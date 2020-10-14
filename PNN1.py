@@ -356,6 +356,6 @@ alldata = []
 
 
 # tot_erro1,tot_rms1 = loadData('calhousing',4,4, 1000,0.09,50,'SSS') 
-train_error = loadData('C:\\ayman\\PhDThesis\\iris.txt', 4,3,500,0.05,100,false) 
+train_error = loadData('Data\\LRData\\iris.txt', 4,3,500,0.05,100,false) 
 # Relu_error = loadData('C:\\ayman\\PhDThesis\\iris', 4, 3,100,0.05,50,'Relu') 
 

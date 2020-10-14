@@ -571,7 +571,7 @@ def rescale(values,featuresno,data_no, new_min , new_max ):
 
 
 def loadData(filename, featuresno, noutputlist, epochs,lratelist,hn,scale):
-    filename ='C:\\Ayman\\PhDThesis\\'  + filename + '.csv'
+    filename =filename 
     gpsTrack = open(filename, "r")
     csvReader = csv.reader(gpsTrack)
     groupno=len(noutputlist)
@@ -611,7 +611,7 @@ def loadData(filename, featuresno, noutputlist, epochs,lratelist,hn,scale):
 noutputlist=[3,3]
 lratelist=[0.05,0.05]
 # trainederror1,trainederror2 ,errorpredicted=loadData(filename='germn2005_2009_modified',featuresno=31,noutputlist=noutputlist,epochs=1000,lratelist=lratelist,hn=50,scale=20)
-trainederror1,trainederror2 ,errorpredicted=loadData(filename='wine_iris_3_3',featuresno=17,noutputlist=noutputlist,epochs=1000,lratelist=lratelist,hn=100,scale=5)
+trainederror1,trainederror2 ,errorpredicted=loadData(filename='Data\\SGPNData\\germn2005_2009_modified.csv',featuresno=17,noutputlist=noutputlist,epochs=1000,lratelist=lratelist,hn=100,scale=5)
                           
 print("Done.")
 
