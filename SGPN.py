@@ -193,6 +193,7 @@ def calculateoutputTau(iterationoutput):
         for  ii in iterationoutput:
             # tau,pv = ss.spearmanr(ii[1], ii[0]) 
             tau , tauslist = calcAvrTau(ii[0], ii[1],2)  
+            # if not np.isnan(tau):
             sum_Tau += tau
         return sum_Tau
 
@@ -288,10 +289,18 @@ def forward_propagation(net, input1 ,groupno,noutputlist,scale):
     for index,layer in enumerate(net): 
         prev_input=[]  
         if index==0:#MIddle Layer
-            for neuron in (layer):
+            for neurindex,neuron in enumerate(layer):
                 neuron['result']=[]
                 for A in range(len(noutputlist)):  
-                    sum1 = neuron['weights'].T.dot(row1[0])   
+                    xx=neuron['weights']
+                    nn=len(xx)
+                    aa=list(xx)
+                    if True:
+                        D1=cache[index][neurindex*nn:neurindex*nn+nn]
+                        aa = aa * np.array(D1)    # Shutdown neurons
+                        aa = aa / keep_prob    # Scales remaining values
+                    sum1 = np.array(aa).T.dot(row1[0])
+                    # sum1 = neuron['weights'].T.dot(row1[0])   
                     result1 = SSS(sum1,noutputlist[A],scale)
                     neuron['result'].append(result1)                    
                 prev_input.append(neuron['result'])
@@ -299,10 +308,17 @@ def forward_propagation(net, input1 ,groupno,noutputlist,scale):
                 outtot=[] 
                 for indexsub,subgroup in enumerate(layer):
                     prev_input=[]      
-                    for neuron in subgroup:
+                    for subind,neuron in enumerate(subgroup):
                         neuron['result']=[]   
                         xx=neuron['weights']
-                        sum1 = neuron['weights'].T.dot([xx[indexsub] for xx in row1])
+                        nn=len(xx)
+                        aa=list(xx)
+                        if True:
+                            D1=cache[index][indexsub][subind*nn:subind*nn+nn]
+                            aa = aa * np.array(D1)    # Shutdown neurons
+                            aa = aa / keep_prob    # Scales remaining values
+                            sum1 = aa.T.dot([xx[indexsub] for xx in row1])
+                        # sum1 = neuron['weights'].T.dot([xx[indexsub] for xx in row1])
                         result1 = SSS(sum1,len(subgroup),scale)
                         neuron['result'].append(result1) 
                         prev_input.append(neuron['result'])
@@ -333,6 +349,7 @@ def back_propagation(net, row, expected,groupno,noutputlist,scale,cache,dropout)
                     neuron['delta']=[]    
                     a =errors[indexsub][j] * dSSS(neuron['result'][0],noutputlist[indexsub],scale)
                     neuron['delta'].append(a)
+
         else:  
             errors = list()
             for j in range(len(layer)):
@@ -342,7 +359,9 @@ def back_propagation(net, row, expected,groupno,noutputlist,scale,cache,dropout)
                 for indexsub,subgroup in enumerate(nextlayer):
                     sub_result=[]            
                     for nindex,neuron in enumerate(subgroup):
-                        herror+= (neuron['weights'][j] * neuron['delta'][0])                                
+                        zzz=cache[1][indexsub][nindex]
+                        if(zzz):
+                          herror+= (neuron['weights'][j] * neuron['delta'][0])                                
                     suberrors.append(herror)
                 errors.append(suberrors)
 
@@ -366,18 +385,18 @@ def updateWeights(net, input1, lratelist,noutputlist,cache,dropout):
                 counter=0
                 for nundex,neuron in enumerate(subgroup): 
                     counter+=nundex
-                    for j in range(len(inputs)):
-                        # zzz=cache[1][indexsub][counter]
-                        # if(zzz):  
-                        neuron['weights'][j] -= lratelist[indexsub] * neuron['delta'][0] * inputs[indexsub][j]
+                    for j in range(len(inputs[0])):
+                        zzz=cache[1][indexsub][counter]
+                        if(zzz):  
+                          neuron['weights'][j] -= lratelist[indexsub] * neuron['delta'][0] * inputs[indexsub][j]
                     neuron['weights'][-1] -= lratelist[indexsub] * neuron['delta'][0]
         else: #Middle layer
                 for nin,neuron in enumerate(net[i]):                  
                     for j in range(len(inputs)):               
-                        # zzz=cache[0][j]
-                        # if(zzz): 
-                        for h in range(len(noutputlist)):                                        
-                            neuron['weights'][j] -= lratelist[h] * neuron['delta'][h] * inputs[j]
+                        zzz=cache[0][j]
+                        if(zzz): 
+                          for h in range(len(noutputlist)):                                        
+                             neuron['weights'][j] -= lratelist[h] * neuron['delta'][h] * inputs[j]
                     for h in range(len(noutputlist)):          
                        neuron['weights'][-1] -= lratelist[h] * neuron['delta'][h]
                  
@@ -393,7 +412,8 @@ def calcAvrTau (x_in,y_out,groupno):
         if not np.isnan(tau):
             sum_Tau += tau 
             Tau_list.append(tau)
-        else: 
+        else:
+            Tau_list=[0,0,0]  
             Tau_list.append(0) 
     return sum_Tau/groupno , Tau_list
 
@@ -571,7 +591,6 @@ def rescale(values,featuresno,data_no, new_min , new_max ):
 
 
 def loadData(filename, featuresno, noutputlist, epochs,lratelist,hn,scale):
-    filename =filename 
     gpsTrack = open(filename, "r")
     csvReader = csv.reader(gpsTrack)
     groupno=len(noutputlist)
@@ -590,13 +609,19 @@ def loadData(filename, featuresno, noutputlist, epochs,lratelist,hn,scale):
         labels.append([a,b])#,c])#,c,d])
     data_no=len(labels)
     train_features_list_norm = rescale(data,featuresno,data_no,-scale,scale) 
+    #train_features_list_norm = zscore(data, axis=0)   
     noofhidden = hn
     noofinputes = featuresno
     
     trainederror=[]
 ###################################
-    # trainederror1,trainederror2=trainingNoValidation(epochs=epochs, lratelist=lratelist,noutputlist= noutputlist,X= train_features_list_norm, y=labels,noofinputes=noofinputes,hn=hn,scale=scale)
-    errorpredicted=training(filename=filename, epochs=epochs, X=train_features_list_norm,y=labels,featuresno= featuresno,noutputlist= noutputlist,groupno=groupno,lratelist=lratelist,hn=hn,scale=scale)
+    # train_features_list_norm =[[0.1,0.2,0.3],[0.8,0.9,0.7]] # [list(item) for item in train_features]
+    # labels =[[[1,2,3,4],[3,2,1]],[[4,2,3,1],[1,3,2]]]   # [list(item) for item in train_labels]
+    # train_labels_list = [list((ti - 1)/(3 - 1) for ti in i) for i in train_labels_list]
+    
+# ########################################
+    trainederror1,trainederror2=trainingNoValidation(epochs=epochs, lratelist=lratelist,noutputlist= noutputlist,X= train_features_list_norm, y=labels,noofinputes=noofinputes,hn=hn,scale=scale)
+    #errorpredicted=training(filename=filename, epochs=epochs, X=train_features_list_norm,y=labels,featuresno= featuresno,noutputlist= noutputlist,groupno=groupno,lratelist=lratelist,hn=hn,scale=scale)
     
     return trainederror1,trainederror2 ,errorpredicted
 ###############################################################################################################################
@@ -608,10 +633,10 @@ def loadData(filename, featuresno, noutputlist, epochs,lratelist,hn,scale):
 # noutputlist=[4,3]
 # trainederror,errorpredicted=loadData('germn2005_2009_modified',3,noutputlist,500,0.05,10,1)
 
-noutputlist=[3,3]
+noutputlist=[5,5]
 lratelist=[0.05,0.05]
 # trainederror1,trainederror2 ,errorpredicted=loadData(filename='germn2005_2009_modified',featuresno=31,noutputlist=noutputlist,epochs=1000,lratelist=lratelist,hn=50,scale=20)
-trainederror1,trainederror2 ,errorpredicted=loadData(filename='Data\\SGPNData\\germn2005_2009_modified.csv',featuresno=17,noutputlist=noutputlist,epochs=1000,lratelist=lratelist,hn=100,scale=5)
+trainederror1,trainederror2 ,errorpredicted=loadData(filename='Data\\SGPNData\\germn2005_2009_modified.csv',featuresno=31,noutputlist=noutputlist,epochs=500,lratelist=lratelist,hn=100,scale=20)
                           
 print("Done.")
 
