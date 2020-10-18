@@ -16,7 +16,6 @@ from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 from sklearn.model_selection import KFold
 import itertools
 import numpy.ma as ma
-from scipy._lib.six import iteritems
 from matplotlib.colors import ListedColormap
 from sklearn.model_selection import train_test_split
 from scipy.stats import rankdata
@@ -31,54 +30,21 @@ alldata = []
 
 
 #Error Function#
-def Spearman(output,expected):
-    n=len(expected)
-    dif=0
-    diflist=[]
-    for i in range (n):
-        diflist.append(np.power(output[i]-expected[i],2))
-        dif+=np.power(output[i]-expected[i],2)
-
-    nem=dif       
-    den=n*(np.power(n,2)-1)
-    deflist=[]
-    for dd in diflist:
-      deflist.append(((6*dd)/(den)))
-    aa=sum(deflist)
-    bb=1-((6*dif)/(den)) 
-    return deflist #1-((6*nem)/(den))
-
-#Error Function Derivative#
-def DSpearman(output,expected):
-    n=len(expected)
-    dif=0
-    diflist=[]
-    deflist=[]
-    for i in range (n):
-        diflist.append(2*(output[i])-2*(expected[i]))
-        dif+=2*(output[i])-2*(expected[i])
-      
-    den=n*(np.power(n,2)-1)
-    for dd in diflist:
-        deflist.append(((dd)/(den)))
-    return deflist #1-((6*dif)/(den))    
-
-
-#StairStep SS Function#
 def SSS(xi,nlabel,bx):
     sum2 = 0
     s=100
     b=100/bx
     t=200
     for i in range(nlabel):
+        
         xx=s-((i*t)/(nlabel-1))
         sum2 +=0.5*(np.tanh((-b*(xi))-(xx)))
     sum2=-1*sum2     
     sum2= sum2+(nlabel*0.5)  
     return sum2      
 
-#StairStep SS Function Derivative#
 def dSSS(xi,nlabel,bx): 
+
     derivative2 = 0
     s=100
     b=100/bx
@@ -89,6 +55,34 @@ def dSSS(xi,nlabel,bx):
     derivative2=-1*derivative2     
     derivative2= derivative2+(nlabel*0.5)  
     return derivative2
+
+def Spearman(output,expected):
+    n=len(expected)
+    dif=0
+    diflist=np.array([])
+    for i in range (n):
+        diflist=np.append(diflist,[np.power(output[i]-expected[i],2)])
+        dif+=np.power(output[i]-expected[i],2)
+
+    den=n*(np.power(n,2)-1)
+    deflist=np.array([])
+    for dd in diflist:
+      deflist=np.append(deflist,((6*dd)/(den)))
+    return deflist 
+
+def DSpearman(output,expected):
+    n=len(expected)
+    dif=0
+    diflist=np.array([])
+    deflist=np.array([])
+    for i in range (n):
+        diflist=np.append(diflist,[2*(output[i])-2*(expected[i])])
+        dif+=2*(output[i])-2*(expected[i])
+      
+    den=n*(np.power(n,2)-1)
+    for dd in diflist:
+        deflist=np.append(deflist,[((dd)/(den))])
+    return deflist  
 
 #Drawing image per each iteration for the video#
 def DrawGraph(net1,inputs,expected,hn,preverror,epoch,totalerror,totalepoch,epochs,imageindex):
@@ -278,9 +272,8 @@ def initialize_network(ins, hiddens,noutputlist):
     net.append(subgroup)
     return net
 
-def forward_propagation(net, input1 ,groupno,noutputlist,scale):
+def forward_propagation(net, input1 ,groupno,noutputlist,noutputvalues,scale):
     row1=[None] * len(noutputlist)
-    keep_prob=0.5
     cache=[]
     if True:
         cache=createDropNet(net)
@@ -289,19 +282,17 @@ def forward_propagation(net, input1 ,groupno,noutputlist,scale):
     for index,layer in enumerate(net): 
         prev_input=[]  
         if index==0:#MIddle Layer
-            for neurindex,neuron in enumerate(layer):
+            for neuron in layer:
                 neuron['result']=[]
                 for A in range(len(noutputlist)):  
                     xx=neuron['weights']
-                    nn=len(xx)
-                    aa=list(xx)
-                    if True:
-                        D1=cache[index][neurindex*nn:neurindex*nn+nn]
-                        aa = aa * np.array(D1)    # Shutdown neurons
-                        aa = aa / keep_prob    # Scales remaining values
-                    sum1 = np.array(aa).T.dot(row1[0])
-                    # sum1 = neuron['weights'].T.dot(row1[0])   
-                    result1 = SSS(sum1,noutputlist[A],scale)
+                    # if True:
+                    #     D1=cache[index][neurindex*nn:neurindex*nn+nn]
+                    #     aa = aa * np.array(D1)    # Shutdown neurons
+                    #     aa = aa / keep_prob    # Scales remaining values
+                    # sum1 = np.array(aa).T.dot(row1[0])
+                    sum1 = neuron['weights'].T.dot(row1[0])   
+                    result1 = SSS(sum1,noutputvalues[A],scale)
                     neuron['result'].append(result1)                    
                 prev_input.append(neuron['result'])
         else:    #OutputLayer Layer 
@@ -313,13 +304,13 @@ def forward_propagation(net, input1 ,groupno,noutputlist,scale):
                         xx=neuron['weights']
                         nn=len(xx)
                         aa=list(xx)
-                        if True:
-                            D1=cache[index][indexsub][subind*nn:subind*nn+nn]
-                            aa = aa * np.array(D1)    # Shutdown neurons
-                            aa = aa / keep_prob    # Scales remaining values
-                            sum1 = aa.T.dot([xx[indexsub] for xx in row1])
-                        # sum1 = neuron['weights'].T.dot([xx[indexsub] for xx in row1])
-                        result1 = SSS(sum1,len(subgroup),scale)
+                        # if True:
+                        #     D1=cache[index][indexsub][subind*nn:subind*nn+nn]
+                        #     aa = aa * np.array(D1)    # Shutdown neurons
+                        #     aa = aa / keep_prob    # Scales remaining values
+                        #     sum1 = aa.T.dot([xx[indexsub] for xx in row1])
+                        sum1 = neuron['weights'].T.dot([xx[indexsub] for xx in row1])
+                        result1 = SSS(sum1,noutputvalues[indexsub],scale)
                         neuron['result'].append(result1) 
                         prev_input.append(neuron['result'])
                     prev_input =[j for sub in prev_input for j in sub]    
@@ -328,7 +319,7 @@ def forward_propagation(net, input1 ,groupno,noutputlist,scale):
 
     return outtot ,cache
 
-def back_propagation(net, row, expected,groupno,noutputlist,scale,cache,dropout):
+def back_propagation(net, row, expected,groupno,noutputlist,noutputvalues,scale,cache,dropout):
     for i in reversed(range(len(net))):
         layer = net[i]
         results = list()   
@@ -347,7 +338,7 @@ def back_propagation(net, row, expected,groupno,noutputlist,scale,cache,dropout)
             for indexsub,subgroup in enumerate(layer):
                 for j,neuron in enumerate(subgroup):
                     neuron['delta']=[]    
-                    a =errors[indexsub][j] * dSSS(neuron['result'][0],noutputlist[indexsub],scale)
+                    a =errors[indexsub][j] * dSSS(neuron['result'][0],noutputvalues[indexsub],scale)
                     neuron['delta'].append(a)
 
         else:  
@@ -369,9 +360,9 @@ def back_propagation(net, row, expected,groupno,noutputlist,scale,cache,dropout)
                 neuron = layer[j]
                 neuron['delta']=[]
                 for g in range(groupno):
-                  neuron['delta'].append(errors[j][g] * dSSS(neuron['result'][g],noutputlist[g],scale))   
+                  neuron['delta'].append(errors[j][g] * dSSS(neuron['result'][g],noutputvalues[g],scale))   
 
-def updateWeights(net, input1, lratelist,noutputlist,cache,dropout):              
+def updateWeights(net, input1, lratelist,noutputlist,noutputvalues,cache,dropout):              
     inputs=list()
     for i in range(len(net)):    
         inputs=np.asarray(input1).tolist()     
@@ -417,7 +408,7 @@ def calcAvrTau (x_in,y_out,groupno):
             Tau_list.append(0) 
     return sum_Tau/groupno , Tau_list
 
-def trainingNoValidation( epochs, lratelist,noutputlist, X, y,noofinputes,hn,scale):
+def trainingNoValidation( epochs, lratelist,noutputlist,noutputvalues, X, y,noofinputes,hn,scale):
     groupno=len(noutputlist)
     nx=len(X)
     errorRate = []
@@ -434,9 +425,9 @@ def trainingNoValidation( epochs, lratelist,noutputlist, X, y,noofinputes,hn,sca
         errg1=[]
         errg2=[]
         for i, row in enumerate(X):
-            outputs,cache = forward_propagation(net, row,groupno,noutputlist,scale)
-            back_propagation(net, row, y[i],groupno,noutputlist,scale,cache,True)
-            updateWeights(net, row, lratelist,noutputlist,cache,True)
+            outputs,cache = forward_propagation(net, row,groupno,noutputlist,noutputvalues,scale)
+            back_propagation(net, row, y[i],groupno,noutputlist,noutputvalues,scale,cache,True)
+            updateWeights(net, row, lratelist,noutputlist,noutputvalues,cache,True)
             singleTau,Tau_list = calcAvrTau(y[i], outputs,groupno)
             detailedtau.append(Tau_list)
             sum_Tau+=singleTau
@@ -493,21 +484,21 @@ def plotTrainValidate(trainerror,validateerror):
     plt.ylabel('Tau')
     plt.show()
 
-def PNNFit(net,train_fold_features,train_fold_labels,noutputlist,lratelist,epoch,datalength,hn,b):
+def PNNFit(net,train_fold_features,train_fold_labels,noutputlist,noutputvalues,lratelist,epoch,datalength,hn,b):
     iterationoutput=list()
     sum_Tau=0
     for i, row in enumerate((train_fold_features)):
         xxx1=list(row)       
         trainfoldlbelarray=np.array((train_fold_labels))
-        trainfoldexpected=trainfoldlbelarray[0,i,:,:]
-        outputs,cache= forward_propagation(net, xxx1,len(noutputlist),noutputlist,b)
-        back_propagation(net, xxx1, trainfoldexpected, len(noutputlist),noutputlist,b,cache,True)
-        updateWeights(net, xxx1, lratelist,noutputlist,cache,True)   
+        trainfoldexpected=trainfoldlbelarray[i]
+        outputs,cache= forward_propagation(net, xxx1,len(noutputlist),noutputlist,noutputvalues,b)
+        back_propagation(net, xxx1, trainfoldexpected, len(noutputlist),noutputlist,noutputvalues,b,cache,True)
+        updateWeights(net, xxx1, lratelist,noutputlist,noutputvalues,cache,True)   
         iterationoutput.append([trainfoldexpected.tolist(),outputs])
 
     return iterationoutput , net
 
-def CrossValidationAvg(kfold,foldindex,n,foldederrorrate,X_train,y_train,featuresno, noofhidden, noutputlist,groupno,lratelist,bbs,epochs,Datasetfilename):
+def CrossValidationAvg(kfold,foldindex,n,foldederrorrate,X_train,y_train,featuresno, noofhidden, noutputlist,noutputvalues,groupno,lratelist,bbs,epochs,Datasetfilename):
     net = initialize_network(featuresno, noofhidden, noutputlist)
     epocherror=[]
     for idx_train, idx_test in kfold.split(X_train):      
@@ -515,52 +506,88 @@ def CrossValidationAvg(kfold,foldindex,n,foldederrorrate,X_train,y_train,feature
         train_fold_features=X_train[idx_train,:]
         xx=idx_train.tolist()
         yy=np.array(y_train)
-        train_fold_labels=yy[[xx],:,:].tolist()
+        train_fold_labels=yy[xx]
+        # train_fold_labels=yy[[xx],:,:].tolist()
         test_fold_features=X_train[idx_test,:]
         xx2=idx_test.tolist()
-        test_fold_labels=yy[[xx2],:,:].tolist()
+        test_fold_labels=yy[xx2]
+        # test_fold_labels=yy[[xx2],:,:].tolist()
         tot_epoch=[]      
         errorRate_validate=[]
         for epoch in range(epochs):
-            iterationoutput_train,net=PNNFit(net,train_fold_features,train_fold_labels,noutputlist,lratelist,epoch,n,noofhidden,bbs)
+            iterationoutput_train,net=PNNFit(net,train_fold_features,train_fold_labels,noutputlist,noutputvalues,lratelist,epoch,n,noofhidden,bbs)
             sum_Tau_train = calculateoutputTau(iterationoutput_train)
             tot_epoch.append(epoch)
             epochError_train=sum_Tau_train/(len(train_fold_features))
             errorRate_validate.append(epochError_train)
             if epoch % 10 == 0:
                 print('Epoch result >Epoch=%4d ,Tau=%.4f,' % (epoch,epochError_train))
-        foldederrorrate.append(sum(errorRate_validate)/len(errorRate_validate)) 
-        iterationoutput_test=predict(test_fold_features, test_fold_labels, net, noutputlist,bbs)
+        foldederrorrate=np.append(foldederrorrate,[sum(errorRate_validate)/len(errorRate_validate)]) 
+        iterationoutput_test=predict(test_fold_features, test_fold_labels, net, noutputlist,noutputvalues,bbs)
         result1=calculateoutputTau(iterationoutput_test)
         print('Epoch result >Fold=%4d ,Tau=%.4f,' % (foldindex,result1/(len(test_fold_features))))
         epocherror.append(result1/(len(test_fold_features)))
 
     epocherrorAvg=  sum(epocherror)/10 
-    print('Folded average result > ,Tau=%.4f,' % (epocherrorAvg))
+    print('Folded average result > ,Tau=%.4f,' , (epocherrorAvg))
     return epocherrorAvg , net
 
 
-def training(filename,epochs, X,y, featuresno, noutputlist,groupno,lratelist,hn,scale):
+def training(filename,epochs, X,y, featuresno, noutputlist,groupno,lratelist,noutputvalues,hn,scale):
 
-    kfold = KFold(3, True, 1)
+    # kfold = KFold(3, True, 1)
+    # foldindex = 0
+    # n=len(alldata)
+    # foldederrorrate=[]
+    # X_train, X_test, y_train, y_test = sklearn.model_selection.train_test_split(X, y, test_size=0.2, random_state=1)
+    # foldederrors,net=CrossValidationAvg(kfold,foldindex,n,foldederrorrate,X_train,y_train,featuresno, hn, noutputlist,groupno,lratelist,scale,epochs,filename)    
+    # ErrorPredicted=predict_testing(X_test, y_test, net, noutputlist,scale)
+    # result1=calculateoutputTau(ErrorPredicted)
+    # print('Error Predicted average  > ,Tau=%.4f,' % (result1))
+    # return ErrorPredicted 
+    kfold = KFold(10, True, 1)
     foldindex = 0
     n=len(alldata)
-    foldederrorrate=[]
+    alldata_array=np.array(alldata)
+    foldederrorrate=np.array([])
+    # X=X[:,0:featuresno]
+    # y=alldata_array[:,featuresno:featuresno+groupno]
     X_train, X_test, y_train, y_test = sklearn.model_selection.train_test_split(X, y, test_size=0.2, random_state=1)
-    foldederrors,net=CrossValidationAvg(kfold,foldindex,n,foldederrorrate,X_train,y_train,featuresno, hn, noutputlist,groupno,lratelist,scale,epochs,filename)    
-    ErrorPredicted=predict_testing(X_test, y_test, net, noutputlist,scale)
-    result1=calculateoutputTau(ErrorPredicted)
-    print('Error Predicted average  > ,Tau=%.4f,' % (result1))
-    return ErrorPredicted 
+    lrlist=[0.05]#,0.09,0.1,0.2,0.3,0.4,0.5]
+    scalelist=[2,10,30,50]
+    hnlist=[featuresno+100]
+    bestvector=[0,0,0,0,0]
+    avresult=0
+    bestvresult=0
+    for hn1 in hnlist: 
+        for lr1 in lrlist:
+            for scl in scalelist:
+                avresult,bestnet=CrossValidationAvg(kfold,foldindex,n,foldederrorrate,X_train,y_train,featuresno, hn, noutputlist,noutputvalues,groupno,lratelist,scale,epochs,filename)   
+                print('Final Prediction=%f , lr=%f',(avresult,lr1))
+                if(avresult>bestvresult):
+                    bestvresult=avresult
+                    bestvector=[bestnet,lr1,hn1,bestvresult,scl]
+    now = datetime.now()
+    timestamp = datetime.timestamp(now)
+    # with open(Datasetfilename+str(timestamp)+'.txt', 'a') as f:
+    print(">>>>>>>>Best Parameters<<<<<<<<<")
+    print(">>>>>>>>Best Vector Data<<<<<<<<<")
+    print('scale=%f,best result=%f',(bestvector[4],bestvresult))
+    print(">>>>>>>>Testing data result<<<<<<<<<")
+    X_test_norm = zscore(X_test, axis=0)
+    iterationoutput=predict(X_test_norm, y_test, bestvector[0], noutputlist,bestvector[4])
+    print('Final Prediction=%f',iterationoutput)
+    print(">>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<<")
+    return avresult
 
 
-def predict(test_fold_features,test_fold_labels, net, noutputlist,bx):
+def predict(test_fold_features,test_fold_labels, net, noutputlist,noutputvalues,bx):
     iterationoutput=[]
     for i, row in enumerate((test_fold_features)):
-        xxx1=list(row)  
+        xxx1=list(row) 
         labelsarr=np.array(test_fold_labels)     
-        testfoldlabels=list(labelsarr[0,i,:,:])
-        predicted,cache= forward_propagation(net, xxx1,len(noutputlist),noutputlist,bx)
+        testfoldlabels=labelsarr[i].tolist()
+        predicted,cache= forward_propagation(net, xxx1,len(noutputlist),noutputlist,noutputvalues,bx)
         iterationoutput.append([testfoldlabels,predicted])
     return  iterationoutput
 
@@ -590,7 +617,7 @@ def rescale(values,featuresno,data_no, new_min , new_max ):
     return totaloutput1
 
 
-def loadData(filename, featuresno, noutputlist, epochs,lratelist,hn,scale):
+def loadData(filename, featuresno, noutputlist, epochs,lratelist,noutputvalues,hn,scale):
     gpsTrack = open(filename, "r")
     csvReader = csv.reader(gpsTrack)
     groupno=len(noutputlist)
@@ -599,14 +626,15 @@ def loadData(filename, featuresno, noutputlist, epochs,lratelist,hn,scale):
     next(csvReader)
     labelno1=noutputlist[0]
     labelno2=noutputlist[1]
-    # labelno3=noutputlist[2]
+    labelno3=noutputlist[2]
     for row in csvReader:
         data.append(list(map(float,row[0:featuresno])))
         a=list(map(float,row[featuresno:featuresno + labelno1]))
         b=list(map(float,row[featuresno+labelno1:featuresno + labelno1+labelno2]))
+        c=list(map(float,row[featuresno+labelno1+labelno2:featuresno + labelno1+labelno2+labelno3]))
         ######################################
         ######################################
-        labels.append([a,b])#,c])#,c,d])
+        labels.append([a,b,c])#,c,d])
     data_no=len(labels)
     train_features_list_norm = rescale(data,featuresno,data_no,-scale,scale) 
     #train_features_list_norm = zscore(data, axis=0)   
@@ -615,13 +643,11 @@ def loadData(filename, featuresno, noutputlist, epochs,lratelist,hn,scale):
     
     trainederror=[]
 ###################################
-    # train_features_list_norm =[[0.1,0.2,0.3],[0.8,0.9,0.7]] # [list(item) for item in train_features]
-    # labels =[[[1,2,3,4],[3,2,1]],[[4,2,3,1],[1,3,2]]]   # [list(item) for item in train_labels]
-    # train_labels_list = [list((ti - 1)/(3 - 1) for ti in i) for i in train_labels_list]
+
     
 # ########################################
-    trainederror1,trainederror2=trainingNoValidation(epochs=epochs, lratelist=lratelist,noutputlist= noutputlist,X= train_features_list_norm, y=labels,noofinputes=noofinputes,hn=hn,scale=scale)
-    #errorpredicted=training(filename=filename, epochs=epochs, X=train_features_list_norm,y=labels,featuresno= featuresno,noutputlist= noutputlist,groupno=groupno,lratelist=lratelist,hn=hn,scale=scale)
+    #trainederror1,trainederror2=trainingNoValidation(epochs=epochs, lratelist=lratelist,noutputlist= noutputlist,noutputvalues=noutputvalues,X= train_features_list_norm, y=labels,noofinputes=noofinputes,hn=hn,scale=scale)
+    errorpredicted=training(filename=filename, epochs=epochs, X=train_features_list_norm,y=labels,featuresno= featuresno,noutputlist= noutputlist,groupno=groupno,lratelist=lratelist,noutputvalues=noutputvalues,hn=hn,scale=scale)
     
     return trainederror1,trainederror2 ,errorpredicted
 ###############################################################################################################################
@@ -633,11 +659,16 @@ def loadData(filename, featuresno, noutputlist, epochs,lratelist,hn,scale):
 # noutputlist=[4,3]
 # trainederror,errorpredicted=loadData('germn2005_2009_modified',3,noutputlist,500,0.05,10,1)
 
-noutputlist=[5,5]
-lratelist=[0.05,0.05]
-# trainederror1,trainederror2 ,errorpredicted=loadData(filename='germn2005_2009_modified',featuresno=31,noutputlist=noutputlist,epochs=1000,lratelist=lratelist,hn=50,scale=20)
-trainederror1,trainederror2 ,errorpredicted=loadData(filename='Data\\SGPNData\\germn2005_2009_modified.csv',featuresno=31,noutputlist=noutputlist,epochs=500,lratelist=lratelist,hn=100,scale=20)
-                          
+# noutputlist=[5,5]
+# lratelist=[0.05,0.05]
+# # trainederror1,trainederror2 ,errorpredicted=loadData(filename='germn2005_2009_modified',featuresno=31,noutputlist=noutputlist,epochs=1000,lratelist=lratelist,hn=50,scale=20)
+# trainederror1,trainederror2 ,errorpredicted=loadData(filename='Data\\SGPNData\\germn2005_2009_modified.csv',featuresno=31,noutputlist=noutputlist,epochs=10,lratelist=lratelist,hn=100,scale=20)
+
+noutputlist=[4,2,2]
+noutputvalues=[4,3,2]
+lratelist=[0.05,0.05,0.05]
+trainederror1,trainederror2 ,errorpredicted=loadData(filename='Data\\SGPNData\\Emotions.csv',featuresno=72,noutputlist=noutputlist,noutputvalues=noutputvalues,epochs=100,lratelist=lratelist,hn=50,scale=20)
+
 print("Done.")
 
 #############################################################################################

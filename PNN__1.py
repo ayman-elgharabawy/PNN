@@ -120,7 +120,9 @@ def forward_propagation(net, input1,trainfold, n_outputs,b,hn,statelayer,recurre
            sum1 = neuron['weights'].T.dot(row1)+statelayer[nindex]
         else:
            sum1 = neuron['weights'].T.dot(row1)
-        result = SSS(sum1,n_outputs,b)      
+        result = SSS(sum1,n_outputs,b) 
+        if math.isnan(result):
+              result=0   
         neuron['result'] = result 
         prev_input = np.append(prev_input, [result])    
     row1 = prev_input 
@@ -129,7 +131,9 @@ def forward_propagation(net, input1,trainfold, n_outputs,b,hn,statelayer,recurre
     prev_input = np.array([])
     for neuron in net[1]['output']:
         sum1 = neuron['weights'].T.dot(row1)
-        result = SSS(sum1,n_outputs,b)      
+        result = SSS(sum1,n_outputs,b)    
+        if math.isnan(result):
+              result=0   
         neuron['result'] = result 
         prev_input = np.append(prev_input, [result])
   
@@ -242,7 +246,7 @@ def CrossValidationAvg(kfold,foldindex,n,foldederrorrate,X_train,y_train,feature
         sum_Tau=np.array([])
         for epoch in range(epochs):
             iterationoutput_train=PNNFit(net,train_fold_features_norm,train_fold_labels,labelno,lrate,epoch,n,noofhidden,bbs,recurrent)
-            # print("Train Epoch %d, %f",(epoch,iterationoutput_train))
+            print("Train Epoch %d, %f",(epoch,iterationoutput_train))
             sum_Tau=np.append(sum_Tau,iterationoutput_train) 
             iterationoutput=predict(test_fold_features_norm, test_fold_labels, net, labelno,bbs,noofhidden,recurrent)
             tot_etau=np.append(tot_etau,[iterationoutput])
@@ -340,8 +344,8 @@ def loadData(filename, featuresno, labelno, iteration,lrate,hn,recurrent):
     alldata_list = [list(item) for item in alldata]
     
 
-    tot_error=trainingNoValidation(iteration, nooflabels, train_features_list,train_labels_list, featuresno, labelno,lrate,hn,scale,recurrent)
-    tot_error2=training(filename, iteration, alldata_list, featuresno, labelno,lrate,hn,scale,tot_error,recurrent)
+    # tot_error=trainingNoValidation(iteration, nooflabels, train_features_list,train_labels_list, featuresno, labelno,lrate,hn,scale,recurrent)
+    tot_error2=training(filename, iteration, alldata_list, featuresno, labelno,lrate,hn,scale,[],recurrent)
                                       
     print('Done')
     return tot_error
@@ -357,5 +361,5 @@ alldata = []
 
 # tot_erro1,tot_rms1 = loadData('calhousing',4,4, 1000,0.09,50,'SSS') 
 # train_error = loadData('Data\\LRData\\iris.txt', 4,3,500,0.05,100,false) 
-train_error = loadData('Data\\LRData\\german2005.csv', 31,5,500,0.05,100,false) 
+train_error = loadData('C:\\Github\\PNN\\Data\\SGPNData\\RC_Final_5_1.csv', 18,5,5000,0.05,100,false) 
 
