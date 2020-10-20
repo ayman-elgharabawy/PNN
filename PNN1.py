@@ -16,7 +16,6 @@ from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 from sklearn.model_selection import KFold
 import itertools
 import numpy.ma as ma
-from scipy._lib.six import iteritems
 from matplotlib.colors import ListedColormap
 from sklearn.model_selection import train_test_split
 from scipy.stats import rankdata
@@ -111,7 +110,7 @@ def initialize_network(ins, hiddens, outs, n_hlayers):
     return net 
 
 
-def forward_propagation(net, input1,trainfold, n_outputs,b,hn,statelayer,recurrent):
+def forward_propagation(net, input1,trainfold, n_outputs,labelvalue,b,hn,statelayer,recurrent):
 
     row1 = input1
     prev_input = np.array([])
@@ -120,7 +119,9 @@ def forward_propagation(net, input1,trainfold, n_outputs,b,hn,statelayer,recurre
            sum1 = neuron['weights'].T.dot(row1)+statelayer[nindex]
         else:
            sum1 = neuron['weights'].T.dot(row1)
-        result = SSS(sum1,n_outputs,b)      
+        result = SSS(sum1,labelvalue,b)  
+        if math.isnan(result):
+              result=0    
         neuron['result'] = result 
         prev_input = np.append(prev_input, [result])    
     row1 = prev_input 
@@ -129,7 +130,9 @@ def forward_propagation(net, input1,trainfold, n_outputs,b,hn,statelayer,recurre
     prev_input = np.array([])
     for neuron in net[1]['output']:
         sum1 = neuron['weights'].T.dot(row1)
-        result = SSS(sum1,n_outputs,b)      
+        result = SSS(sum1,labelvalue,b)   
+        if math.isnan(result):
+              result=0   
         neuron['result'] = result 
         prev_input = np.append(prev_input, [result])
   
@@ -145,7 +148,7 @@ def updateNeuronResults(layer,row1):
     for indexn,neuron in enumerate(layer):
          neuron['result']=row1[indexn]
 
-def back_propagation(net, row, expected, outputs, n_outputs,datalength,b):
+def back_propagation(net, row, expected, outputs, n_outputs,labelvalue,datalength,b):
 
     results = list()
     errors = np.array([]) #list()#np.zeros(n_outputs)
@@ -153,7 +156,7 @@ def back_propagation(net, row, expected, outputs, n_outputs,datalength,b):
     errors =DSpearman(results,expected)
 
     for indexsub,neuron in enumerate(net[1]['output']):   
-        neuron['delta'] =errors[indexsub] * dSSS(neuron['result'],n_outputs,b)
+        neuron['delta'] =errors[indexsub] * dSSS(neuron['result'],labelvalue,b)
 
     for indexsub,neuron in enumerate(net[0]['middle']):
         herror = 0
@@ -162,7 +165,7 @@ def back_propagation(net, row, expected, outputs, n_outputs,datalength,b):
         errors=np.append(errors,[herror])
 
     for indexsub,neuron in enumerate(net[0]['middle']):
-        neuron['delta'] =errors[indexsub] * dSSS(neuron['result'],n_outputs,b)
+        neuron['delta'] =errors[indexsub] * dSSS(neuron['result'],labelvalue,b)
 
 
 def updateWeights(net, input1, lrate):
@@ -180,15 +183,15 @@ def updateWeights(net, input1, lrate):
 
     return neuron
 
-def PNNFit(net,train_fold_features,train_fold_labels,n_outputs,lrate,epoch,datalength,hn,b,recurrent):
+def PNNFit(net,train_fold_features,train_fold_labels,n_outputs,labelvalue,lrate,epoch,datalength,hn,b,recurrent):
     iterationoutput=np.array([])
     vv=np.array([])
     statelayer=[0]*hn 
     for i, row in enumerate((train_fold_features)):
         xxx1=np.array(list(row))       
         trainfoldexpected=list(train_fold_labels[i])
-        outputs ,statelayer = forward_propagation(net, xxx1,trainfoldexpected, n_outputs,b,hn,statelayer,recurrent)
-        back_propagation(net, xxx1, trainfoldexpected, outputs, n_outputs,datalength,b)
+        outputs ,statelayer = forward_propagation(net, xxx1,trainfoldexpected, n_outputs,labelvalue,b,hn,statelayer,recurrent)
+        back_propagation(net, xxx1, trainfoldexpected, outputs, n_outputs,labelvalue,datalength,b)
         updateWeights(net, xxx1, lrate)  
         iterationoutput=np.append(iterationoutput,calculateoutputTau([outputs,np.array(trainfoldexpected)]))
     z=len(train_fold_features)    
@@ -209,13 +212,13 @@ def truncate(n, decimals=0):
     v=int(n * multiplier) / multiplier
     return v
 
-def trainingNoValidation(epochs, n_outputs, train_features,train_labels, featuresno, labelno,lrate,hn,b,recurrent):
+def trainingNoValidation(epochs, n_outputs, train_features,train_labels, featuresno, labelno,labelvalue,lrate,hn,b,recurrent):
     net = initialize_network(featuresno, hn, n_outputs,1)
     errorRate = np.array([])
     sum_Tau=np.array([])
     n=len(train_features)
     for epoch in range(epochs):     
-          iterationoutput=PNNFit(net,train_features,train_labels,n_outputs,lrate,epoch,n,hn,b,recurrent)
+          iterationoutput=PNNFit(net,train_features,train_labels,n_outputs,labelvalue,lrate,epoch,n,hn,b,recurrent)
           sum_Tau=np.append(sum_Tau,iterationoutput) 
           if epoch % 10 == 0:
             print('Training >epoch=%d,Tau=%.4f' % (epoch, sum(sum_Tau)/(epoch+1)))
@@ -226,7 +229,7 @@ def trainingNoValidation(epochs, n_outputs, train_features,train_labels, feature
     return Terror
 
 
-def CrossValidationAvg(kfold,foldindex,n,foldederrorrate,X_train,y_train,featuresno, noofhidden, labelno,lrate,bbs,epochs,bestvector,Datasetfilename,trainingdataresult,recurrent):
+def CrossValidationAvg(kfold,foldindex,n,foldederrorrate,X_train,y_train,featuresno, noofhidden, labelno,labelvalue,lrate,bbs,epochs,bestvector,Datasetfilename,trainingdataresult,recurrent):
     net = initialize_network(featuresno, noofhidden, labelno,1)
     avr_res=0
     for idx_train, idx_test in kfold.split(X_train):      
@@ -241,20 +244,20 @@ def CrossValidationAvg(kfold,foldindex,n,foldederrorrate,X_train,y_train,feature
         errorRate_validate=np.array([])
         sum_Tau=np.array([])
         for epoch in range(epochs):
-            iterationoutput_train=PNNFit(net,train_fold_features_norm,train_fold_labels,labelno,lrate,epoch,n,noofhidden,bbs,recurrent)
+            iterationoutput_train=PNNFit(net,train_fold_features_norm,train_fold_labels,labelno,labelvalue,lrate,epoch,n,noofhidden,bbs,recurrent)
             # print("Train Epoch %d, %f",(epoch,iterationoutput_train))
             sum_Tau=np.append(sum_Tau,iterationoutput_train) 
-            iterationoutput=predict(test_fold_features_norm, test_fold_labels, net, labelno,bbs,noofhidden,recurrent)
+            iterationoutput=predict(test_fold_features_norm, test_fold_labels, net, labelno,labelvalue,bbs,noofhidden,recurrent)
             tot_etau=np.append(tot_etau,[iterationoutput])
             # print("-- Predition Result %d",iterationoutput)
         avr_res=sum(tot_etau)/(epochs)  
-        print("Final average Predition Result %d",avr_res)
+        print("Final average Predition Result %f",avr_res)
         
 
     return avr_res, net
   
 
-def training(Datasetfilename,epochs, alldata, featuresno, labelno,lrate,hn,scale,trainingdataresult,recurrent):
+def training(Datasetfilename,epochs, alldata, featuresno, labelno,labelvalue,lrate,hn,scale,trainingdataresult,recurrent):
     kfold = KFold(10, True, 1)
     foldindex = 0
     n=len(alldata)
@@ -272,8 +275,8 @@ def training(Datasetfilename,epochs, alldata, featuresno, labelno,lrate,hn,scale
     for hn1 in hnlist: 
         for lr1 in lrlist:
             for scl in scalelist:
-                avresult,bestnet=CrossValidationAvg(kfold,foldindex,n,foldederrorrate,X_train,y_train,featuresno, hn1, labelno,lr1,scl,epochs,bestvector,Datasetfilename,trainingdataresult,recurrent)
-                print('Final Prediction=%f , lr=%f',(avresult,lr1))
+                avresult,bestnet=CrossValidationAvg(kfold,foldindex,n,foldederrorrate,X_train,y_train,featuresno, hn1, labelno,labelvalue,lr1,scl,epochs,bestvector,Datasetfilename,trainingdataresult,recurrent)
+                print('crossv Prediction=%f , lr=%f',(avresult,lr1))
                 if(avresult>bestvresult):
                     bestvresult=avresult
                     bestvector=[bestnet,lr1,hn1,bestvresult,scl]
@@ -286,26 +289,26 @@ def training(Datasetfilename,epochs, alldata, featuresno, labelno,lrate,hn,scale
     print('scale=%f,best result=%f',(bestvector[4],bestvresult))
     print(">>>>>>>>Testing data result<<<<<<<<<")
     X_test_norm = zscore(X_test, axis=0)
-    iterationoutput=predict(X_test_norm, y_test, bestvector[0], labelno,bestvector[4],hn1,recurrent)
+    iterationoutput=predict(X_test_norm, y_test, bestvector[0], labelno,labelvalue,bestvector[4],hn1,recurrent)
     print('Final Prediction=%f',iterationoutput)
     print(">>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<<")
     return avresult
 
 
-def predict(test_fold_features,test_fold_labels, net, n_outputs,bx,hn,recurent):
+def predict(test_fold_features,test_fold_labels, net, n_outputs,labelvalue,bx,hn,recurent):
     iterationoutput=np.array([])
     statelayer=list()
     for i, row in enumerate((test_fold_features)):
         xxx1=list(row)       
         testfoldlabels=list(test_fold_labels[i])
-        predicted,statelayer= forward_propagation(net, xxx1,testfoldlabels, n_outputs,bx,hn,statelayer,recurent)
+        predicted,statelayer= forward_propagation(net, xxx1,testfoldlabels, n_outputs,labelvalue,bx,hn,statelayer,recurent)
         iterationoutput=np.append(iterationoutput,[calculateoutputTau([predicted,np.array(testfoldlabels)])])      
     avrre=sum(iterationoutput)/len(test_fold_features) 
     return  avrre
 
 
 
-def loadData(filename, featuresno, labelno, iteration,lrate,hn,recurrent):
+def loadData(filename, featuresno, labelno,labelvalue, iteration,lrate,hn,recurrent):
     data = list()
     labels = list()
     alldata = list()
@@ -340,8 +343,8 @@ def loadData(filename, featuresno, labelno, iteration,lrate,hn,recurrent):
     alldata_list = [list(item) for item in alldata]
     
 
-    tot_error=trainingNoValidation(iteration, nooflabels, train_features_list,train_labels_list, featuresno, labelno,lrate,hn,scale,recurrent)
-    tot_error2=training(filename, iteration, alldata_list, featuresno, labelno,lrate,hn,scale,tot_error,recurrent)
+    tot_error=trainingNoValidation(iteration, nooflabels, train_features_list,train_labels_list, featuresno, labelno,labelvalue,lrate,hn,scale,recurrent)
+    tot_error2=training(filename, iteration, alldata_list, featuresno, labelno,labelvalue,lrate,hn,scale,tot_error,recurrent)
                                       
     print('Done')
     return tot_error
@@ -357,5 +360,5 @@ alldata = []
 
 # tot_erro1,tot_rms1 = loadData('calhousing',4,4, 1000,0.09,50,'SSS') 
 # train_error = loadData('Data\\LRData\\iris.txt', 4,3,500,0.05,100,false) 
-train_error = loadData('Data\\LRData\\german2005.csv', 31,5,500,0.05,100,false) 
-
+train_error = loadData(filename='Data\\SGPNData\\emotions_1_4.csv', featuresno=72,labelno=4,labelvalue=2,iteration=10,lrate=0.05,hn=50,recurrent=false) 
+# train_error = loadData('Data\\LRData\\german2005.csv', 31,5,500,0.05,100,false) 
