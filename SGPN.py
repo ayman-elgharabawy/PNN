@@ -523,7 +523,7 @@ def CrossValidationAvg(kfold,foldindex,n,foldederrorrate,X_train,y_train,feature
             if epoch % 10 == 0:
                 print('Epoch result >Epoch=%4d ,Tau=%.4f,' % (epoch,epochError_train))
         foldederrorrate=np.append(foldederrorrate,[sum(errorRate_validate)/len(errorRate_validate)]) 
-        iterationoutput_test=predict(test_fold_features, test_fold_labels, net, noutputlist,noutputvalues,bbs)
+        iterationoutput_test=predict(test_fold_features, test_fold_labels, net, noutputlist,noutputvalues,bbs,groupno)
         result1=calculateoutputTau(iterationoutput_test)
         print('Epoch result >Fold=%4d ,Tau=%.4f,' % (foldindex,result1/(len(test_fold_features))))
         epocherror.append(result1/(len(test_fold_features)))
@@ -535,16 +535,7 @@ def CrossValidationAvg(kfold,foldindex,n,foldederrorrate,X_train,y_train,feature
 
 def training(filename,epochs, X,y, featuresno, noutputlist,groupno,lratelist,noutputvalues,hn,scale):
 
-    # kfold = KFold(3, True, 1)
-    # foldindex = 0
-    # n=len(alldata)
-    # foldederrorrate=[]
-    # X_train, X_test, y_train, y_test = sklearn.model_selection.train_test_split(X, y, test_size=0.2, random_state=1)
-    # foldederrors,net=CrossValidationAvg(kfold,foldindex,n,foldederrorrate,X_train,y_train,featuresno, hn, noutputlist,groupno,lratelist,scale,epochs,filename)    
-    # ErrorPredicted=predict_testing(X_test, y_test, net, noutputlist,scale)
-    # result1=calculateoutputTau(ErrorPredicted)
-    # print('Error Predicted average  > ,Tau=%.4f,' % (result1))
-    # return ErrorPredicted 
+
     kfold = KFold(10, True, 1)
     foldindex = 0
     n=len(alldata)
@@ -575,20 +566,32 @@ def training(filename,epochs, X,y, featuresno, noutputlist,groupno,lratelist,nou
     print('scale=%f,best result=%f',(bestvector[4],bestvresult))
     print(">>>>>>>>Testing data result<<<<<<<<<")
     X_test_norm = zscore(X_test, axis=0)
-    iterationoutput=predict(X_test_norm, y_test, bestvector[0], noutputlist,bestvector[4])
+    iterationoutput=predict(X_test_norm, y_test, bestvector[0], noutputlist,noutputvalues,bestvector[4],groupno)
     print('Final Prediction=%f',iterationoutput)
     print(">>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<<")
     return avresult
 
 
-def predict(test_fold_features,test_fold_labels, net, noutputlist,noutputvalues,bx):
+def predict(test_fold_features,test_fold_labels, net, noutputlist,noutputvalues,bx,groupno):
     iterationoutput=[]
+    testlist=[]
     for i, row in enumerate((test_fold_features)):
         xxx1=list(row) 
         labelsarr=np.array(test_fold_labels)     
         testfoldlabels=labelsarr[i].tolist()
         predicted,cache= forward_propagation(net, xxx1,len(noutputlist),noutputlist,noutputvalues,bx)
-        iterationoutput.append([testfoldlabels,predicted])
+        singleTau,Tau_list = calcAvrTau(test_fold_labels[i].tolist(), predicted,groupno)
+        testlist.append(Tau_list)
+
+
+    xxx=[i[0] for i in testlist]
+    aa=sum(xxx)/len(testlist)
+    yyy=[i[1] for i in testlist]
+    bb=sum(yyy)/len(testlist)
+    print("============================================")
+    print('Prediction==>>Tau1='+str(aa)+' Tau2='+str(bb))#+' Tau3='+str(cc))
+    print("============================================")
+
     return  iterationoutput
 
 
@@ -598,7 +601,7 @@ def predict_testing(test_fold_features,test_fold_labels, net, noutputlist,bx):
         xxx1=list(row)  
         labelsarr=np.array(test_fold_labels)     
         testfoldlabels=(labelsarr[i]).tolist()
-        predicted,cache= forward_propagation(net, xxx1,len(noutputlist),noutputlist,bx)
+        predicted,cache= forward_propagation(net, xxx1,len(noutputlist),noutputlist,noutputvalues,bx)
         iterationoutput.append([testfoldlabels,predicted])
     return  iterationoutput    
 
@@ -667,7 +670,7 @@ def loadData(filename, featuresno, noutputlist, epochs,lratelist,noutputvalues,h
 noutputlist=[4,2,2]
 noutputvalues=[4,3,2]
 lratelist=[0.05,0.05,0.05]
-trainederror1,trainederror2 ,errorpredicted=loadData(filename='Data\\SGPNData\\Emotions.csv',featuresno=72,noutputlist=noutputlist,noutputvalues=noutputvalues,epochs=100,lratelist=lratelist,hn=50,scale=20)
+trainederror1,trainederror2 ,errorpredicted=loadData(filename='Data\\SGPNData\\Emotions.csv',featuresno=72,noutputlist=noutputlist,noutputvalues=noutputvalues,epochs=10,lratelist=lratelist,hn=50,scale=20)
 
 print("Done.")
 
