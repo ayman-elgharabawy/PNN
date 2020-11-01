@@ -343,12 +343,30 @@ def labelsprocessing(labelsarray):
     return ranklist
 
 
-# def groundTruthBySubgroup(alldata,featuresno,labelno):
+def groundTruthBySubgroup(alldata,featuresno,labelno):
 
-    # for i in alldata:
-    #         writer.writerow(i[0])
+    uniquedata=[]
+    uniqufeatures=[]
+    for i in range (0,len(alldata)):    
+        if(alldata[i][0:featuresno] not in uniqufeatures):
+                uniquedata.append(alldata[i])
+                uniqufeatures.append(alldata[i][0:featuresno])
+        else:
+            for j in range(len(uniquedata)):
+                if(alldata[i][0:featuresno] == uniquedata[j][0:featuresno] ):
+                    b=alldata[i][featuresno:featuresno+labelno] 
+                    uniquedata[j].extend(b)
 
+    for k in range(len(uniquedata)):
+        if(len(uniquedata[k])==20):
+            uniquedata[k].extend([0]*10)
 
+    for k in range(len(uniquedata)):
+        if(len(uniquedata[k])==40):
+            temp=uniquedata[k][0:30]
+            uniquedata[k].clear()
+            uniquedata[k]=temp
+    return uniquedata
 
 def indexingLabels(filename):
 
@@ -381,4 +399,12 @@ import itertools
 
 
 alldata=indexingLabels('Data\\LRData\\sushi.txt') 
-# groundTruthBySubgroup(alldata,10,10)
+modifieddata=groundTruthBySubgroup(alldata,10,10)
+
+tot=[]
+columns= ['sex','age','answer_duration','lived_in_prefecture','lived_in_region','lived_in','lives_in_prefecture','lives_in_region','lives_in','changed_city','a1','b1','c1','d1','e1','f1','g1','h1','i1','j1','a2','b2','c2','d2','e2','f2','g2','h2','i2','j2']
+# for i in modifieddata:
+#         tot.append(i[0])
+df = pd.DataFrame(modifieddata) 
+df.columns=columns
+df.to_csv('Data\\LRData\\sushi_ranked_subgrouped.csv', sep=',', encoding='utf-8')      

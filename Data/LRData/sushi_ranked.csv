@@ -1,4 +1,4 @@
-,sex,age,answer_duration,lived_in_prefecture,lived_in_region,lived_in,lives_in_prefecture,lives_in_region,lives_in,changed_city,,,,,,,,,,
+,sex,age,answer_duration,lived_in_prefecture,lived_in_region,lived_in,lives_in_prefecture,lives_in_region,lives_in,changed_city,a,b,c,d,e,f,g,h,i,j
 0,0,2,355,0,0,0,0,0,0,0,2,8,10,3,4,1,5,9,7,6
 1,1,1,214,26,6,1,26,6,1,0,1,8,6,4,10,9,3,5,7,2
 2,1,2,363,29,6,1,26,6,1,1,2,8,3,4,6,7,10,1,5,9
