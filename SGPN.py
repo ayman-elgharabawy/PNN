@@ -629,15 +629,15 @@ def loadData(filename, featuresno, noutputlist, epochs,lratelist,noutputvalues,h
     next(csvReader)
     labelno1=noutputlist[0]
     labelno2=noutputlist[1]
-    labelno3=noutputlist[2]
+    # labelno3=noutputlist[2]
     for row in csvReader:
         data.append(list(map(float,row[0:featuresno])))
         a=list(map(float,row[featuresno:featuresno + labelno1]))
         b=list(map(float,row[featuresno+labelno1:featuresno + labelno1+labelno2]))
-        c=list(map(float,row[featuresno+labelno1+labelno2:featuresno + labelno1+labelno2+labelno3]))
+        # c=list(map(float,row[featuresno+labelno1+labelno2:featuresno + labelno1+labelno2+labelno3]))
         ######################################
         ######################################
-        labels.append([a,b,c])#,c,d])
+        labels.append([a,b])#,c])#,c,d])
     data_no=len(labels)
     train_features_list_norm = rescale(data,featuresno,data_no,-scale,scale) 
     #train_features_list_norm = zscore(data, axis=0)   
@@ -667,10 +667,18 @@ def loadData(filename, featuresno, noutputlist, epochs,lratelist,noutputvalues,h
 # # trainederror1,trainederror2 ,errorpredicted=loadData(filename='germn2005_2009_modified',featuresno=31,noutputlist=noutputlist,epochs=1000,lratelist=lratelist,hn=50,scale=20)
 # trainederror1,trainederror2 ,errorpredicted=loadData(filename='Data\\SGPNData\\germn2005_2009_modified.csv',featuresno=31,noutputlist=noutputlist,epochs=10,lratelist=lratelist,hn=100,scale=20)
 
-noutputlist=[4,2,2]
-noutputvalues=[4,3,2]
-lratelist=[0.05,0.05,0.05]
-trainederror1,trainederror2 ,errorpredicted=loadData(filename='Data\\SGPNData\\Emotions.csv',featuresno=72,noutputlist=noutputlist,noutputvalues=noutputvalues,epochs=10,lratelist=lratelist,hn=50,scale=20)
+# noutputlist=[4,2,2]
+# noutputvalues=[4,3,2]
+# lratelist=[0.05,0.05,0.05]
+# trainederror1,trainederror2 ,errorpredicted=loadData(filename='Data\\SGPNData\\Emotions.csv',featuresno=72,noutputlist=noutputlist,noutputvalues=noutputvalues,epochs=10,lratelist=lratelist,hn=50,scale=20)
+
+
+noutputlist=[10,10]
+noutputvalues=[10,10]
+lratelist=[0.05,0.05]
+trainederror1,trainederror2 ,errorpredicted=loadData(filename='Data\\SGPNData\\sushi_ranked_subgrouped.csv',featuresno=10,noutputlist=noutputlist,noutputvalues=noutputvalues,epochs=10,lratelist=lratelist,hn=50,scale=20)
+
+
 
 print("Done.")
 

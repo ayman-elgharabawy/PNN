@@ -359,6 +359,6 @@ alldata = []
 
 
 # tot_erro1,tot_rms1 = loadData('calhousing',4,4, 1000,0.09,50,'SSS') 
-# train_error = loadData('Data\\LRData\\iris.txt', 4,3,500,0.05,100,false) 
-train_error = loadData(filename='Data\\SGPNData\\emotions_1_4.csv', featuresno=72,labelno=4,labelvalue=2,iteration=10,lrate=0.05,hn=50,recurrent=false) 
+train_error = loadData(filename='Data\\LRData\\iris.txt', featuresno=4,labelno=3,labelvalue=3,iteration=500,lrate=0.05,hn=100,recurrent=true) 
+# train_error = loadData(filename='Data\\SGPNData\\sushi_ranked_subgrouped.csv', featuresno=10,labelno=10,labelvalue=10,iteration=10,lrate=0.05,hn=50,recurrent=false) 
 # train_error = loadData('Data\\LRData\\german2005.csv', 31,5,500,0.05,100,false) 
