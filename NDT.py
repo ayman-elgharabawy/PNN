@@ -69,20 +69,27 @@ def print_network(net):
 
 def initialize_network():
     input_neurons=len(X[0])
-    hidden_neurons=input_neurons*4
     output_neurons=1
-    n_hidden_layers=1
-    net=list()
-    for h in range(n_hidden_layers):
-        if h!=0:
-            input_neurons=len(net[-1])
-            
-        hidden_layer = [ { 'weights': np.random.uniform(low=-0.1, high=0.1,size=input_neurons)} for i in range(hidden_neurons) ]
-        net.append(hidden_layer)
-    
-    output_layer = [ { 'weights': np.random.uniform(low=-0.1, high=0.1,size=hidden_neurons)} for i in range(output_neurons)]
-    net.append(output_layer) 
+    net=list()       
+    OneNeuron = [ { 'weights': np.random.uniform(low=-0.1, high=0.1,size=input_neurons)} for i in range(output_neurons) ]
+    net.append(OneNeuron)
     return net
+# def initialize_network():
+#     input_neurons=len(X[0])
+#     hidden_neurons=input_neurons*4
+#     output_neurons=1
+#     n_hidden_layers=1
+#     net=list()
+#     for h in range(n_hidden_layers):
+#         if h!=0:
+#             input_neurons=len(net[-1])
+            
+#         hidden_layer = [ { 'weights': np.random.uniform(low=-0.1, high=0.1,size=input_neurons)} for i in range(hidden_neurons) ]
+#         net.append(hidden_layer)
+    
+#     output_layer = [ { 'weights': np.random.uniform(low=-0.1, high=0.1,size=hidden_neurons)} for i in range(output_neurons)]
+#     net.append(output_layer) 
+#     return net
 
 def  forward_propagation (net,input):
     row=input
@@ -150,16 +157,58 @@ def predict(net, row):
     outputs = forward_propagation(net, row)
     return outputs
 
+def plot_confusion_matrix(df_confusion, title='Confusion matrix', cmap=plt.cm.gray_r):
+    plt.matshow(df_confusion, cmap=cmap) # imshow
+    #plt.title(title)
+    plt.colorbar()
+    tick_marks = np.arange(len(df_confusion.columns))
+    plt.xticks(tick_marks, df_confusion.columns, rotation=45)
+    plt.yticks(tick_marks, df_confusion.index)
+    #plt.tight_layout()
+    plt.ylabel(df_confusion.index.name)
+    plt.xlabel(df_confusion.columns.name)
+    plt.show()
 
-def loadData(filename, featuresno, labelno, iteration,lrate,hn):
+###############################################################################################################################
+def removeDataByLabelIndex(X,y,labelIndex):
+    outputData=[]
+    outputLabels=[]
+    for indexl,row in enumerate(y):
+      if row!=labelIndex:
+         outputData.append(X[indexl])
+         outputLabels.append(row)
+    return  outputData , outputLabels
+
+def ProcessRoot(X,labels,iterations ):
+    pred_error=0
+    pred_values=[]
+    errors=training(net,X,labels,iterations, 0.07,1)
+    for index,y in enumerate(X[0:100]):
+       pred=predict(net,np.array(y))
+       pred_values.append(pred.tolist()[0])
+       pred_error+=math.sqrt(math.pow(labels[index]-pred,2))
+    print("Predicted Error "+str(pred_error))
+
+
+
+    y_actu = pd.Series(pred_values, name='Actual')
+    y_pred = pd.Series(labels[0:100], name='Predicted')
+
+    df_confusion = pd.crosstab(y_actu, y_pred, rownames=['Actual'], colnames=['Predicted'])
+    print (df_confusion)
+    # matrix = classification_report(y_actu,y_pred,labels=[2,1,0])
+    # print('Classification report : \n',matrix)
+
+    # plot_confusion_matrix(df_confusion)
+
+###############################################################################################################################
+
+
+def loadData(filename, featuresno, labelno):
     data = list()
     labels = list()
     alldata = list()
-    scale=2*labelno
     print("=================================="+filename+"=============================")
-    nooflabels = labelno
-    noofhidden = labelno + hn
-    noofinputes = featuresno
     filename1 =  filename
     gpsTrack = open(filename1, "r")
     csvReader = csv.reader(gpsTrack)
@@ -180,43 +229,25 @@ def loadData(filename, featuresno, labelno, iteration,lrate,hn):
 
     y=[x[0] for x in y ]  
     return X,y
-###############################################################################################################################
-def ProcessRoot(X,labels ):
-    pred_error=0
-    errors=training(net,X,labels,100, 0.07,1)
-    for index,y in enumerate(X[0:100]):
-       pred=predict(net,np.array(y))
-       pred_error+=math.sqrt(math.pow(labels[index]-pred,2))
-    print("Predicted Error "+str(pred_error))
-###############################################################################################################################
-def plot_confusion_matrix(df_confusion, title='Confusion matrix', cmap=plt.cm.gray_r):
-    plt.matshow(df_confusion, cmap=cmap) # imshow
-    #plt.title(title)
-    plt.colorbar()
-    tick_marks = np.arange(len(df_confusion.columns))
-    plt.xticks(tick_marks, df_confusion.columns, rotation=45)
-    plt.yticks(tick_marks, df_confusion.index)
-    #plt.tight_layout()
-    plt.ylabel(df_confusion.index.name)
-    plt.xlabel(df_confusion.columns.name)
-    plt.show()
+
  
 
-X,y = loadData('C:\\ayman\\PhDThesis\\iris.csv', 4,1,1000,0.05,100) 
-
+X,y = loadData('C:\\ayman\\PhDThesis\\iris.csv', 4,1) 
 net=initialize_network()
-ProcessRoot(X,y)
+ProcessRoot(X,y,500)
+X1,y1=removeDataByLabelIndex(X,y,0)
+ProcessRoot(X1,y1,500)
 
 # print_network(net)
 
 # Confusion matrix
 
-y_actu = pd.Series([2, 0, 2, 2, 0, 1, 1, 2, 2, 0, 1, 2], name='Actual')
-y_pred = pd.Series([0, 0, 2, 1, 0, 2, 1, 0, 2, 0, 2, 2], name='Predicted')
+# y_actu = pd.Series([2, 0, 2, 2, 0, 1, 1, 2, 2, 0, 1, 2], name='Actual')
+# y_pred = pd.Series([0, 0, 2, 1, 0, 2, 1, 0, 2, 0, 2, 2], name='Predicted')
 
-df_confusion = pd.crosstab(y_actu, y_pred, rownames=['Actual'], colnames=['Predicted'])
-print (df_confusion)
-matrix = classification_report(y_actu,y_pred,labels=[1,0])
-print('Classification report : \n',matrix)
+# df_confusion = pd.crosstab(y_actu, y_pred, rownames=['Actual'], colnames=['Predicted'])
+# print (df_confusion)
+# matrix = classification_report(y_actu,y_pred,labels=[1,0])
+# print('Classification report : \n',matrix)
 
-plot_confusion_matrix(df_confusion)
+# plot_confusion_matrix(df_confusion)
