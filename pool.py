@@ -59,7 +59,7 @@ def initializeFilter(size, scale = 1.0):
     return np.random.normal(loc = 0, scale = stddev, size = size)
 
 
-def RankingConvolution(image, filt, bias, s=1):
+def RankingConvolution(image, s=1):
     '''
     Confolves `filt` over `image` using stride `s`
     '''
@@ -162,7 +162,7 @@ for batch in (t):
     X = X.reshape(len(batch), 1, dim, dim)
     filt=np.random.normal(loc = 0, scale = 0.25, size = (1,1,3,3))
     a=X[0]
-    out1=RankingConvolution(a, filt, 0, s=1)
+    out1=RankingConvolution(a, s=1)
 print(out1)
 imgplot1 =plt.imshow(out1[0,:,:])
 plt.show()

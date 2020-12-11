@@ -366,6 +366,7 @@ def loadData(featuresno, labelno,labelvalue, iteration,lrate,hn,recurrent):
     # softmax = Softmax(13 * 13 * 8, 10) # 13x13x8 -> 10
     flatterd=[]
     for tup in train_images:
+        
        flatterd.append(tup.ravel() )
 
     # dataarray = np.asarray(data)

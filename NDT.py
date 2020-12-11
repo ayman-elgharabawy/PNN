@@ -91,20 +91,20 @@ def initialize_network():
 #     net.append(output_layer) 
 #     return net
 
-def  forward_propagation (net,input):
+def  forward_propagation (net,input,noclassesvalues):
     row=input
     for index, layer in enumerate(net):
         prev_input=np.array([])
         for neuron in layer:
             sum=neuron['weights'].T.dot(row)
-            result=SSS(sum,3,1)
+            result=SSS(sum,noclassesvalues,5)
             neuron['result']=result
             
             prev_input=np.append(prev_input,[result])
         row =prev_input   
     return row
 
-def back_propagation(net,row,expected):
+def back_propagation(net,row,expected,noclassesvalues):
      for i in reversed(range(len(net))):
             layer=net[i]
             errors=np.array([])
@@ -122,7 +122,7 @@ def back_propagation(net,row,expected):
             for j in range(len(layer)):
                 neuron=layer[j]
                 results=[neuron1['result'] for neuron1 in layer]
-                neuron['delta']=errors[j]*dSSS(neuron['result'],3,1)
+                neuron['delta']=errors[j]*dSSS(neuron['result'],noclassesvalues,5)
 
 
 def updateWeights(net,input,lrate):   
@@ -136,14 +136,14 @@ def updateWeights(net,input,lrate):
                 neuron['weights'][j]+=lrate*neuron['delta']*inputs[j]
             neuron['weights'][-1]+=lrate*neuron['delta']
 
-def  training(net,X,y, epochs,lrate,n_outputs):
+def  training(net,X,y, epochs,lrate,n_outputs,noclassesvalues):
     errors=[]
     for epoch in range(epochs):
         sum_error=0
         for i,row in enumerate(X):
-            outputs=forward_propagation(net,row)
+            outputs=forward_propagation(net,row,noclassesvalues)
             sum_error+=math.sqrt(math.pow(y[i]-outputs,2)) 
-            back_propagation(net,row,y[i])
+            back_propagation(net,row,y[i],noclassesvalues)
             updateWeights(net,row,0.05)
         if epoch%10 ==0:
             print('>epoch=%d,error=%.3f'%(epoch,sum_error))
@@ -154,7 +154,7 @@ def  training(net,X,y, epochs,lrate,n_outputs):
 
 # Make a prediction with a network# Make a 
 def predict(net, row):
-    outputs = forward_propagation(net, row)
+    outputs = forward_propagation(net, row,noclassesvalues)
     return outputs
 
 def plot_confusion_matrix(df_confusion, title='Confusion matrix', cmap=plt.cm.gray_r):
@@ -179,10 +179,10 @@ def removeDataByLabelIndex(X,y,labelIndex):
          outputLabels.append(row)
     return  outputData , outputLabels
 
-def ProcessRoot(X,labels,iterations ):
+def ProcessRoot(X,labels,iterations ,noclasses):
     pred_error=0
     pred_values=[]
-    errors=training(net,X,labels,iterations, 0.07,1)
+    errors=training(net,X,labels,iterations, 0.01,1,noclasses)
     for index,y in enumerate(X[0:100]):
        pred=predict(net,np.array(y))
        pred_values.append(pred.tolist()[0])
@@ -227,22 +227,22 @@ def loadData(filename, featuresno, labelno):
     X = np.array([list(item) for item in train_features])
     y = [list(item) for item in train_labels]
 
-    y=[x[0] for x in y ]  
+    y=[x[0]-1 for x in y ]  
     return X,y
 
  
 
-X,y = loadData('C:\\ayman\\PhDThesis\\iris.csv', 4,1) 
+X,y = loadData('C:\\Github\\PNN\\Data\\ClassificationData\\glass.csv', 9,1) 
 net=initialize_network()
-ProcessRoot(X,y,500)
-X1,y1=removeDataByLabelIndex(X,y,0)
-ProcessRoot(X1,y1,500)
+ProcessRoot(X,y,5000,7)
+# X1,y1=removeDataByLabelIndex(X,y,0)
+# ProcessRoot(X1,y1,500)
 
 # print_network(net)
 
 # Confusion matrix
 
-# y_actu = pd.Series([2, 0, 2, 2, 0, 1, 1, 2, 2, 0, 1, 2], name='Actual')
+# y_actu = pd.Series([2, 0, 2, 2, 0, 1, 1, 2,` 2, 0, 1, 2], name='Actual')
 # y_pred = pd.Series([0, 0, 2, 1, 0, 2, 1, 0, 2, 0, 2, 2], name='Predicted')
 
 # df_confusion = pd.crosstab(y_actu, y_pred, rownames=['Actual'], colnames=['Predicted'])
