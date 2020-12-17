@@ -28,14 +28,31 @@ import networkx as nx
 from sklearn import preprocessing
 from numpy import transpose
 from datetime import datetime
-
+import mnist
 import pandas as pd
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import classification_report
 import matplotlib.pyplot as plt
 
+
+
+def Spearman(output,expected):
+    n=len(expected)
+    nem=0
+    for i in range (n):
+        nem+=np.power(output[i]-expected[i],2) 
+    den=n*(np.power(n,2)-1)
+    bb=1-((6*nem)/(den)) 
+    if bb>100:
+        print("Weired.. "+bb)
+    if(np.isnan(bb)):
+        bb=0
+    return bb
+
 #StairStep SS Function#
-def SSS(xi,nlabel,bx):
+
+def SSS(xi,nlabel,start,bx):
+   
     sum2 = 0
     s=100
     b=100/bx
@@ -43,12 +60,11 @@ def SSS(xi,nlabel,bx):
     for i in range(nlabel):
         xx=s-((i*t)/(nlabel-1))
         sum2 +=0.5*(np.tanh((-b*(xi))-(xx)))
-    sum2=-1*sum2     
-    sum2= sum2+(nlabel*0.5)  
-    return sum2      
+    sum2=-1*sum2  
+    sum2= sum2+(start+(nlabel/2))
+    return sum2   
 
-#StairStep SS Function Derivative#
-def dSSS(xi,nlabel,bx): 
+def dSSS(xi,nlabel,start,bx):
     derivative2 = 0
     s=100
     b=100/bx
@@ -57,8 +73,10 @@ def dSSS(xi,nlabel,bx):
         xx=s-((i*t)/(nlabel-1))
         derivative2 +=0.5*(1-np.power(np.tanh((-b*(xi))-(xx)),2))
     derivative2=-1*derivative2     
-    derivative2= derivative2+(nlabel*0.5)  
+    derivative2= derivative2+(start+(nlabel/2))  
     return derivative2
+
+
 
 def print_network(net):
     for i,layer in enumerate(net,1):
@@ -67,107 +85,16 @@ def print_network(net):
             print("neuron {} :".format(j),neuron)
 
 
-def initialize_network():
-    input_neurons=len(X[0])
-    output_neurons=1
-    net=list()       
-    OneNeuron = [ { 'weights': np.random.uniform(low=-0.1, high=0.1,size=input_neurons)} for i in range(output_neurons) ]
-    net.append(OneNeuron)
-    return net
-# def initialize_network():
-#     input_neurons=len(X[0])
-#     hidden_neurons=input_neurons*4
-#     output_neurons=1
-#     n_hidden_layers=1
-#     net=list()
-#     for h in range(n_hidden_layers):
-#         if h!=0:
-#             input_neurons=len(net[-1])
-            
-#         hidden_layer = [ { 'weights': np.random.uniform(low=-0.1, high=0.1,size=input_neurons)} for i in range(hidden_neurons) ]
-#         net.append(hidden_layer)
+
     
-#     output_layer = [ { 'weights': np.random.uniform(low=-0.1, high=0.1,size=hidden_neurons)} for i in range(output_neurons)]
-#     net.append(output_layer) 
-#     return net
-
-def  forward_propagation (net,input,noclassesvalues):
-    row=input
-    for index, layer in enumerate(net):
-        prev_input=np.array([])
-        for neuron in layer:
-            sum=neuron['weights'].T.dot(row)
-            result=SSS(sum,noclassesvalues,5)
-            neuron['result']=result
-            
-            prev_input=np.append(prev_input,[result])
-        row =prev_input   
-    return row
-
-def back_propagation(net,row,expected,noclassesvalues):
-     for i in reversed(range(len(net))):
-            layer=net[i]
-            errors=np.array([])
-            if i==len(net)-1:
-                results=[neuron['result'] for neuron in layer]
-                errors = (expected-np.array(results))/1000 
-            else:
-                for j in range(len(layer)):
-                    herror=0
-                    nextlayer=net[i+1]
-                    for neuron in nextlayer:
-                        herror+=(neuron['weights'][j]*neuron['delta'])
-                    errors=np.append(errors,[herror])
-            
-            for j in range(len(layer)):
-                neuron=layer[j]
-                results=[neuron1['result'] for neuron1 in layer]
-                neuron['delta']=errors[j]*dSSS(neuron['result'],noclassesvalues,5)
-
-
-def updateWeights(net,input,lrate):   
-    for i in range(len(net)):
-        inputs = input
-        if i!=0:
-            inputs=[neuron['result'] for neuron in net[i-1]]
-
-        for neuron in net[i]:
-            for j in range(len(inputs)):
-                neuron['weights'][j]+=lrate*neuron['delta']*inputs[j]
-            neuron['weights'][-1]+=lrate*neuron['delta']
-
-def  training(net,X,y, epochs,lrate,n_outputs,noclassesvalues):
-    errors=[]
-    for epoch in range(epochs):
-        sum_error=0
-        for i,row in enumerate(X):
-            outputs=forward_propagation(net,row,noclassesvalues)
-            sum_error+=math.sqrt(math.pow(y[i]-outputs,2)) 
-            back_propagation(net,row,y[i],noclassesvalues)
-            updateWeights(net,row,0.05)
-        if epoch%10 ==0:
-            print('>epoch=%d,error=%.3f'%(epoch,sum_error))
-            errors.append(sum_error)
-            # print_network(net)
-    return errors
 
 
 # Make a prediction with a network# Make a 
-def predict(net, row):
-    outputs = forward_propagation(net, row,noclassesvalues)
+def predict(net, row,steps,startindex,scale,Afunction):
+    outputs = forward_propagation(net, row,steps,startindex,scale,Afunction)
     return outputs
 
-def plot_confusion_matrix(df_confusion, title='Confusion matrix', cmap=plt.cm.gray_r):
-    plt.matshow(df_confusion, cmap=cmap) # imshow
-    #plt.title(title)
-    plt.colorbar()
-    tick_marks = np.arange(len(df_confusion.columns))
-    plt.xticks(tick_marks, df_confusion.columns, rotation=45)
-    plt.yticks(tick_marks, df_confusion.index)
-    #plt.tight_layout()
-    plt.ylabel(df_confusion.index.name)
-    plt.xlabel(df_confusion.columns.name)
-    plt.show()
+
 
 ###############################################################################################################################
 def removeDataByLabelIndex(X,y,labelIndex):
@@ -179,23 +106,68 @@ def removeDataByLabelIndex(X,y,labelIndex):
          outputLabels.append(row)
     return  outputData , outputLabels
 
-def ProcessRoot(X,labels,iterations ,noclasses):
+def removeDataByLabelList(X,y,labelList): 
+    outputData=[]
+    outputLabels=[]
+    for indexl,row in enumerate(y):
+       for labelIndex in (labelList): 
+         if row==labelIndex:
+            outputData.append(X[indexl])
+            outputLabels.append(row)
+    return  outputData , outputLabels
+
+
+def ProcessRoot(net,X,labels,X1,labels1,iterations,loop ,steps,startindex,lrate,scale,Afunction):
     pred_error=0
     pred_values=[]
-    errors=training(net,X,labels,iterations, 0.01,1,noclasses)
-    for index,y in enumerate(X[0:100]):
-       pred=predict(net,np.array(y))
+    errors,net=training(net,X,labels,iterations,lrate,1,steps,startindex,scale,Afunction)
+    for index,y in enumerate(X1):
+       pred=predict(net,np.array(y),steps,startindex,scale,Afunction)
        pred_values.append(pred.tolist()[0])
-       pred_error+=math.sqrt(math.pow(labels[index]-pred,2))
-    print("Predicted Error "+str(pred_error))
+       if(Afunction=='SS'):
+         pred_error+=math.sqrt(math.pow(labels1[index]-pred,2))
+    if(Afunction=='SS'):     
+       print("Predicted Error "+str(pred_error))
+    else:
+        print("Predicted Ranking Error "+str(ss.spearmanr(pred_values,labels1)))
+    # y_actu = pd.Series(pred_values, name='Actual')
+    # y_pred = pd.Series(labels1, name='Predicted')
 
+    # df_confusion = pd.crosstab(y_actu, y_pred,rownames=['Actual'], colnames=['Predicted'])
+    # print (df_confusion)
+    # finalpredictedvalues=[]
+    # finalIndex=0
+    # for index,k in enumerate(df_confusion.columns):
+    #     counter1=0
+    #     counter2=0
+    #     for i in range(len(df_confusion.values)):
+    #         counter2+=df_confusion.values[i,index]
+    #         if(round(df_confusion.index[i])==k):
+    #             finalpredictedvalues.append(round(df_confusion.index[i]))
+    #             counter1+= df_confusion.values[i,index]
+    #     if(counter1==counter2):
+    #         print("K="+str(k))
+    #         finalIndex= k
 
+    # finalpredictedvalues=np.unique(finalpredictedvalues) 
+    # counter=0
+    # for t in (df_confusion.columns):
+    #     for r in finalpredictedvalues: 
+    #         if(t==round(r)):
+    #               counter+=1 
+    #               break
+    # if counter!= len(df_confusion.columns) :  
+    #     print("Increasing no. of iterations = "+str(iterations+2000))             
+    #     ProcessRoot(net,X,labels,X1,labels1,iterations+2000,loop,steps,startindex,lrate,scale)          
+    # if (finalIndex!=0):
+    #     return finalIndex
+    # if loop==7:
+    #     return 0 
+    # else:
+    #     print("Increasing no. of iterations = "+str(iterations+2000))             
+    #     ProcessRoot(net,X,labels,X1,labels1,iterations+2000,loop,steps,startindex,lrate,scale)        
 
-    y_actu = pd.Series(pred_values, name='Actual')
-    y_pred = pd.Series(labels[0:100], name='Predicted')
-
-    df_confusion = pd.crosstab(y_actu, y_pred, rownames=['Actual'], colnames=['Predicted'])
-    print (df_confusion)
+    return net
     # matrix = classification_report(y_actu,y_pred,labels=[2,1,0])
     # print('Classification report : \n',matrix)
 
@@ -203,8 +175,40 @@ def ProcessRoot(X,labels,iterations ,noclasses):
 
 ###############################################################################################################################
 
+def testData(net,X1,labels1,steps,startindex,scale,Afunction):
+    pred_values=[]
+    pred_error=0
+    for index,y in enumerate(X1):
+       pred=predict(net,np.array(y),steps,startindex,scale,Afunction)
+       pred_values.append(pred.tolist()[0])
+       if(Afunction=='SS'):
+          pred_error+=math.sqrt(math.pow(labels1[index]-pred,2))
+    if Afunction=='SS':
+       print("Predicted Test Error "+str(pred_error))
+    else:
+       print("Predicted Ranking Error "+str(ss.spearmanr(pred_values,labels1)))
+    
+    return pred_values
 
-def loadData(filename, featuresno, labelno):
+def splitterData(train_features,train_labels):
+
+    train_features, test_features, train_labels, test_labels  =sklearn.model_selection.train_test_split(train_features, train_labels, test_size=0.3, stratify=train_labels,random_state=1)
+    X = np.array([list(item) for item in train_features])
+    y = train_labels
+    X1 = np.array([list(item) for item in test_features])
+    y1 = test_labels
+    return X,y,X1,y1
+
+def categoryLabels(labels,noofclasses):
+    newlist=[]
+    for lab in labels:
+        if(lab>=(round(noofclasses/2))):
+           newlist.extend([2])
+        else:
+           newlist.extend([1])
+    return newlist
+
+def loadData(filename, featuresno, labelno,labelvalues):
     data = list()
     labels = list()
     alldata = list()
@@ -212,6 +216,7 @@ def loadData(filename, featuresno, labelno):
     filename1 =  filename
     gpsTrack = open(filename1, "r")
     csvReader = csv.reader(gpsTrack)
+
     next(csvReader)
     for row in csvReader :
             data.append(row[0:featuresno])
@@ -220,34 +225,59 @@ def loadData(filename, featuresno, labelno):
 
     y = np.array(labels)
     X = np.array(data)  
-    train_labels = [map(int, i) for i in y]
-    train_features = [map(float, i) for i in X]
+ 
 
-    train_features, test_features, train_labels, test_labels  =sklearn.model_selection.train_test_split(train_features, train_labels, test_size=0.2, random_state=1)
+
+    train_features, test_features, train_labels, test_labels  =sklearn.model_selection.train_test_split(X, y,stratify = y, test_size=0.3, random_state=1)
+    
+
+    train_labels = [map(float, i) for i in train_labels]
+    train_features = [map(float, i) for i in train_features]
+
+    test_features = [map(float, i) for i in test_features]
+    test_labels = [map(float, i) for i in test_labels]
+
+
     X = np.array([list(item) for item in train_features])
-    y = [list(item) for item in train_labels]
+    y = np.array([list(item) for item in train_labels])
+    X1 = np.array([list(item) for item in test_features])
+    y1 = np.array([list(item) for item in test_labels])
+    y=[g[0] for g in y ] 
+    y1=[g[0] for g in y1 ]
 
-    y=[x[0]-1 for x in y ]  
-    return X,y
+    return X,y,X1,y1
 
  
 
-X,y = loadData('C:\\Github\\PNN\\Data\\ClassificationData\\glass.csv', 9,1) 
+X,y,X1,y1 = loadData('C:\\Github\\PNN\\Data\\ClassificationData\\glass.csv', featuresno=9,labelno=1,labelvalues=6) 
+##############################################Building Tree 3 models#####################################
+
 net=initialize_network()
-ProcessRoot(X,y,5000,7)
-# X1,y1=removeDataByLabelIndex(X,y,0)
-# ProcessRoot(X1,y1,500)
+yb=categoryLabels(y,6)
+yb1=categoryLabels(y1,6)
 
-# print_network(net)
+net1=ProcessRoot(net,X,yb,X1,yb1,10000,0,steps=2,startindex=1,lrate=0.07,scale=5,Afunction='Splitter')
 
-# Confusion matrix
+X2,y2=removeDataByLabelList(X,y,[1,2,3])
+X22,y22=removeDataByLabelList(X,y,[4,5,6])
 
-# y_actu = pd.Series([2, 0, 2, 2, 0, 1, 1, 2,` 2, 0, 1, 2], name='Actual')
-# y_pred = pd.Series([0, 0, 2, 1, 0, 2, 1, 0, 2, 0, 2, 2], name='Predicted')
+X4,y4,X3,y3=splitterData(X2,y2)
+net2=ProcessRoot(net,X4,y4,X3,y3,10000,0,steps=3,startindex=1,lrate=0.07,scale=5,Afunction='SS')
 
-# df_confusion = pd.crosstab(y_actu, y_pred, rownames=['Actual'], colnames=['Predicted'])
-# print (df_confusion)
-# matrix = classification_report(y_actu,y_pred,labels=[1,0])
-# print('Classification report : \n',matrix)
 
-# plot_confusion_matrix(df_confusion)
+X4,y4,X3,y3=splitterData(X22,y22)
+net3=ProcessRoot(net,X4,y4,X3,y3,10000,0,steps=3,startindex=4,lrate=0.07,scale=5,Afunction='SS')
+
+
+##############################################################################################
+###################################Testing the 3 models#######################################
+
+X_train, X_test,y_train , y_test  =sklearn.model_selection.train_test_split(X, y,stratify = y, test_size=0.3, random_state=1)
+y_train=categoryLabels(y_train,6)
+y_test=categoryLabels(y_test,6)
+rootresult=testData(net1,X_test,y_test,steps=2,startindex=1,scale=5,Afunction='Splitter')
+X_test2,y_test2=removeDataByLabelList(X_train,rootresult,[1,2,3])
+X_test3,y_test3=removeDataByLabelList(X_train,rootresult,[4,5,6])
+
+rootresult=testData(net2,X_test2,y_test2,steps=3,startindex=1,scale=5,Afunction='SS')
+rootresult=testData(net3,X_test3,y_test3,steps=3,startindex=4,scale=5,Afunction='SS')
