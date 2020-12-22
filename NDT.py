@@ -33,48 +33,10 @@ import pandas as pd
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import classification_report
 import matplotlib.pyplot as plt
+import PartialRankerNeuron
+import ClassifierNeuron
 
 
-
-def Spearman(output,expected):
-    n=len(expected)
-    nem=0
-    for i in range (n):
-        nem+=np.power(output[i]-expected[i],2) 
-    den=n*(np.power(n,2)-1)
-    bb=1-((6*nem)/(den)) 
-    if bb>100:
-        print("Weired.. "+bb)
-    if(np.isnan(bb)):
-        bb=0
-    return bb
-
-#StairStep SS Function#
-
-def SSS(xi,nlabel,start,bx):
-   
-    sum2 = 0
-    s=100
-    b=100/bx
-    t=200
-    for i in range(nlabel):
-        xx=s-((i*t)/(nlabel-1))
-        sum2 +=0.5*(np.tanh((-b*(xi))-(xx)))
-    sum2=-1*sum2  
-    sum2= sum2+(start+(nlabel/2))
-    return sum2   
-
-def dSSS(xi,nlabel,start,bx):
-    derivative2 = 0
-    s=100
-    b=100/bx
-    t=200
-    for i in range(nlabel):
-        xx=s-((i*t)/(nlabel-1))
-        derivative2 +=0.5*(1-np.power(np.tanh((-b*(xi))-(xx)),2))
-    derivative2=-1*derivative2     
-    derivative2= derivative2+(start+(nlabel/2))  
-    return derivative2
 
 
 
@@ -87,13 +49,6 @@ def print_network(net):
 
 
     
-
-
-# Make a prediction with a network# Make a 
-def predict(net, row,steps,startindex,scale,Afunction):
-    outputs = forward_propagation(net, row,steps,startindex,scale,Afunction)
-    return outputs
-
 
 
 ###############################################################################################################################
@@ -117,78 +72,37 @@ def removeDataByLabelList(X,y,labelList):
     return  outputData , outputLabels
 
 
-def ProcessRoot(net,X,labels,X1,labels1,iterations,loop ,steps,startindex,lrate,scale,Afunction):
-    pred_error=0
-    pred_values=[]
-    errors,net=training(net,X,labels,iterations,lrate,1,steps,startindex,scale,Afunction)
-    for index,y in enumerate(X1):
-       pred=predict(net,np.array(y),steps,startindex,scale,Afunction)
-       pred_values.append(pred.tolist()[0])
-       if(Afunction=='SS'):
-         pred_error+=math.sqrt(math.pow(labels1[index]-pred,2))
-    if(Afunction=='SS'):     
-       print("Predicted Error "+str(pred_error))
-    else:
-        print("Predicted Ranking Error "+str(ss.spearmanr(pred_values,labels1)))
-    # y_actu = pd.Series(pred_values, name='Actual')
-    # y_pred = pd.Series(labels1, name='Predicted')
-
-    # df_confusion = pd.crosstab(y_actu, y_pred,rownames=['Actual'], colnames=['Predicted'])
-    # print (df_confusion)
-    # finalpredictedvalues=[]
-    # finalIndex=0
-    # for index,k in enumerate(df_confusion.columns):
-    #     counter1=0
-    #     counter2=0
-    #     for i in range(len(df_confusion.values)):
-    #         counter2+=df_confusion.values[i,index]
-    #         if(round(df_confusion.index[i])==k):
-    #             finalpredictedvalues.append(round(df_confusion.index[i]))
-    #             counter1+= df_confusion.values[i,index]
-    #     if(counter1==counter2):
-    #         print("K="+str(k))
-    #         finalIndex= k
-
-    # finalpredictedvalues=np.unique(finalpredictedvalues) 
-    # counter=0
-    # for t in (df_confusion.columns):
-    #     for r in finalpredictedvalues: 
-    #         if(t==round(r)):
-    #               counter+=1 
-    #               break
-    # if counter!= len(df_confusion.columns) :  
-    #     print("Increasing no. of iterations = "+str(iterations+2000))             
-    #     ProcessRoot(net,X,labels,X1,labels1,iterations+2000,loop,steps,startindex,lrate,scale)          
-    # if (finalIndex!=0):
-    #     return finalIndex
-    # if loop==7:
-    #     return 0 
-    # else:
-    #     print("Increasing no. of iterations = "+str(iterations+2000))             
-    #     ProcessRoot(net,X,labels,X1,labels1,iterations+2000,loop,steps,startindex,lrate,scale)        
-
-    return net
-    # matrix = classification_report(y_actu,y_pred,labels=[2,1,0])
-    # print('Classification report : \n',matrix)
-
-    # plot_confusion_matrix(df_confusion)
+# def ProcessRoot(net,X,labels,X1,labels1,iterations,loop ,steps,startindex,lrate,scale,Afunction):
+#     pred_error=0
+#     pred_values=[]
+    
+#     # errors,net=training(net,X,labels,iterations,lrate,1,steps,startindex,scale,Afunction)
+#     for index,y in enumerate(X1):
+#        pred=predict(net,np.array(y),steps,startindex,scale,Afunction)
+#        pred_values.append(pred.tolist()[0])
+#        if(Afunction=='SS'):
+#          pred_error+=math.sqrt(math.pow(labels1[index]-pred,2))
+#     if(Afunction=='SS'):     
+#        print("Predicted Error "+str(pred_error))
+#     else:
+#         print("Predicted Ranking Error "+str(ss.spearmanr(pred_values,labels1)))
 
 ###############################################################################################################################
 
-def testData(net,X1,labels1,steps,startindex,scale,Afunction):
-    pred_values=[]
-    pred_error=0
-    for index,y in enumerate(X1):
-       pred=predict(net,np.array(y),steps,startindex,scale,Afunction)
-       pred_values.append(pred.tolist()[0])
-       if(Afunction=='SS'):
-          pred_error+=math.sqrt(math.pow(labels1[index]-pred,2))
-    if Afunction=='SS':
-       print("Predicted Test Error "+str(pred_error))
-    else:
-       print("Predicted Ranking Error "+str(ss.spearmanr(pred_values,labels1)))
+# def testData(net,X1,labels1,steps,startindex,scale,Afunction):
+#     pred_values=[]
+#     pred_error=0
+#     for index,y in enumerate(X1):
+#        pred=predict(net,np.array(y),steps,startindex,scale,Afunction)
+#        pred_values.append(pred.tolist()[0])
+#        if(Afunction=='SS'):
+#           pred_error+=math.sqrt(math.pow(labels1[index]-pred,2))
+#     if Afunction=='SS':
+#        print("Predicted Test Error "+str(pred_error))
+#     else:
+#        print("Predicted Ranking Error "+str(ss.spearmanr(pred_values,labels1)))
     
-    return pred_values
+#     return pred_values
 
 def splitterData(train_features,train_labels):
 
@@ -226,17 +140,13 @@ def loadData(filename, featuresno, labelno,labelvalues):
     y = np.array(labels)
     X = np.array(data)  
  
-
-
     train_features, test_features, train_labels, test_labels  =sklearn.model_selection.train_test_split(X, y,stratify = y, test_size=0.3, random_state=1)
     
-
     train_labels = [map(float, i) for i in train_labels]
     train_features = [map(float, i) for i in train_features]
 
     test_features = [map(float, i) for i in test_features]
     test_labels = [map(float, i) for i in test_labels]
-
 
     X = np.array([list(item) for item in train_features])
     y = np.array([list(item) for item in train_labels])
@@ -248,25 +158,24 @@ def loadData(filename, featuresno, labelno,labelvalues):
     return X,y,X1,y1
 
  
-
-X,y,X1,y1 = loadData('C:\\Github\\PNN\\Data\\ClassificationData\\glass.csv', featuresno=9,labelno=1,labelvalues=6) 
+filename='C:\\Github\\PNN\\Data\\ClassificationData\\glass.csv'
+X,y,X1,y1 = loadData(filename, featuresno=9,labelno=1,labelvalues=6) 
 ##############################################Building Tree 3 models#####################################
 
-net=initialize_network()
+
 yb=categoryLabels(y,6)
 yb1=categoryLabels(y1,6)
 
-net1=ProcessRoot(net,X,yb,X1,yb1,10000,0,steps=2,startindex=1,lrate=0.07,scale=5,Afunction='Splitter')
+net1=PartialRankerNeuron.loadData(filename=filename,featuresno= 9,noofclassvalues=6,labelno=9,scale=5,epoches=50,lr=0.07,dropout=false,point=3) 
 
 X2,y2=removeDataByLabelList(X,y,[1,2,3])
 X22,y22=removeDataByLabelList(X,y,[4,5,6])
 
 X4,y4,X3,y3=splitterData(X2,y2)
-net2=ProcessRoot(net,X4,y4,X3,y3,10000,0,steps=3,startindex=1,lrate=0.07,scale=5,Afunction='SS')
-
+net2=ClassifierNeuron.loadData(X4,y4,X3,y3,featuresno= 9,steps=3,startindex=1,noofclassvalues=7,labelno=1,scale=5,epoches=50,lr=0.05,dropout=false) 
 
 X4,y4,X3,y3=splitterData(X22,y22)
-net3=ProcessRoot(net,X4,y4,X3,y3,10000,0,steps=3,startindex=4,lrate=0.07,scale=5,Afunction='SS')
+net3=ClassifierNeuron.loadData(X4,y4,X3,y3,featuresno= 9,steps=3,startindex=1,noofclassvalues=7,labelno=1,scale=5,epoches=50,lr=0.05,dropout=false) 
 
 
 ##############################################################################################
@@ -275,9 +184,10 @@ net3=ProcessRoot(net,X4,y4,X3,y3,10000,0,steps=3,startindex=4,lrate=0.07,scale=5
 X_train, X_test,y_train , y_test  =sklearn.model_selection.train_test_split(X, y,stratify = y, test_size=0.3, random_state=1)
 y_train=categoryLabels(y_train,6)
 y_test=categoryLabels(y_test,6)
-rootresult=testData(net1,X_test,y_test,steps=2,startindex=1,scale=5,Afunction='Splitter')
+rootresult=PartialRankerNeuron.Test(net1,X_test,y_test,noofclassvalues=6,scale=5,point=3,dropout=False)
+
 X_test2,y_test2=removeDataByLabelList(X_train,rootresult,[1,2,3])
 X_test3,y_test3=removeDataByLabelList(X_train,rootresult,[4,5,6])
 
-rootresult=testData(net2,X_test2,y_test2,steps=3,startindex=1,scale=5,Afunction='SS')
-rootresult=testData(net3,X_test3,y_test3,steps=3,startindex=4,scale=5,Afunction='SS')
+rootresult=ClassifierNeuron.Test(net2,X_test2,y_test2,steps=3,startindex=1,scale=5,dropout=False)
+rootresult=ClassifierNeuron.Test(net3,X_test3,y_test3,steps=3,startindex=4,scale=5,dropout=False)

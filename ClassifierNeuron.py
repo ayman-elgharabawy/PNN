@@ -72,7 +72,7 @@ def createDropNet(net):
 
 
 #StairStep SS Function#
-def SSS(xi,nlabel,bx):
+def SSS(xi,nlabel,start,bx):
     sum2 = 0
     s=100
     b=100/bx
@@ -80,9 +80,9 @@ def SSS(xi,nlabel,bx):
     for i in range(nlabel):
         xx=s-((i*t)/(nlabel-1))
         sum2 +=0.5*(np.tanh((-b*(xi))-(xx)))
-    sum2=-1*sum2     
-    sum2= sum2+(nlabel*0.5)  
-    return sum2      
+    sum2=-1*sum2  
+    sum2= sum2+(start+(nlabel/2))
+    return sum2    
 
 #StairStep SS Function Derivative#
 def dSSS(xi,nlabel,bx): 
@@ -112,7 +112,7 @@ def initialize_network(features_norm):
     net.append(OneNeuron)
     return net
 
-def  forward_propagation (net,input,noofclassvalues,scale,dropout):
+def  forward_propagation (net,input,steps,startindex,scale,dropout):
     row=input
     keep_prob=0.5
     cache=[]
@@ -133,7 +133,7 @@ def  forward_propagation (net,input,noofclassvalues,scale,dropout):
                 aa = aa / keep_prob    # Scales remaining values
             sum = np.array(aa).T.dot(row)
             # sum=neuron['weights'].T.dot(row)
-            result=SSS(sum,noofclassvalues,scale)
+            result=SSS(sum,steps,startindex,scale)
             neuron['result']=result           
             prev_input=np.append(prev_input,[result])
         row =prev_input   
@@ -180,50 +180,61 @@ def updateWeights(net,input,lrate,dropout,cache):
                 else:                        
                     neuron['weights'][j]+=lrate*neuron['delta']*inputs[j]
             neuron['weights'][-1]+=lrate*neuron['delta']
+    return net        
 
-def  training(net,X,y, epochs,lrate,n_outputs,noofclassvalues,scale,dropout):
+def  training(net,X,y, epochs,steps,startindex,lrate,n_outputs,noofclassvalues,scale,dropout):
     errors=[]
     for epoch in range(epochs):
         sum_error=0
         for i,row in enumerate(X):
-            outputs,cache=forward_propagation(net,row,noofclassvalues,scale,dropout)
+            outputs,cache=forward_propagation(net,row,steps,startindex,scale,dropout)
             sum_error+=math.sqrt(math.pow(y[i]-outputs,2)) 
             back_propagation(net,row,y[i],noofclassvalues,scale,dropout,cache)
-            updateWeights(net,row,lrate,dropout,cache)
+            net1=updateWeights(net,row,lrate,dropout,cache)
         if epoch%10 ==0:
             print('>epoch=%d,error=%.3f'%(epoch,sum_error))
             errors.append(sum_error)
             # print_network(net)
-    return errors
+    return errors , net1
 
 
 # Make a prediction with a network# Make a 
-def predict(net, row,noofclassvalues,scale,dropout):
-    outputs,cache = forward_propagation(net, row,noofclassvalues,scale,dropout)
+def predict(net, row,steps,startindex,scale,dropout):
+    outputs,cache = forward_propagation(net, row,steps,startindex,scale,dropout)
     return outputs
 
 ###############################################################################################################################
 
-
-def ProcessRoot(net,X,labels,iterations,noofclassvalues,scale,lr,dropout ):
+def Test(net1,X_test,y_test,steps,startindex,scale,dropout=False):
     pred_error=0
     pred_values=[]
-    errors=training(net,X,labels,iterations, lr,1,noofclassvalues,scale,dropout)
+    for index,row in enumerate(X_test):
+       pred=predict(net1,np.array(row),steps,startindex,scale,dropout) 
+       pred_error+=math.sqrt(math.pow(y_test[index]-pred,2)) 
+    print("Test Classifier Predicted Error "+str(pred_error))   
+    return pred_error
+
+
+def ProcessRoot(net,X,labels,iterations,steps,startindex,noofclassvalues,scale,lr,dropout ):
+    pred_error=0
+    pred_values=[]
+    errors,net1=training(net,X,labels,iterations,steps,startindex, lr,1,noofclassvalues,scale,dropout)
     for index,y in enumerate(X[0:100]):
-       pred=predict(net,np.array(y),noofclassvalues,scale,dropout)
-       pred_values.append(pred.tolist()[0])
+       pred=predict(net,np.array(y),steps,startindex,scale,dropout)
+    #    pred_values.append(pred.tolist()[0])
        pred_error+=math.sqrt(math.pow(labels[index]-pred,2))
     print("Predicted Error "+str(pred_error))
-    y_actu = pd.Series(pred_values, name='Actual')
-    y_pred = pd.Series(labels[0:100], name='Predicted')
 
-    df_confusion = pd.crosstab(y_actu, y_pred, rownames=['Actual'], colnames=['Predicted'])
-    print (df_confusion)
+    # y_actu = pd.Series(pred_values, name='Actual')
+    # y_pred = pd.Series(labels[0:100], name='Predicted')
+    # df_confusion = pd.crosstab(y_actu, y_pred, rownames=['Actual'], colnames=['Predicted'])
+    # print (df_confusion)
+
     # matrix = classification_report(y_actu,y_pred,labels=[2,1,0])
     # print('Classification report : \n',matrix)
 
     # plot_confusion_matrix(df_confusion)
-
+    return net1
 ###############################################################################################################################
 def rescale(values,featuresno,data_no, new_min , new_max ):
     totaloutput=[] 
@@ -282,12 +293,18 @@ def loadData(filename, featuresno,noofclassvalues, labelno,scale,epoches,lr,drop
 
     y=[x[0] for x in y ]  
     net=initialize_network(features_norm)
-    ProcessRoot(net,features_norm,y,epoches,noofclassvalues,scale,lr,dropout)
+    net1=ProcessRoot(net,features_norm,y,epoches,noofclassvalues,scale,lr,dropout)
+    return net1
 
+def loadData(X,y,X_test,y_test,featuresno,steps,startindex,noofclassvalues,labelno,scale,epoches,lr,dropout):
 
+    # y=[x[0] for x in y ]  
+    net=initialize_network(X)
+    net1=ProcessRoot(net,X,y,epoches,steps,startindex,noofclassvalues,scale,lr,dropout)
+    return net1
 ######################################################################################################
 ######################################################################################################
 
-loadData(filename='C:\\Github\\PNN\\Data\\ClassificationData\\glass.csv',featuresno= 9,noofclassvalues=7,labelno=1,scale=5,epoches=50000,lr=0.05,dropout=false) 
+# loadData(filename='C:\\Github\\PNN\\Data\\ClassificationData\\glass.csv',featuresno= 9,noofclassvalues=7,labelno=1,scale=5,epoches=50000,lr=0.05,dropout=false) 
 
 

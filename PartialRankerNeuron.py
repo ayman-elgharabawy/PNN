@@ -179,7 +179,7 @@ def updateWeights(net,input,lrate,dropout,cache):
                 else:                        
                     neuron['weights'][j]-=lrate*neuron['delta']*inputs[j]
             neuron['weights'][-1]-=lrate*neuron['delta']
-
+    return net
 def calculateoutputTau(iterationoutput):
         sum_Tau=0
         for  ii in iterationoutput:
@@ -193,22 +193,22 @@ def calculateoutputTau(iterationoutput):
 def  training(net,X,y, epochs,lrate,n_outputs,noofclassvalues,scale,dropout,point):
     errors=[]
     iterationoutput=list()
-    n=len(X)
-    for epoch in range(epochs):
-        arr1=np.array(X)
+    arr1=np.array(X)
+    n=arr1.shape[1] #len(X)
+    for epoch in range(epochs):     
         sum_Tau=0
         for col in range(arr1.shape[1]):   #i,row in enumerate(X):
             xxx1=list(arr1[:, col]) 
-            outputs,cache=forward_propagation(net,y,noofclassvalues,scale,dropout,point)
+            outputs,cache=forward_propagation(net,xxx1,noofclassvalues,scale,dropout,point)
             back_propagation(net,xxx1,y,noofclassvalues,scale,dropout,cache,point)
-            updateWeights(net,xxx1,lrate,dropout,cache)
+            net1=updateWeights(net,xxx1,lrate,dropout,cache)
             iterationoutput.append([y,outputs.tolist()])
             sum_Tau+=calculateoutputTau(iterationoutput)    
         if epoch%10 ==0:
             print('>epoch=%d,error=%.3f'%(epoch,sum_Tau/n))
             errors.append(sum_Tau)
             # print_network(net)
-    return errors
+    return errors ,net1
 
 
 # Make a prediction with a network# Make a 
@@ -219,20 +219,39 @@ def predict(net, row,noofclassvalues,scale,dropout,point):
 ###############################################################################################################################
 
 
-def ProcessRoot(net,X,labels,iterations,noofclassvalues,scale,lr,dropout,point ):
-    pred_error=0
-    pred_values=[]
-    errors=training(net,X,labels,iterations, lr,1,noofclassvalues,scale,dropout,point)
-    for index,y in enumerate(X[0:100]):
-       pred=predict(net,np.array(y),noofclassvalues,scale,dropout,point)
-       pred_values.append(pred.tolist()[0])
-       pred_error+=math.sqrt(math.pow(labels[index]-pred,2))
-    print("Predicted Error "+str(pred_error))
-    y_actu = pd.Series(pred_values, name='Actual')
-    y_pred = pd.Series(labels[0:100], name='Predicted')
 
-    df_confusion = pd.crosstab(y_actu, y_pred, rownames=['Actual'], colnames=['Predicted'])
-    print (df_confusion)
+
+def Test(net1,X_test,y_test,noofclassvalues,scale,point,dropout):
+    sum_Tau=0
+    iterationoutput=[]
+    pred_values=[]
+    n=len(X_test)
+    for row in X_test:
+       pred=predict(net1,np.array(row),noofclassvalues,scale,dropout,point) 
+       pred_values.append(pred.tolist()[0])
+       iterationoutput.append([y_test,pred.tolist()])
+       sum_Tau+=calculateoutputTau(iterationoutput)  
+    print("Test Ranker Predicted Error "+str(sum_Tau/n))   
+    return sum_Tau/n
+
+def ProcessRoot(net,X,labels,iterations,noofclassvalues,scale,lr,dropout,point ):
+    pred_values=[]
+    errors,net1=training(net,X,labels,iterations, lr,1,noofclassvalues,scale,dropout,point)
+    iterationoutput=[]
+    sum_Tau=0
+    n=X.shape[1]
+    for index in range(X.shape[1]):   #i,row in enumerate(X):
+       xxx1=list(X[:, index]) 
+       pred=predict(net,np.array(xxx1),noofclassvalues,scale,dropout,point)
+       pred_values.append(pred.tolist()[0])
+       iterationoutput.append([labels,pred.tolist()])
+       sum_Tau+=calculateoutputTau(iterationoutput)  
+    print("Predicted Error "+str(sum_Tau/n))
+    # y_actu = pd.Series(pred_values, name='Actual')
+    # y_pred = pd.Series(labels[0:100], name='Predicted')
+
+    # df_confusion = pd.crosstab(y_actu, y_pred, rownames=['Actual'], colnames=['Predicted'])
+    # print (df_confusion)
 
 
 ###############################################################################################################################
@@ -293,12 +312,12 @@ def loadData(filename, featuresno,noofclassvalues, labelno,scale,epoches,lr,drop
 
     y=[x[0] for x in y ]  
     net= initialize_network(len(train_features))
-    ProcessRoot(net,features_norm,y,epoches,noofclassvalues,scale,lr,dropout,point)
-
+    net1=ProcessRoot(net,features_norm,y,epoches,noofclassvalues,scale,lr,dropout,point)
+    return net1
 
 ######################################################################################################
 ######################################################################################################
 
-loadData(filename='C:\\Github\\PNN\\Data\\ClassificationData\\glass.csv',featuresno= 9,noofclassvalues=6,labelno=9,scale=5,epoches=50000,lr=0.07,dropout=false,point=3) 
+# loadData(filename='C:\\Github\\PNN\\Data\\ClassificationData\\glass.csv',featuresno= 9,noofclassvalues=6,labelno=9,scale=5,epoches=50000,lr=0.07,dropout=false,point=3) 
 
 
