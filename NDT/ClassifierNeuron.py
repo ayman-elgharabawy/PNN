@@ -85,7 +85,7 @@ def SSS(xi,nlabel,start,bx):
     return sum2    
 
 #StairStep SS Function Derivative#
-def dSSS(xi,nlabel,bx): 
+def dSSS(xi,nlabel,start,bx): 
     derivative2 = 0
     s=100
     b=100/bx
@@ -94,7 +94,7 @@ def dSSS(xi,nlabel,bx):
         xx=s-((i*t)/(nlabel-1))
         derivative2 +=0.5*(1-np.power(np.tanh((-b*(xi))-(xx)),2))
     derivative2=-1*derivative2     
-    derivative2= derivative2+(nlabel*0.5)  
+    derivative2= derivative2+(start+(nlabel/2))  
     return derivative2
 
 def print_network(net):
@@ -139,13 +139,13 @@ def  forward_propagation (net,input,steps,startindex,scale,dropout):
         row =prev_input   
     return row ,cache
 
-def back_propagation(net,row,expected,noofclassvalues,scale,dropout,cache):
+def back_propagation(net,row,expected,nlabel,star,scale,dropout,cache):
      for i in reversed(range(len(net))):
             layer=net[i]
             errors=np.array([])
             if i==len(net)-1:
                 results=[neuron['result'] for neuron in layer]
-                errors = (expected-np.array(results))/100 
+                errors = (expected-np.array(results))/1000 
             else:
                 for j in range(len(layer)):
                     herror=0
@@ -162,7 +162,7 @@ def back_propagation(net,row,expected,noofclassvalues,scale,dropout,cache):
             for j in range(len(layer)):
                 neuron=layer[j]
                 results=[neuron1['result'] for neuron1 in layer]
-                neuron['delta']=errors[j]*dSSS(neuron['result'],noofclassvalues,scale)
+                neuron['delta']=errors[j]*dSSS(neuron['result'],nlabel,star,scale)
 
 
 def updateWeights(net,input,lrate,dropout,cache):   
@@ -189,13 +189,13 @@ def  training(net,X,y, epochs,steps,startindex,lrate,n_outputs,noofclassvalues,s
         for i,row in enumerate(X):
             outputs,cache=forward_propagation(net,row,steps,startindex,scale,dropout)
             sum_error+=math.sqrt(math.pow(y[i]-outputs,2)) 
-            back_propagation(net,row,y[i],noofclassvalues,scale,dropout,cache)
-            net1=updateWeights(net,row,lrate,dropout,cache)
-        if epoch%10 ==0:
-            print('>epoch=%d,error=%.3f'%(epoch,sum_error))
+            back_propagation(net,row,y[i],steps,startindex,scale,dropout,cache)
+            net=updateWeights(net,row,lrate,dropout,cache)
+        if epoch%100 ==0:
+            print('>epoch=%d,error=%.5f'%(epoch,sum_error))
             errors.append(sum_error)
             # print_network(net)
-    return errors , net1
+    return errors , net
 
 
 # Make a prediction with a network# Make a 
@@ -212,6 +212,7 @@ def Test(net1,X_test,y_test,steps,startindex,scale,dropout=False):
        pred=predict(net1,np.array(row),steps,startindex,scale,dropout) 
        pred_error+=math.sqrt(math.pow(y_test[index]-pred,2)) 
     print("Test Classifier Predicted Error "+str(pred_error))   
+    print("==================================================")
     return pred_error
 
 

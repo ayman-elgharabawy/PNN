@@ -36,20 +36,11 @@ import matplotlib.pyplot as plt
 import PartialRankerNeuron
 import ClassifierNeuron
 
-
-
-
-
 def print_network(net):
     for i,layer in enumerate(net,1):
         print("Layer {} ".format(i))
         for j,neuron in enumerate(layer,1):
             print("neuron {} :".format(j),neuron)
-
-
-
-    
-
 
 ###############################################################################################################################
 def removeDataByLabelIndex(X,y,labelIndex):
@@ -72,37 +63,23 @@ def removeDataByLabelList(X,y,labelList):
     return  outputData , outputLabels
 
 
-# def ProcessRoot(net,X,labels,X1,labels1,iterations,loop ,steps,startindex,lrate,scale,Afunction):
-#     pred_error=0
-#     pred_values=[]
-    
-#     # errors,net=training(net,X,labels,iterations,lrate,1,steps,startindex,scale,Afunction)
-#     for index,y in enumerate(X1):
-#        pred=predict(net,np.array(y),steps,startindex,scale,Afunction)
-#        pred_values.append(pred.tolist()[0])
-#        if(Afunction=='SS'):
-#          pred_error+=math.sqrt(math.pow(labels1[index]-pred,2))
-#     if(Afunction=='SS'):     
-#        print("Predicted Error "+str(pred_error))
-#     else:
-#         print("Predicted Ranking Error "+str(ss.spearmanr(pred_values,labels1)))
 
-###############################################################################################################################
 
-# def testData(net,X1,labels1,steps,startindex,scale,Afunction):
-#     pred_values=[]
-#     pred_error=0
-#     for index,y in enumerate(X1):
-#        pred=predict(net,np.array(y),steps,startindex,scale,Afunction)
-#        pred_values.append(pred.tolist()[0])
-#        if(Afunction=='SS'):
-#           pred_error+=math.sqrt(math.pow(labels1[index]-pred,2))
-#     if Afunction=='SS':
-#        print("Predicted Test Error "+str(pred_error))
-#     else:
-#        print("Predicted Ranking Error "+str(ss.spearmanr(pred_values,labels1)))
-    
-#     return pred_values
+def splitData(X_data,labels,classno):
+    list1=[]
+    list2=[] 
+    outputdata1=[]
+    outputdata2=[]
+    for index, i in enumerate(labels):
+        if i >classno:
+            list1.append(i)
+            outputdata1.append(X_data[index])
+        else:
+            list2.append(i)
+            outputdata2.append(X_data[index])
+
+    return outputdata1,list1,outputdata2,list2
+
 
 def splitterData(train_features,train_labels):
 
@@ -116,10 +93,10 @@ def splitterData(train_features,train_labels):
 def categoryLabels(labels,noofclasses):
     newlist=[]
     for lab in labels:
-        if(lab>=(round(noofclasses/2))):
-           newlist.extend([2])
-        else:
+        if(lab>(round(noofclasses/2))):
            newlist.extend([1])
+        else:
+           newlist.extend([0])
     return newlist
 
 def loadData(filename, featuresno, labelno,labelvalues):
@@ -164,30 +141,29 @@ X,y,X1,y1 = loadData(filename, featuresno=9,labelno=1,labelvalues=6)
 
 
 yb=categoryLabels(y,6)
-yb1=categoryLabels(y1,6)
 
-net1=PartialRankerNeuron.loadData(filename=filename,featuresno= 9,noofclassvalues=6,labelno=9,scale=5,epoches=50,lr=0.07,dropout=false,point=3) 
+
+net1=PartialRankerNeuron.loadData(X=X,y=yb,featuresno= 9,noofclassvalues=6,labelno=9,scale=5,epoches=5000,lr=0.07,dropout=false,point=3) 
 
 X2,y2=removeDataByLabelList(X,y,[1,2,3])
 X22,y22=removeDataByLabelList(X,y,[4,5,6])
 
 X4,y4,X3,y3=splitterData(X2,y2)
-net2=ClassifierNeuron.loadData(X4,y4,X3,y3,featuresno= 9,steps=3,startindex=1,noofclassvalues=7,labelno=1,scale=5,epoches=50,lr=0.05,dropout=false) 
+net2=ClassifierNeuron.loadData(X4,y4,X3,y3,featuresno= 9,steps=3,startindex=1,noofclassvalues=3,labelno=1,scale=5,epoches=1000,lr=0.05,dropout=false) 
 
-X4,y4,X3,y3=splitterData(X22,y22)
-net3=ClassifierNeuron.loadData(X4,y4,X3,y3,featuresno= 9,steps=3,startindex=1,noofclassvalues=7,labelno=1,scale=5,epoches=50,lr=0.05,dropout=false) 
+X44,y44,X33,y33=splitterData(X22,y22)
+net3=ClassifierNeuron.loadData(X44,y44,X33,y33,featuresno= 9,steps=3,startindex=4,noofclassvalues=3,labelno=1,scale=5,epoches=1000,lr=0.05,dropout=false) 
 
 
 ##############################################################################################
 ###################################Testing the 3 models#######################################
 
-X_train, X_test,y_train , y_test  =sklearn.model_selection.train_test_split(X, y,stratify = y, test_size=0.3, random_state=1)
-y_train=categoryLabels(y_train,6)
-y_test=categoryLabels(y_test,6)
-rootresult=PartialRankerNeuron.Test(net1,X_test,y_test,noofclassvalues=6,scale=5,point=3,dropout=False)
+X_test=X[:,0:3]
+y_train=categoryLabels(y,6)
+y_test=categoryLabels(y,6)
+rooterror,pred_values=PartialRankerNeuron.Test(net1,X_test,y_test,noofclassvalues=6,scale=5,point=3,dropout=False)
 
-X_test2,y_test2=removeDataByLabelList(X_train,rootresult,[1,2,3])
-X_test3,y_test3=removeDataByLabelList(X_train,rootresult,[4,5,6])
+X_test2,y_test2,X_test3,y_test3 =splitData(X,y,6)
 
 rootresult=ClassifierNeuron.Test(net2,X_test2,y_test2,steps=3,startindex=1,scale=5,dropout=False)
 rootresult=ClassifierNeuron.Test(net3,X_test3,y_test3,steps=3,startindex=4,scale=5,dropout=False)

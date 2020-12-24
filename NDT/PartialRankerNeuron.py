@@ -85,18 +85,21 @@ def ModifiedKendalTau(output,expected,point):
     for i in range (len(output)):
         sum1=0
         sum1+=(np.tanh(500*(expected[i]-point))*np.tanh(500*(output[i]-point)))         
-        tanhrow1.append(2*sum1/(len(output)*(len(output)-1)))
-    return sum(tanhrow1)
+        tanhrow1.append(2*sum1/(n*(n-1)))
+    a=sum(tanhrow1)    
+    return a
 
 
 def DModifiedKendalTau(output,expected,point):   
     tanhrow1=list()
+    n=len(expected)
     for i in range (len(output)):
         sum1=0
         x1=((1-np.power(np.tanh(500*(expected[i]-point)),2))*np.tanh(500*(output[i]-point)))
         x2=np.tanh(500*(expected[i]-point))*((1-np.power(np.tanh(500*(output[i]-point)),2)))  
         sum1+=(x1+x2)       
-        tanhrow1.append(2*sum1/(len(output)*(len(output)-1)))
+        # tanhrow1.append(2*sum1/(n*(n-1)))
+        tanhrow1.append(sum1)
     return tanhrow1 
 
 
@@ -128,8 +131,6 @@ def  forward_propagation (net,input,noofclassvalues,scale,dropout,point):
                 aa = aa * D1    # Shutdown neurons
                 aa = aa / keep_prob    # Scales remaining values
             sum = np.array(aa).T.dot(row)
-            # sum=neuron['weights'].T.dot(row)
-            # result=TanhSplitter(sum,point)
             result=sigmoid(sum)
             neuron['result']=result           
             prev_input=np.append(prev_input,[result])
@@ -141,10 +142,8 @@ def back_propagation(net,row,expected,noofclassvalues,scale,dropout,cache,point)
             layer=net[i]
             errors=np.array([])
             if i==len(net)-1:
-                # results=[neuron['result'] for neuron in layer]
-                # errors = (expected-np.array(results))/100 
                 results = [neuron['result'] for neuron in net[0]]
-                errors =DModifiedKendalTau(results,expected,3)
+                errors =DModifiedKendalTau(results,expected,0.5)
             else:
                 for j in range(len(layer)):
                     herror=0
@@ -175,38 +174,40 @@ def updateWeights(net,input,lrate,dropout,cache):
                 if dropout:
                     zzz=cache[i][inno][j]
                     if(zzz):
-                        neuron['weights'][j]-=lrate*neuron['delta']*inputs[j]
+                        neuron['weights'][j]+=lrate*neuron['delta']*inputs[j]
                 else:                        
-                    neuron['weights'][j]-=lrate*neuron['delta']*inputs[j]
-            neuron['weights'][-1]-=lrate*neuron['delta']
+                    neuron['weights'][j]+=lrate*neuron['delta']*inputs[j]
+            neuron['weights'][-1]+=lrate*neuron['delta']
     return net
+
 def calculateoutputTau(iterationoutput):
-        sum_Tau=0
-        for  ii in iterationoutput:
-            # tau,pv = ss.kendalltau(ii[0],ii[1])  
-            tau=ModifiedKendalTau(ii[0],ii[1],3)
-            if not np.isnan(tau):
-                sum_Tau += tau
-        return sum_Tau
+
+        xx=iterationoutput[0]
+        vv=iterationoutput[1]
+        tau=ModifiedKendalTau(xx,vv,0.5)
+        if  np.isnan(tau):
+            tau=0
+        return tau
 
 
 def  training(net,X,y, epochs,lrate,n_outputs,noofclassvalues,scale,dropout,point):
     errors=[]
-    iterationoutput=list()
+    
     arr1=np.array(X)
     n=arr1.shape[1] #len(X)
     for epoch in range(epochs):     
-        sum_Tau=0
-        for col in range(arr1.shape[1]):   #i,row in enumerate(X):
+        sum_Tau1=0
+        for col in range(arr1.shape[1]):   #i,row in enumerate(X):     
             xxx1=list(arr1[:, col]) 
             outputs,cache=forward_propagation(net,xxx1,noofclassvalues,scale,dropout,point)
             back_propagation(net,xxx1,y,noofclassvalues,scale,dropout,cache,point)
             net1=updateWeights(net,xxx1,lrate,dropout,cache)
-            iterationoutput.append([y,outputs.tolist()])
-            sum_Tau+=calculateoutputTau(iterationoutput)    
-        if epoch%10 ==0:
-            print('>epoch=%d,error=%.3f'%(epoch,sum_Tau/n))
-            errors.append(sum_Tau)
+            # print('>epoch=%d,error=%.18f'%(epoch,sum_Tau1))
+
+            sum_Tau1+=calculateoutputTau([y,outputs.tolist()])    
+        if epoch%100 ==0:
+            print('>-===========epoch=%d,error=%.18f'%(epoch,sum_Tau1))
+            errors.append(sum_Tau1)
             # print_network(net)
     return errors ,net1
 
@@ -218,21 +219,19 @@ def predict(net, row,noofclassvalues,scale,dropout,point):
 
 ###############################################################################################################################
 
-
-
-
 def Test(net1,X_test,y_test,noofclassvalues,scale,point,dropout):
     sum_Tau=0
     iterationoutput=[]
     pred_values=[]
-    n=len(X_test)
-    for row in X_test:
+    
+    arr1=np.array(X_test)
+    n=arr1.shape[1]
+    for col in range(n):   #i,row in enumerate(X):
+       row=list(arr1[:, col]) 
        pred=predict(net1,np.array(row),noofclassvalues,scale,dropout,point) 
-       pred_values.append(pred.tolist()[0])
-       iterationoutput.append([y_test,pred.tolist()])
-       sum_Tau+=calculateoutputTau(iterationoutput)  
-    print("Test Ranker Predicted Error "+str(sum_Tau/n))   
-    return sum_Tau/n
+       sum_Tau+=calculateoutputTau([y_test,pred.tolist()])  
+    print("Test Predicted rank Error "+"{:.6f}".format(sum_Tau/n)) 
+    return sum_Tau/n ,pred.tolist()
 
 def ProcessRoot(net,X,labels,iterations,noofclassvalues,scale,lr,dropout,point ):
     pred_values=[]
@@ -244,9 +243,10 @@ def ProcessRoot(net,X,labels,iterations,noofclassvalues,scale,lr,dropout,point )
        xxx1=list(X[:, index]) 
        pred=predict(net,np.array(xxx1),noofclassvalues,scale,dropout,point)
        pred_values.append(pred.tolist()[0])
-       iterationoutput.append([labels,pred.tolist()])
-       sum_Tau+=calculateoutputTau(iterationoutput)  
-    print("Predicted Error "+str(sum_Tau/n))
+    #    iterationoutput.append([labels,pred.tolist()])
+       sum_Tau+=calculateoutputTau([labels,pred.tolist()])  
+    print("Predicted Error "+"{:.6f}".format(sum_Tau/n))
+    return net1
     # y_actu = pd.Series(pred_values, name='Actual')
     # y_pred = pd.Series(labels[0:100], name='Predicted')
 
@@ -278,40 +278,36 @@ def rescale(values,featuresno,data_no, new_min , new_max ):
         ############################
     return totaloutput1
 
-def loadData(filename, featuresno,noofclassvalues, labelno,scale,epoches,lr,dropout,point):
+def loadData(X,y, featuresno,noofclassvalues, labelno,scale,epoches,lr,dropout,point):
     data = list()
     labels = list()
     alldata = list()
-    print("=================================="+filename+"=============================")
-    filename1 =  filename
-    gpsTrack = open(filename1, "r")
-    csvReader = csv.reader(gpsTrack)
-    next(csvReader)
-    for row in csvReader :
-            data.append(row[0:featuresno])
-            labels.append(row[featuresno:featuresno + labelno])
-            alldata.append(row[:])
+    # print("=================================="+filename+"=============================")
+    # filename1 =  filename
+    # gpsTrack = open(filename1, "r")
+    # csvReader = csv.reader(gpsTrack)
+    # next(csvReader)
+    # for row in csvReader :
+    #         data.append(row[0:featuresno])
+    #         labels.append(row[featuresno:featuresno + labelno])
+    #         alldata.append(row[:])
 
-    y = np.array(labels)
-    X = np.array(data)  
-    train_labels = [map(int, i) for i in y]
-    train_features = [map(float, i) for i in X]
-
-
-    features_norm=[]
-    features_norm_all=[]
+    # y = np.array(labels)
+    # X = np.array(data)  
+    # train_labels = [map(int, i) for i in y]
+    # train_features = [map(float, i) for i in X]
 
 
-    train_features, test_features, train_labels, test_labels  =sklearn.model_selection.train_test_split(train_features, train_labels, test_size=0.07, random_state=1)
-    X = np.array([list(item) for item in train_features])
-    y = [list(item) for item in train_labels]
-     
-    data_no=len(X)
+    # features_norm=[]
+   
+
+
+    # train_features, test_features, train_labels, test_labels  =sklearn.model_selection.train_test_split(train_features, train_labels, test_size=0.07, random_state=1)
+    # X = np.array([list(item) for item in train_features])
+    # y = [list(item) for item in train_labels]
     features_norm = zscore(X, axis=1)
-    # features_norm = rescale(X,featuresno,data_no,-scale,scale) 
-
-    y=[x[0] for x in y ]  
-    net= initialize_network(len(train_features))
+    # y=[x[0] for x in y ]  
+    net= initialize_network(len(X))
     net1=ProcessRoot(net,features_norm,y,epoches,noofclassvalues,scale,lr,dropout,point)
     return net1
 
