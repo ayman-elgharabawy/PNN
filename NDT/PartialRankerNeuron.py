@@ -246,10 +246,9 @@ def calculateoutputTau(iterationoutput):
 
 
 def  training(net,X,y, epochs,lrate,n_outputs,noofclassvalues,scale,dropout):
-    errors=[]
-    
+    errors=[]    
     arr1=np.array(X)
-    n=arr1.shape[1] #len(X)
+    n=arr1.shape[1]
     for epoch in range(epochs):     
         sum_Tau1=0
         for col in range(arr1.shape[1]):   #i,row in enumerate(X):     
@@ -293,15 +292,15 @@ def ProcessRoot(net,X,labels,iterations,noofclassvalues,scale,lr,dropout ):
     errors,net1=training(net,X,labels,iterations, lr,1,noofclassvalues,scale,dropout)
     iterationoutput=[]
     sum_Tau=0
-    n=X.shape[1]
-    for index in range(X.shape[1]):   #i,row in enumerate(X):
-       xxx1=list(X[:, index]) 
+    arr1=np.array(X)
+    n=arr1.shape[1]
+    for index in range(n):  
+       xxx1=list(arr1[:, index]) 
        pred=predict(net,np.array(xxx1),noofclassvalues,scale,dropout)
        pred_values.append(pred.tolist()[0])
-    #    iterationoutput.append([labels,pred.tolist()])
        sum_Tau+=calculateoutputTau([labels,pred.tolist()])  
     print("Predicted Error "+"{:.6f}".format(sum_Tau/n))
-    return net1
+    return net1 ,pred
     # y_actu = pd.Series(pred_values, name='Actual')
     # y_pred = pd.Series(labels[0:100], name='Predicted')
 
@@ -353,19 +352,11 @@ def loadData(X,y, featuresno,noofclassvalues, labelno,scale,epoches,lr,dropout):
     # train_features = [map(float, i) for i in X]
 
 
-    # features_norm=[]
-   
-
-
-    # train_features, test_features, train_labels, test_labels  =sklearn.model_selection.train_test_split(train_features, train_labels, test_size=0.07, random_state=1)
-    # X = np.array([list(item) for item in train_features])
-    # y = [list(item) for item in train_labels]
     features_norm=rescale(X,featuresno,len(X), -scale , scale )
     #features_norm = zscore(X, axis=1)
-    # y=[x[0] for x in y ]  
     net= initialize_network(len(X))
-    net1=ProcessRoot(net,features_norm,y,epoches,noofclassvalues,scale,lr,dropout)
-    return net1
+    net1,traineddata=ProcessRoot(net,features_norm,y,epoches,noofclassvalues,scale,lr,dropout)
+    return net1 ,traineddata
 
 ######################################################################################################
 ######################################################################################################
