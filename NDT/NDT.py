@@ -116,14 +116,14 @@ def categorResult(originalData,trainedlabels):
     newdata2=[]
     newdata3=[]
     for index,lab in enumerate(trainedlabels):
-        if(lab>4):
-           newlabel1.extend(lab)
+        if(round(lab)==1):
+           newlabel1.append(round(lab))
            newdata1.append(originalData[index])
-        elif(lab<5 and lab>2):
-           newlabel2.extend(lab)
+        elif(round(lab)==2):
+           newlabel2.append(round(lab))
            newdata2.append(originalData[index])
         else:
-           newlabel3.extend(lab) 
+           newlabel3.append(round(lab)) 
            newdata3.append(originalData[index])  
 
     return newdata1 ,newlabel1,newdata2,newlabel2,newdata3,newlabel3
@@ -173,7 +173,7 @@ X,y,X1,y1 = loadData(filename, featuresno=9,labelno=1,labelvalues=6)
 yb=categoryLabels(y)
 
 
-net1,trainedlabels=PartialRankerNeuron.loadData(X=X,y=yb,featuresno= 9,noofclassvalues=3,labelno=9,scale=30,epoches=100,lr=0.07,dropout=false) 
+net1,trainedlabels=PartialRankerNeuron.loadData(X=X,y=yb,featuresno= 9,noofclassvalues=3,labelno=9,scale=30,epoches=1000,lr=0.07,dropout=false) 
 
 
 X2,y2,X22,y22,X33,y33=categorResult(X,trainedlabels)
@@ -183,7 +183,7 @@ X2,y2,X22,y22,X33,y33=categorResult(X,trainedlabels)
 # X33,y33=removeDataByLabelList(X,y,[5,6])
 
 X_1,y_1,X_1,y_1=splitterData(X2,y2)
-net2=ClassifierNeuron.loadData(X_1,y_1,X_1,y_1,featuresno= 9,steps=3,startindex=1,noofclassvalues=2,labelno=1,scale=10,epoches=1000,lr=0.05,dropout=false) 
+net2=ClassifierNeuron.loadData(X_1,y_1,X_1,y_1,featuresno= 9,steps=3,startindex=1,noofclassvalues=2,labelno=1,scale=10,epoches=5000,lr=0.05,dropout=false) 
 
 X_2,y_2,X_2,y_2=splitterData(X22,y22)
 net3=ClassifierNeuron.loadData(X_2,y_2,X_2,y_2,featuresno= 9,steps=3,startindex=3,noofclassvalues=2,labelno=1,scale=5,epoches=1000,lr=0.05,dropout=false) 
