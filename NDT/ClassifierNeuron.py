@@ -73,6 +73,7 @@ def createDropNet(net):
 
 #StairStep SS Function#
 def SSS(xi,nlabel,start,bx):
+    nlabel=nlabel-1
     sum2 = 0
     s=100
     b=100/bx
@@ -86,6 +87,7 @@ def SSS(xi,nlabel,start,bx):
 
 #StairStep SS Function Derivative#
 def dSSS(xi,nlabel,start,bx): 
+    nlabel=nlabel-1
     derivative2 = 0
     s=100
     b=100/bx
@@ -145,7 +147,7 @@ def back_propagation(net,row,expected,nlabel,star,scale,dropout,cache):
             errors=np.array([])
             if i==len(net)-1:
                 results=[neuron['result'] for neuron in layer]
-                errors = (expected-np.array(results))/1000 
+                errors = (expected-np.array(results))/100
             else:
                 for j in range(len(layer)):
                     herror=0
@@ -215,29 +217,31 @@ def Test(net1,X_test,y_test,steps,startindex,scale,dropout=False):
     pred_values=[]
     for index,row in enumerate(X_test):
        pred=predict(net1,np.array(row),steps,startindex,scale,dropout)
-       pred_values.append(pred)
+       pred_values.extend(pred)
     #    pred_error+=math.sqrt(math.pow(y_test[index]-pred,2)) 
     mse = mean_squared_error(y_test, pred_values)
     rmse = sqrt(mse)   
     print("Test Classifier Predicted Error "+str(rmse))   
     print("==================================================")
-    y_actu = pd.Series(pred_values, name='Actual')
-    y_pred = pd.Series(y_test, name='Predicted')
+    y_actu = pd.Series(np.array(pred_values), name='Actual')
+    y_pred = pd.Series(np.array(y_test), name='Predicted')
 
     df_confusion = pd.crosstab(y_actu, y_pred, rownames=['Actual'], colnames=['Predicted'])
     print (df_confusion)
-    return pred_error
+    return rmse
 
 
 def ProcessRoot(net,X,labels,iterations,steps,startindex,noofclassvalues,scale,lr,dropout ):
-    pred_error=0
+    # pred_error=0
     pred_values=[]
     errors,net1=training(net,X,labels,iterations,steps,startindex, lr,1,noofclassvalues,scale,dropout)
-    for index,y in enumerate(X[0:100]):
+    for index,y in enumerate(X):
        pred=predict(net,np.array(y),steps,startindex,scale,dropout)
-    #    pred_values.append(pred.tolist()[0])
-       pred_error+=math.sqrt(math.pow(labels[index]-pred,2))
-    print("Predicted Error "+str(pred_error))
+       pred_values.append(pred)
+    #    pred_error+=math.sqrt(math.pow(labels[index]-pred,2))
+    mse = mean_squared_error(labels, pred_values)
+    rmse = sqrt(mse)   
+    print("Predicted Error "+str(rmse))
 
     # y_actu = pd.Series(pred_values, name='Actual')
     # y_pred = pd.Series(labels[0:100], name='Predicted')

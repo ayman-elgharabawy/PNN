@@ -65,7 +65,7 @@ def removeDataByLabelList(X,y,labelList):
 
 def trainTestingSplitter(train_features,train_labels):
 
-    train_features, test_features, train_labels, test_labels  =sklearn.model_selection.train_test_split(train_features, train_labels, test_size=0.3, stratify=train_labels,random_state=1)
+    train_features, test_features, train_labels, test_labels  =sklearn.model_selection.train_test_split(train_features, train_labels, test_size=0.3, random_state=1)
     X = np.array([list(item) for item in train_features])
     y = train_labels
     X1 = np.array([list(item) for item in test_features])
@@ -75,7 +75,7 @@ def trainTestingSplitter(train_features,train_labels):
 def binaryLabels(labels):
     newlist=[]
     for lab in labels:
-        if( lab>4):
+        if( lab>=4):
            newlist.append([2,1])
         else:
            newlist.append([1,2])   
@@ -142,7 +142,7 @@ X,y,X1,y1 = loadData(filename, featuresno=9,labelno=1,labelvalues=6)
 
 
 yb=binaryLabels(y)
-net1,trainedlabels=PreferenceNeuron.loadData(X=X,y=yb,featuresno= 9,noofclassvalues=2,labelno=9,scale=30,epoches=1000,lr=0.07,dropout=false) 
+net1,trainedlabels=PreferenceNeuron.loadData(X=X,y=yb,featuresno= 9,noofclassvalues=2,labelno=9,scale=30,epoches=500,lr=0.07,dropout=false) 
 X2,y2,X22,y22=categorResult(X,y,trainedlabels)
 
 # X2,y2=removeDataByLabelList(X,y,[1,2])
@@ -150,10 +150,10 @@ X2,y2,X22,y22=categorResult(X,y,trainedlabels)
 # X33,y33=removeDataByLabelList(X,y,[5,6])
 
 X_1,y_1,X_11,y_11=trainTestingSplitter(X2,y2)
-net2=ClassifierNeuron.loadData(X_1,y_1,X_1,y_1,featuresno= 9,steps=3,startindex=1,noofclassvalues=3,labelno=1,scale=10,epoches=5000,lr=0.05,dropout=false) 
+net2=ClassifierNeuron.loadData(X_1,y_1,X_1,y_1,featuresno= 9,steps=3,startindex=4,noofclassvalues=3,labelno=1,scale=5,epoches=1000,lr=0.07,dropout=false) 
 
 X_2,y_2,X_2,y_2=trainTestingSplitter(X22,y22)
-net3=ClassifierNeuron.loadData(X_2,y_2,X_2,y_2,featuresno= 9,steps=3,startindex=4,noofclassvalues=3,labelno=1,scale=5,epoches=1000,lr=0.05,dropout=false) 
+net3=ClassifierNeuron.loadData(X_2,y_2,X_2,y_2,featuresno= 9,steps=3,startindex=1,noofclassvalues=3,labelno=1,scale=5,epoches=1000,lr=0.07,dropout=false) 
 
 
 ##############################################################################################
@@ -167,5 +167,5 @@ rooterror,pred_values=PreferenceNeuron.Test(net1,X_11,y_11b,noofclassvalues=2,sc
 
 X_test2,y_test2,X_test3,y_test3=categorResult(X_11,y,pred_values)
 
-rootresult=ClassifierNeuron.Test(net2,X_test2,y_test2,steps=3,startindex=1,scale=5,dropout=False)
-rootresult=ClassifierNeuron.Test(net3,X_test3,y_test3,steps=3,startindex=4,scale=5,dropout=False)
+rootresult=ClassifierNeuron.Test(net2,X_test2,y_test2,steps=3,startindex=4,scale=5,dropout=False)
+rootresult=ClassifierNeuron.Test(net3,X_test3,y_test3,steps=3,startindex=1,scale=5,dropout=False)
