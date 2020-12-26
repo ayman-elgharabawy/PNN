@@ -223,8 +223,8 @@ def Test(net1,X_test,y_test,steps,startindex,scale,dropout=False):
     rmse = sqrt(mse)   
     print("Test Classifier Predicted Error "+str(rmse))   
     print("==================================================")
-    y_actu = pd.Series(np.array(pred_values), name='Actual')
-    y_pred = pd.Series(np.array(y_test), name='Predicted')
+    y_actu = pd.Series(pred_values, name='Actual')
+    y_pred = pd.Series(y_test, name='Predicted')
 
     df_confusion = pd.crosstab(y_actu, y_pred, rownames=['Actual'], colnames=['Predicted'])
     print (df_confusion)
