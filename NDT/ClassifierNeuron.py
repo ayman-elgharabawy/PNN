@@ -28,7 +28,7 @@ import networkx as nx
 from sklearn import preprocessing
 from numpy import transpose
 from datetime import datetime
-
+from sklearn.metrics import mean_squared_error
 import pandas as pd
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import classification_report
@@ -186,16 +186,21 @@ def  training(net,X,y, epochs,steps,startindex,lrate,n_outputs,noofclassvalues,s
     errors=[]
     for epoch in range(epochs):
         sum_error=0
+        outlist=[]
         for i,row in enumerate(X):
             outputs,cache=forward_propagation(net,row,steps,startindex,scale,dropout)
-            sum_error+=math.sqrt(math.pow(y[i]-outputs,2)) 
+            outlist.append(outputs)
+            # sum_error+=math.sqrt(math.pow(y[i]-outputs,2)) 
             back_propagation(net,row,y[i],steps,startindex,scale,dropout,cache)
             net=updateWeights(net,row,lrate,dropout,cache)
+
         if epoch%100 ==0:
-            print('>epoch=%d,error=%.5f'%(epoch,sum_error))
-            errors.append(sum_error)
+            mse = mean_squared_error(y, outlist)
+            rmse = sqrt(mse)
+            print('>epoch=%d,RMS error=%.5f'%(epoch,rmse))
+            # errors.append(sum_error)
             # print_network(net)
-    return errors , net
+    return rmse , net
 
 
 # Make a prediction with a network# Make a 
@@ -209,9 +214,12 @@ def Test(net1,X_test,y_test,steps,startindex,scale,dropout=False):
     pred_error=0
     pred_values=[]
     for index,row in enumerate(X_test):
-       pred=predict(net1,np.array(row),steps,startindex,scale,dropout) 
-       pred_error+=math.sqrt(math.pow(y_test[index]-pred,2)) 
-    print("Test Classifier Predicted Error "+str(pred_error))   
+       pred=predict(net1,np.array(row),steps,startindex,scale,dropout)
+       pred_values.append(pred)
+    #    pred_error+=math.sqrt(math.pow(y_test[index]-pred,2)) 
+    mse = mean_squared_error(y_test, pred_values)
+    rmse = sqrt(mse)   
+    print("Test Classifier Predicted Error "+str(rmse))   
     print("==================================================")
     y_actu = pd.Series(pred_values, name='Actual')
     y_pred = pd.Series(y_test, name='Predicted')

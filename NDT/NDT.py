@@ -33,7 +33,7 @@ import pandas as pd
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import classification_report
 import matplotlib.pyplot as plt
-import PartialRankerNeuronHorizontal
+import PreferenceNeuron
 import ClassifierNeuron
 
 def print_network(net):
