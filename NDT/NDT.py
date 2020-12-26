@@ -63,24 +63,6 @@ def removeDataByLabelList(X,y,labelList):
     return  outputData , outputLabels
 
 
-
-
-# def splitData(X_data,labels,classno):
-#     list1=[]
-#     list2=[] 
-#     outputdata1=[]
-#     outputdata2=[]
-#     for index, i in enumerate(labels):
-#         if i [0]>classno/2:
-#             list1.extend(i)
-#             outputdata1.append(X_data[index])
-#         else:
-#             list2.extend(i)
-#             outputdata2.append(X_data[index])
-
-#     return outputdata1,list1,outputdata2,list2
-
-
 def trainTestingSplitter(train_features,train_labels):
 
     train_features, test_features, train_labels, test_labels  =sklearn.model_selection.train_test_split(train_features, train_labels, test_size=0.3, stratify=train_labels,random_state=1)
@@ -98,8 +80,6 @@ def binaryLabels(labels):
         else:
            newlist.append([1,2])   
     return newlist
-
-
 
 
 def categorResult(originalData,y,trainedlabels):
@@ -185,7 +165,6 @@ X_1,y_1,X_11,y_11=trainTestingSplitter(X2,y2)
 y_11b=binaryLabels(y_11)
 rooterror,pred_values=PartialRankerNeuronHorizontal.Test(net1,X_11,y_11b,noofclassvalues=2,scale=5,subrank=2,dropout=False)
 
-# X_test2,y_test2,X_test3,y_test3 =splitData(X_11,pred_values,6)
 X_test2,y_test2,X_test3,y_test3=categorResult(X_11,y,pred_values)
 
 rootresult=ClassifierNeuron.Test(net2,X_test2,y_test2,steps=3,startindex=1,scale=5,dropout=False)
