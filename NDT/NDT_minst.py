@@ -159,7 +159,7 @@ X,X1,y,y1 = loadData()
 print(len(X[0]))
 yb=categoryLabels(y)
 
-net1,trainedlabels=PartialRankerNeuronHorizontal.loadData(X=X,y=yb,featuresno= 784,noofclassvalues=2,labelno=2,scale=30,epoches=200,lr=0.07,dropout=true) 
+net1,trainedlabels=PartialRankerNeuronHorizontal.loadData(X=X,y=yb,featuresno= 784,noofclassvalues=2,labelno=2,scale=30,epoches=1000,lr=0.07,dropout=true) 
 
 X2,y2,X22,y22=categorResult(X,y,trainedlabels)
 

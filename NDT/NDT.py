@@ -142,7 +142,7 @@ X,y,X1,y1 = loadData(filename, featuresno=9,labelno=1,labelvalues=6)
 
 
 yb=binaryLabels(y)
-net1,trainedlabels=PartialRankerNeuronHorizontal.loadData(X=X,y=yb,featuresno= 9,noofclassvalues=2,labelno=9,scale=30,epoches=500,lr=0.07,dropout=false) 
+net1,trainedlabels=PartialRankerNeuronHorizontal.loadData(X=X,y=yb,featuresno= 9,noofclassvalues=2,labelno=9,scale=30,epoches=1000,lr=0.07,dropout=false) 
 X2,y2,X22,y22=categorResult(X,y,trainedlabels)
 
 # X2,y2=removeDataByLabelList(X,y,[1,2])
@@ -150,10 +150,10 @@ X2,y2,X22,y22=categorResult(X,y,trainedlabels)
 # X33,y33=removeDataByLabelList(X,y,[5,6])
 
 X_1,y_1,X_11,y_11=trainTestingSplitter(X2,y2)
-net2=ClassifierNeuron.loadData(X_1,y_1,X_1,y_1,featuresno= 9,steps=3,startindex=1,noofclassvalues=3,labelno=1,scale=10,epoches=500,lr=0.05,dropout=false) 
+net2=ClassifierNeuron.loadData(X_1,y_1,X_1,y_1,featuresno= 9,steps=3,startindex=1,noofclassvalues=3,labelno=1,scale=10,epoches=5000,lr=0.05,dropout=false) 
 
 X_2,y_2,X_2,y_2=trainTestingSplitter(X22,y22)
-net3=ClassifierNeuron.loadData(X_2,y_2,X_2,y_2,featuresno= 9,steps=3,startindex=4,noofclassvalues=3,labelno=1,scale=5,epoches=100,lr=0.05,dropout=false) 
+net3=ClassifierNeuron.loadData(X_2,y_2,X_2,y_2,featuresno= 9,steps=3,startindex=4,noofclassvalues=3,labelno=1,scale=5,epoches=1000,lr=0.05,dropout=false) 
 
 
 ##############################################################################################

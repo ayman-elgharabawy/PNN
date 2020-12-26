@@ -213,6 +213,11 @@ def Test(net1,X_test,y_test,steps,startindex,scale,dropout=False):
        pred_error+=math.sqrt(math.pow(y_test[index]-pred,2)) 
     print("Test Classifier Predicted Error "+str(pred_error))   
     print("==================================================")
+    y_actu = pd.Series(pred_values, name='Actual')
+    y_pred = pd.Series(y_test, name='Predicted')
+
+    df_confusion = pd.crosstab(y_actu, y_pred, rownames=['Actual'], colnames=['Predicted'])
+    print (df_confusion)
     return pred_error
 
 
@@ -279,10 +284,8 @@ def loadData(filename, featuresno,noofclassvalues, labelno,scale,epoches,lr,drop
     train_labels = [map(int, i) for i in y]
     train_features = [map(float, i) for i in X]
 
-
     features_norm=[]
     features_norm_all=[]
-
 
     train_features, test_features, train_labels, test_labels  =sklearn.model_selection.train_test_split(train_features, train_labels, test_size=0.2, random_state=1)
     X = np.array([list(item) for item in train_features])
@@ -299,7 +302,6 @@ def loadData(filename, featuresno,noofclassvalues, labelno,scale,epoches,lr,drop
 
 def loadData(X,y,X_test,y_test,featuresno,steps,startindex,noofclassvalues,labelno,scale,epoches,lr,dropout):
 
-    # y=[x[0] for x in y ]  
     net=initialize_network(X)
     net1=ProcessRoot(net,X,y,epoches,steps,startindex,noofclassvalues,scale,lr,dropout)
     return net1

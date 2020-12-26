@@ -271,6 +271,12 @@ def Test(net1,X_test,y_test,noofclassvalues,scale,subrank,dropout):
        pred_values.append(pred.tolist()[0])
        sum_Tau+=calculateoutputTau([y_test[ind],pred.tolist()])  
     print("Test Predicted rank Error "+"{:.6f}".format(sum_Tau/n)) 
+    
+    # y_actu = pd.Series(pred_values, name='Actual')
+    # y_pred = pd.Series(labels[0:100], name='Predicted')
+
+    # df_confusion = pd.crosstab(y_actu, y_pred, rownames=['Actual'], colnames=['Predicted'])
+    # print (df_confusion)
     return sum_Tau/n ,pred_values
 
 def ProcessRoot(net,X,labels,iterations,noofclassvalues,scale,lr,dropout ):
