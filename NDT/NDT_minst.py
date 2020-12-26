@@ -65,23 +65,23 @@ def removeDataByLabelList(X,y,labelList):
 
 
 
-# def splitData(X_data,labels,classno):
-#     list1=[]
-#     list2=[] 
-#     outputdata1=[]
-#     outputdata2=[]
-#     for index, i in enumerate(labels):
-#         if i [0]>classno/2:
-#             list1.extend(i)
-#             outputdata1.append(X_data[index])
-#         else:
-#             list2.extend(i)
-#             outputdata2.append(X_data[index])
+def splitData(X_data,labels,classno):
+    list1=[]
+    list2=[] 
+    outputdata1=[]
+    outputdata2=[]
+    for index, i in enumerate(labels):
+        if i >classno:
+            list1.append(i)
+            outputdata1.append(X_data[index])
+        else:
+            list2.append(i)
+            outputdata2.append(X_data[index])
 
-#     return outputdata1,list1,outputdata2,list2
+    return outputdata1,list1,outputdata2,list2
 
 
-def trainTestingSplitter(train_features,train_labels):
+def splitterData(train_features,train_labels):
 
     train_features, test_features, train_labels, test_labels  =sklearn.model_selection.train_test_split(train_features, train_labels, test_size=0.3, stratify=train_labels,random_state=1)
     X = np.array([list(item) for item in train_features])
@@ -90,7 +90,7 @@ def trainTestingSplitter(train_features,train_labels):
     y1 = test_labels
     return X,y,X1,y1
 
-def binaryLabels(labels):
+def categoryLabels(labels):
     newlist=[]
     for lab in labels:
         if( lab>4):
@@ -98,7 +98,6 @@ def binaryLabels(labels):
         else:
            newlist.append([1,2])   
     return newlist
-
 
 
 
@@ -119,74 +118,64 @@ def categorResult(originalData,y,trainedlabels):
 
     return newdata1 ,newlabel1,newdata2,newlabel2
 
+def convertMultilabel(train_labels,labelno):
+    newLabels=np.array([[0]*labelno]*len(train_labels))
 
-def loadData(filename, featuresno, labelno,labelvalues):
+    for index,row in enumerate(train_labels):
+         newLabels[index,row]=1
+
+    return newLabels
+
+def loadData():
     data = list()
     labels = list()
     alldata = list()
-    print("=================================="+filename+"=============================")
-    filename1 =  filename
-    gpsTrack = open(filename1, "r")
-    csvReader = csv.reader(gpsTrack)
+    print("==================================Minsit=============================")
+    train_images = mnist.train_images()[:1000]
+    train_labels = mnist.train_labels()[:1000]
+    test_images = mnist.test_images()[:1000]
+    test_labels = mnist.test_labels()[:1000]
+    flatterd=[]
+    for tup in train_images:   
+       flatterd.append(tup.ravel() )
 
-    next(csvReader)
-    for row in csvReader :
-            data.append(row[0:featuresno])
-            labels.append(row[featuresno:featuresno + labelno])
-            alldata.append(row[:])
-
-    y = np.array(labels)
-    X = np.array(data)  
+    y = np.array(train_labels)
+    X = np.array(flatterd)  
  
     train_features, test_features, train_labels, test_labels  =sklearn.model_selection.train_test_split(X, y,stratify = y, test_size=0.3, random_state=1)
-    
-    train_labels = [map(float, i) for i in train_labels]
-    train_features = [map(float, i) for i in train_features]
-
-    test_features = [map(float, i) for i in test_features]
-    test_labels = [map(float, i) for i in test_labels]
-
-    X = np.array([list(item) for item in train_features])
-    y = np.array([list(item) for item in train_labels])
-    X1 = np.array([list(item) for item in test_features])
-    y1 = np.array([list(item) for item in test_labels])
-    y=[g[0] for g in y ] 
-    y1=[g[0] for g in y1 ]
-
-    return X,y,X1,y1
+    return train_features, test_features, train_labels, test_labels 
 
  
-filename='C:\\Github\\PNN\\Data\\ClassificationData\\glass.csv'
-X,y,X1,y1 = loadData(filename, featuresno=9,labelno=1,labelvalues=6) 
+
+X,X1,y,y1 = loadData() 
 ##############################################Building Tree 3 models#####################################
+print(len(X[0]))
+yb=categoryLabels(y)
 
+net1,trainedlabels=PartialRankerNeuronHorizontal.loadData(X=X,y=yb,featuresno= 784,noofclassvalues=2,labelno=2,scale=30,epoches=200,lr=0.07,dropout=true) 
 
-yb=binaryLabels(y)
-net1,trainedlabels=PartialRankerNeuronHorizontal.loadData(X=X,y=yb,featuresno= 9,noofclassvalues=2,labelno=9,scale=30,epoches=500,lr=0.07,dropout=false) 
 X2,y2,X22,y22=categorResult(X,y,trainedlabels)
 
 # X2,y2=removeDataByLabelList(X,y,[1,2])
 # X22,y22=removeDataByLabelList(X,y,[3,4])
 # X33,y33=removeDataByLabelList(X,y,[5,6])
 
-X_1,y_1,X_11,y_11=trainTestingSplitter(X2,y2)
-net2=ClassifierNeuron.loadData(X_1,y_1,X_1,y_1,featuresno= 9,steps=3,startindex=1,noofclassvalues=3,labelno=1,scale=10,epoches=500,lr=0.05,dropout=false) 
+X_1,y_1,X_1,y_1=splitterData(X2,y2)
+net2=ClassifierNeuron.loadData(X_1,y_1,X_1,y_1,featuresno= 9,steps=5,startindex=5,noofclassvalues=5,labelno=1,scale=5,epoches=5000,lr=0.05,dropout=false) 
 
-X_2,y_2,X_2,y_2=trainTestingSplitter(X22,y22)
-net3=ClassifierNeuron.loadData(X_2,y_2,X_2,y_2,featuresno= 9,steps=3,startindex=4,noofclassvalues=3,labelno=1,scale=5,epoches=100,lr=0.05,dropout=false) 
+X_2,y_2,X_2,y_2=splitterData(X22,y22)
+net3=ClassifierNeuron.loadData(X_2,y_2,X_2,y_2,featuresno= 9,steps=5,startindex=1,noofclassvalues=5,labelno=1,scale=5,epoches=1000,lr=0.05,dropout=false) 
 
 
 ##############################################################################################
 ###################################Testing the 3 models#######################################
 
+X_test=X[:,0:3]
+y_train=categoryLabels(y)
+y_test=categoryLabels(y)
+rooterror,pred_values=PartialRankerNeuron.Test(net1,X_test,y_test,noofclassvalues=3,scale=5,point=3,dropout=False)
 
-X_1,y_1,X_11,y_11=trainTestingSplitter(X2,y2)
-
-y_11b=binaryLabels(y_11)
-rooterror,pred_values=PartialRankerNeuronHorizontal.Test(net1,X_11,y_11b,noofclassvalues=2,scale=5,subrank=2,dropout=False)
-
-# X_test2,y_test2,X_test3,y_test3 =splitData(X_11,pred_values,6)
-X_test2,y_test2,X_test3,y_test3=categorResult(X_11,y,pred_values)
+X_test2,y_test2,X_test3,y_test3 =splitData(X,y,6)
 
 rootresult=ClassifierNeuron.Test(net2,X_test2,y_test2,steps=3,startindex=1,scale=5,dropout=False)
 rootresult=ClassifierNeuron.Test(net3,X_test3,y_test3,steps=3,startindex=4,scale=5,dropout=False)

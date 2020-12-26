@@ -149,7 +149,7 @@ def DModifiedKendalTau(output,expected,point):
 
 def initialize_network(features_no):
     input_neurons=features_no
-    output_neurons=features_no
+    output_neurons=2
     net=list()            
     OneNeuron = [ { 'weights': np.random.uniform(low=-0.01, high=0.01,size=input_neurons)} for i in range(output_neurons) ]
     net.append(OneNeuron)
@@ -237,17 +237,16 @@ def calculateoutputTau(iterationoutput):
 def  training(net,X,y, epochs,lrate,n_outputs,noofclassvalues,scale,dropout):
     errors=[]    
     arr1=np.array(X)
-    n=arr1.shape[1]
+    n=len(X)
     for epoch in range(epochs):     
         sum_Tau1=0
-        for col in range(arr1.shape[1]):   #i,row in enumerate(X):     
-            xxx1=list(arr1[:, col]) 
+        for ind,xxx1 in enumerate(X):   #i,row in enumerate(X):     
             outputs,cache=forward_propagation(net,xxx1,noofclassvalues,scale,dropout)
-            back_propagation(net,xxx1,y,noofclassvalues,scale,dropout,cache)
+            back_propagation(net,xxx1,y[ind],noofclassvalues,scale,dropout,cache)
             net1=updateWeights(net,xxx1,lrate,dropout,cache)
             # print('>epoch=%d,error=%.18f'%(epoch,sum_Tau1))
 
-            sum_Tau1+=calculateoutputTau([y,outputs.tolist()])    
+            sum_Tau1+=calculateoutputTau([y[ind],outputs.tolist()])    
         if epoch%100 ==0:
             print('>-===========epoch=%d,error=%.18f'%(epoch,sum_Tau1/n))
             errors.append(sum_Tau1)
@@ -264,17 +263,15 @@ def predict(net, row,noofclassvalues,scale,dropout):
 
 def Test(net1,X_test,y_test,noofclassvalues,scale,subrank,dropout):
     sum_Tau=0
-    iterationoutput=[]
     pred_values=[]
-    
-    arr1=np.array(X_test)
-    n=arr1.shape[1]
-    for col in range(n):   #i,row in enumerate(X):
-       row=list(arr1[:, col]) 
-       pred=predict(net1,np.array(row),noofclassvalues,scale,dropout,subrank) 
-       sum_Tau+=calculateoutputTau([y_test,pred.tolist()])  
+    n=len(X_test)
+    for ind in range(n):   #i,row in enumerate(X):
+       row=X_test[ind] 
+       pred=predict(net1,np.array(row),noofclassvalues,scale,dropout) 
+       pred_values.append(pred.tolist()[0])
+       sum_Tau+=calculateoutputTau([y_test[ind],pred.tolist()])  
     print("Test Predicted rank Error "+"{:.6f}".format(sum_Tau/n)) 
-    return sum_Tau/n ,pred.tolist()
+    return sum_Tau/n ,pred_values
 
 def ProcessRoot(net,X,labels,iterations,noofclassvalues,scale,lr,dropout ):
     pred_values=[]
@@ -283,13 +280,12 @@ def ProcessRoot(net,X,labels,iterations,noofclassvalues,scale,lr,dropout ):
     sum_Tau=0
     arr1=np.array(X)
     n=arr1.shape[1]
-    for index in range(n):  
-       xxx1=list(arr1[:, index]) 
-       pred=predict(net,np.array(xxx1),noofclassvalues,scale,dropout)
+    for i,row in enumerate(X):  
+       pred=predict(net,np.array(row),noofclassvalues,scale,dropout)
        pred_values.append(pred.tolist()[0])
-       sum_Tau+=calculateoutputTau([labels,pred.tolist()])  
+       sum_Tau+=calculateoutputTau([labels[i],pred.tolist()])  
     print("Predicted Error "+"{:.6f}".format(sum_Tau/n))
-    return net1 ,pred
+    return net1 ,pred_values
     # y_actu = pd.Series(pred_values, name='Actual')
     # y_pred = pd.Series(labels[0:100], name='Predicted')
 
@@ -323,9 +319,10 @@ def rescale(values,featuresno,data_no, new_min , new_max ):
 
 def loadData(X,y, featuresno,noofclassvalues, labelno,scale,epoches,lr,dropout):
 
-    features_norm=rescale(X,featuresno,len(X), -scale , scale )
-    #features_norm = zscore(X, axis=1)
-    net= initialize_network(len(X))
+    #features_norm=rescale(X,featuresno,len(X), -scale , scale )
+    features_norm = zscore(X, axis=1)
+    xx=len(X[1])
+    net= initialize_network(xx)
     net1,traineddata=ProcessRoot(net,features_norm,y,epoches,noofclassvalues,scale,lr,dropout)
     return net1 ,traineddata
 

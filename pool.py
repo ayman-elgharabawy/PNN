@@ -33,7 +33,21 @@ def extract_data(filename, num_images, IMAGE_WIDTH):
 #     deflist=np.array([])
 #     for dd in diflist:
 #       deflist=np.append(deflist,((6*dd)/(den)))
-#     return deflist     
+#     return deflist   
+# 
+def SSS(xi,nlabel,bx):
+    sum2 = 0
+    s=100
+    b=100/bx
+    t=200
+    for i in range(nlabel):
+        xx=s-((i*t)/(nlabel-1))
+        sum2 +=0.5*(np.tanh((-b*(xi))-(xx)))
+    sum2=-1*sum2     
+    sum2= sum2+(nlabel*0.5)  
+    return sum2   
+
+
 def Spearman(output,expected):
     n=len(expected)
     nem=0
@@ -144,6 +158,16 @@ tau4 = Spearman([-0.41558442,-0.41558442,1442],[-0.41558442,-0.41558442,1442])
 tau5 = Spearman([1,1,1],[1,1,2])
 tau6 = Spearman([1,1,2],[1,1,1])
 
+x = np.linspace(-10, 9, 10)
+
+y =SSS(x,4,5)
+
+plt.plot(x, y, 'b')
+plt.xlabel('X axis')
+plt.ylabel('Y axis')
+plt.title('ss Function')
+plt.grid(b=True, which='major', color='#666666', linestyle='-')
+plt.show()
 
 # training data
 m =100
