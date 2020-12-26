@@ -142,7 +142,7 @@ X,y,X1,y1 = loadData(filename, featuresno=9,labelno=1,labelvalues=6)
 
 
 yb=binaryLabels(y)
-net1,trainedlabels=PartialRankerNeuronHorizontal.loadData(X=X,y=yb,featuresno= 9,noofclassvalues=2,labelno=9,scale=30,epoches=1000,lr=0.07,dropout=false) 
+net1,trainedlabels=PreferenceNeuron.loadData(X=X,y=yb,featuresno= 9,noofclassvalues=2,labelno=9,scale=30,epoches=1000,lr=0.07,dropout=false) 
 X2,y2,X22,y22=categorResult(X,y,trainedlabels)
 
 # X2,y2=removeDataByLabelList(X,y,[1,2])
@@ -163,7 +163,7 @@ net3=ClassifierNeuron.loadData(X_2,y_2,X_2,y_2,featuresno= 9,steps=3,startindex=
 X_1,y_1,X_11,y_11=trainTestingSplitter(X2,y2)
 
 y_11b=binaryLabels(y_11)
-rooterror,pred_values=PartialRankerNeuronHorizontal.Test(net1,X_11,y_11b,noofclassvalues=2,scale=5,subrank=2,dropout=False)
+rooterror,pred_values=PreferenceNeuron.Test(net1,X_11,y_11b,noofclassvalues=2,scale=5,subrank=2,dropout=False)
 
 X_test2,y_test2,X_test3,y_test3=categorResult(X_11,y,pred_values)
 
