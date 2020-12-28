@@ -255,8 +255,8 @@ def  training(net,X,y, epochs,lrate,n_outputs,noofclassvalues,scale,dropout):
 
 
 # Make a prediction with a network# Make a 
-def predict(net, row,noofclassvalues,scale,dropout):
-    outputs,cache = forward_propagation(net, row,noofclassvalues,scale,dropout)
+def predict(net1, row,noofclassvalues,scale,dropout):
+    outputs,cache = forward_propagation(net1, row,noofclassvalues,scale,dropout)
     return outputs
 
 ###############################################################################################################################
@@ -268,8 +268,9 @@ def Test(net1,X_test,y_test,noofclassvalues,scale,subrank,dropout):
     for ind in range(n):   #i,row in enumerate(X):
        row=X_test[ind] 
        pred=predict(net1,np.array(row),noofclassvalues,scale,dropout) 
-       pred_values.append(pred.tolist()[0])
-       sum_Tau+=calculateoutputTau([y_test[ind],pred.tolist()])  
+       pred_values.append(pred.tolist())
+       sum_Tau+=calculateoutputTau([y_test[ind],pred.tolist()]) 
+       print("Test Predicted rank Error "+"{:.6f}".format(sum_Tau/(ind+1)))  
     print("Test Predicted rank Error "+"{:.6f}".format(sum_Tau/n)) 
     
     # y_actu = pd.Series(pred_values, name='Actual')
@@ -285,19 +286,13 @@ def ProcessRoot(net,X,labels,iterations,noofclassvalues,scale,lr,dropout ):
     iterationoutput=[]
     sum_Tau=0
     arr1=np.array(X)
-    n=arr1.shape[1]
+    n=len(X)
     for i,row in enumerate(X):  
-       pred=predict(net,np.array(row),noofclassvalues,scale,dropout)
+       pred=predict(net1,np.array(row),noofclassvalues,scale,dropout)
        pred_values.append(pred.tolist()[0])
        sum_Tau+=calculateoutputTau([labels[i],pred.tolist()])  
     print("Predicted Error "+"{:.6f}".format(sum_Tau/n))
     return net1 ,pred_values
-    # y_actu = pd.Series(pred_values, name='Actual')
-    # y_pred = pd.Series(labels[0:100], name='Predicted')
-
-    # df_confusion = pd.crosstab(y_actu, y_pred, rownames=['Actual'], colnames=['Predicted'])
-    # print (df_confusion)
-
 
 ###############################################################################################################################
 def rescale(values,featuresno,data_no, new_min , new_max ):

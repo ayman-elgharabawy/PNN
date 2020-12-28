@@ -141,13 +141,13 @@ def  forward_propagation (net,input,steps,startindex,scale,dropout):
         row =prev_input   
     return row ,cache
 
-def back_propagation(net,row,expected,nlabel,star,scale,dropout,cache):
+def back_propagation(net,row,expected,nlabel,start,scale,dropout,cache):
      for i in reversed(range(len(net))):
             layer=net[i]
             errors=np.array([])
             if i==len(net)-1:
                 results=[neuron['result'] for neuron in layer]
-                errors = (expected-np.array(results))/100
+                errors = (expected-np.array(results))/1000
             else:
                 for j in range(len(layer)):
                     herror=0
@@ -164,7 +164,7 @@ def back_propagation(net,row,expected,nlabel,star,scale,dropout,cache):
             for j in range(len(layer)):
                 neuron=layer[j]
                 results=[neuron1['result'] for neuron1 in layer]
-                neuron['delta']=errors[j]*dSSS(neuron['result'],nlabel,star,scale)
+                neuron['delta']=errors[j]*dSSS(neuron['result'],nlabel,start,scale)
 
 
 def updateWeights(net,input,lrate,dropout,cache):   
@@ -277,7 +277,7 @@ def rescale(values,featuresno,data_no, new_min , new_max ):
         ############################
     return totaloutput1
 
-def loadData(filename, featuresno,noofclassvalues, labelno,scale,epoches,lr,dropout):
+def loadData(filename, featuresno,noofclassvalues,scale,epoches,lr,dropout):
     data = list()
     labels = list()
     alldata = list()
@@ -288,7 +288,7 @@ def loadData(filename, featuresno,noofclassvalues, labelno,scale,epoches,lr,drop
     next(csvReader)
     for row in csvReader :
             data.append(row[0:featuresno])
-            labels.append(row[featuresno:featuresno + labelno])
+            labels.append(row[featuresno:featuresno + 1])
             alldata.append(row[:])
 
     y = np.array(labels)
@@ -312,7 +312,7 @@ def loadData(filename, featuresno,noofclassvalues, labelno,scale,epoches,lr,drop
     net1=ProcessRoot(net,features_norm,y,epoches,noofclassvalues,scale,lr,dropout)
     return net1
 
-def loadData(X,y,X_test,y_test,featuresno,steps,startindex,noofclassvalues,labelno,scale,epoches,lr,dropout):
+def loadData(X,y,X_test,y_test,featuresno,steps,startindex,noofclassvalues,scale,epoches,lr,dropout):
 
     net=initialize_network(X)
     net1=ProcessRoot(net,X,y,epoches,steps,startindex,noofclassvalues,scale,lr,dropout)
@@ -320,6 +320,6 @@ def loadData(X,y,X_test,y_test,featuresno,steps,startindex,noofclassvalues,label
 ######################################################################################################
 ######################################################################################################
 
-# loadData(filename='C:\\Github\\PNN\\Data\\ClassificationData\\glass.csv',featuresno= 9,noofclassvalues=7,labelno=1,scale=5,epoches=50000,lr=0.05,dropout=false) 
+# loadData(filename='C:\\Github\\PNN\\Data\\ClassificationData\\glass.csv',featuresno= 9,noofclassvalues=7,scale=5,epoches=50000,lr=0.05,dropout=false) 
 
 

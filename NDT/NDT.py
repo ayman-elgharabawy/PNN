@@ -65,7 +65,7 @@ def removeDataByLabelList(X,y,labelList):
 
 def trainTestingSplitter(train_features,train_labels):
 
-    train_features, test_features, train_labels, test_labels  =sklearn.model_selection.train_test_split(train_features, train_labels, test_size=0.3, random_state=1)
+    train_features, test_features, train_labels, test_labels  =sklearn.model_selection.train_test_split(train_features, train_labels,shuffle=true, test_size=0.2, random_state=1)
     X = np.array([list(item) for item in train_features])
     y = train_labels
     X1 = np.array([list(item) for item in test_features])
@@ -82,7 +82,7 @@ def binaryLabels(labels):
     return newlist
 
 
-def categorResult(originalData,y,trainedlabels):
+def categorRankingResult(originalData,y,trainedlabels):
     newlabel1=[]
     newlabel2=[]
 
@@ -118,7 +118,7 @@ def loadData(filename, featuresno, labelno,labelvalues):
     y = np.array(labels)
     X = np.array(data)  
  
-    train_features, test_features, train_labels, test_labels  =sklearn.model_selection.train_test_split(X, y,stratify = y, test_size=0.3, random_state=1)
+    train_features, test_features, train_labels, test_labels  =sklearn.model_selection.train_test_split(X, y,shuffle=True, test_size=0.2, random_state=1)
     
     train_labels = [map(float, i) for i in train_labels]
     train_features = [map(float, i) for i in train_features]
@@ -139,33 +139,31 @@ def loadData(filename, featuresno, labelno,labelvalues):
 filename='C:\\Github\\PNN\\Data\\ClassificationData\\glass.csv'
 X,y,X1,y1 = loadData(filename, featuresno=9,labelno=1,labelvalues=6) 
 ##############################################Building Tree 3 models#####################################
-
+X_1,y_1,X_11,y_11=trainTestingSplitter(X,y)
 
 yb=binaryLabels(y)
-net1,trainedlabels=PreferenceNeuron.loadData(X=X,y=yb,featuresno= 9,noofclassvalues=2,labelno=9,scale=30,epoches=500,lr=0.07,dropout=false) 
-X2,y2,X22,y22=categorResult(X,y,trainedlabels)
+net1,trainedlabels=PreferenceNeuron.loadData(X=X,y=yb,featuresno= 9,noofclassvalues=2,labelno=2,scale=2,epoches=5000,lr=0.05,dropout=false) 
+# X2,y2,X22,y22=categorRankingResult(X,y,trainedlabels)
 
-# X2,y2=removeDataByLabelList(X,y,[1,2])
-# X22,y22=removeDataByLabelList(X,y,[3,4])
-# X33,y33=removeDataByLabelList(X,y,[5,6])
+X2,y2=removeDataByLabelList(X,y,[4,5,6])
+X22,y22=removeDataByLabelList(X,y,[1,2,3])
 
 X_1,y_1,X_11,y_11=trainTestingSplitter(X2,y2)
-net2=ClassifierNeuron.loadData(X_1,y_1,X_1,y_1,featuresno= 9,steps=3,startindex=4,noofclassvalues=3,labelno=1,scale=5,epoches=1000,lr=0.07,dropout=false) 
+net2=ClassifierNeuron.loadData(X_1,y_1,X_1,y_1,featuresno= 9,steps=3,startindex=4,noofclassvalues=3,scale=5,epoches=5000,lr=0.07,dropout=false) 
 
 X_2,y_2,X_2,y_2=trainTestingSplitter(X22,y22)
-net3=ClassifierNeuron.loadData(X_2,y_2,X_2,y_2,featuresno= 9,steps=3,startindex=1,noofclassvalues=3,labelno=1,scale=5,epoches=1000,lr=0.07,dropout=false) 
+net3=ClassifierNeuron.loadData(X_2,y_2,X_2,y_2,featuresno= 9,steps=3,startindex=1,noofclassvalues=3,scale=5,epoches=5000,lr=0.07,dropout=false) 
 
 
 ##############################################################################################
 ###################################Testing the 3 models#######################################
 
 
-X_1,y_1,X_11,y_11=trainTestingSplitter(X2,y2)
 
-y_11b=binaryLabels(y_11)
-rooterror,pred_values=PreferenceNeuron.Test(net1,X_11,y_11b,noofclassvalues=2,scale=5,subrank=2,dropout=False)
+y_1b=binaryLabels(y1)
+rooterror,pred_values=PreferenceNeuron.Test(net1,X1,y_1b,noofclassvalues=2,scale=2,subrank=2,dropout=False)
 
-X_test2,y_test2,X_test3,y_test3=categorResult(X_11,y,pred_values)
+X_test2,y_test2,X_test3,y_test3=categorRankingResult(X_11,y_11,pred_values)
 
 rootresult=ClassifierNeuron.Test(net2,X_test2,y_test2,steps=3,startindex=4,scale=5,dropout=False)
 rootresult=ClassifierNeuron.Test(net3,X_test3,y_test3,steps=3,startindex=1,scale=5,dropout=False)

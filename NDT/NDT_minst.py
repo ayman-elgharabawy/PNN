@@ -168,10 +168,10 @@ X2,y2,X22,y22=categorResult(X,y,trainedlabels)
 # X33,y33=removeDataByLabelList(X,y,[5,6])
 
 X_1,y_1,X_1,y_1=trainTestingSplitter(X2,y2)
-net2=ClassifierNeuron.loadData(X_1,y_1,X_1,y_1,featuresno= 9,steps=5,startindex=5,noofclassvalues=5,labelno=1,scale=5,epoches=5000,lr=0.05,dropout=false) 
+net2=ClassifierNeuron.loadData(X_1,y_1,X_1,y_1,featuresno= 784,steps=5,startindex=5,noofclassvalues=5,labelno=1,scale=5,epoches=5000,lr=0.05,dropout=false) 
 
 X_2,y_2,X_2,y_2=trainTestingSplitter(X22,y22)
-net3=ClassifierNeuron.loadData(X_2,y_2,X_2,y_2,featuresno= 9,steps=5,startindex=0,noofclassvalues=5,labelno=1,scale=5,epoches=1000,lr=0.05,dropout=false) 
+net3=ClassifierNeuron.loadData(X_2,y_2,X_2,y_2,featuresno= 784,steps=5,startindex=0,noofclassvalues=5,labelno=1,scale=5,epoches=1000,lr=0.05,dropout=false) 
 
 
 ##############################################################################################
