@@ -73,30 +73,29 @@ def createDropNet(net):
 
 #StairStep SS Function#
 def SSS(xi,nlabel,start,bx):
-    nlabel=nlabel-1
     sum2 = 0
     s=100
     b=100/bx
     t=200
-    for i in range(nlabel):
+    for i in range(nlabel-1):
         xx=s-((i*t)/(nlabel-1))
         sum2 +=0.5*(np.tanh((-b*(xi))-(xx)))
-    sum2=-1*sum2  
-    sum2= sum2+(start+(nlabel/2))
-    return sum2    
+    sum2=-1*sum2     
+    sum2= sum2+(nlabel*0.5)-0.5 +start 
+    return sum2     
 
 #StairStep SS Function Derivative#
 def dSSS(xi,nlabel,start,bx): 
-    nlabel=nlabel-1
+
     derivative2 = 0
     s=100
     b=100/bx
     t=200
-    for i in range(nlabel):
+    for i in range(nlabel-1):
         xx=s-((i*t)/(nlabel-1))
         derivative2 +=0.5*(1-np.power(np.tanh((-b*(xi))-(xx)),2))
     derivative2=-1*derivative2     
-    derivative2= derivative2+(start+(nlabel/2))  
+    derivative2= derivative2+(nlabel*0.5)-0.5 +start 
     return derivative2
 
 def print_network(net):
@@ -147,7 +146,7 @@ def back_propagation(net,row,expected,nlabel,start,scale,dropout,cache):
             errors=np.array([])
             if i==len(net)-1:
                 results=[neuron['result'] for neuron in layer]
-                errors = (expected-np.array(results))/1000
+                errors = (expected-np.array(results))/100
             else:
                 for j in range(len(layer)):
                     herror=0
@@ -199,7 +198,7 @@ def  training(net,X,y, epochs,steps,startindex,lrate,n_outputs,noofclassvalues,s
         if epoch%100 ==0:
             mse = mean_squared_error(y, outlist)
             rmse = sqrt(mse)
-            print('>epoch=%d,RMS error=%.5f'%(epoch,rmse))
+            print('>epoch=%d,RMS error=%.9f'%(epoch,rmse))
             # errors.append(sum_error)
             # print_network(net)
     return rmse , net

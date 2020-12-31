@@ -28,7 +28,7 @@ import networkx as nx
 from sklearn import preprocessing
 from numpy import transpose
 from datetime import datetime
-
+from sklearn.model_selection import KFold
 import pandas as pd
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import classification_report
@@ -122,31 +122,6 @@ def createDropNet(net):
 
       return layerdrop1 ,dropnetperneuron
 
-
-def ModifiedKendalTau(output,expected,point):   
-    tanhrow1=list()
-    n=len(expected)  
-    for i in range (len(output)):
-        sum1=0
-        sum1+=(np.tanh(500*(expected[i]-point))*np.tanh(500*(output[i]-point)))         
-        tanhrow1.append(2*sum1/(n*(n-1)))
-    a=sum(tanhrow1)    
-    return a
-
-
-def DModifiedKendalTau(output,expected,point):   
-    tanhrow1=list()
-    n=len(expected)
-    for i in range (len(output)):
-        sum1=0
-        x1=((1-np.power(np.tanh(500*(expected[i]-point)),2))*np.tanh(500*(output[i]-point)))
-        x2=np.tanh(500*(expected[i]-point))*((1-np.power(np.tanh(500*(output[i]-point)),2)))  
-        sum1+=(x1+x2)       
-       # tanhrow1.append(2*sum1/(n*(n-1)))
-        tanhrow1.append(2*sum1)
-    return tanhrow1 
-
-
 def initialize_network(features_no):
     input_neurons=features_no
     output_neurons=2
@@ -225,9 +200,6 @@ def updateWeights(net,input,lrate,dropout,cache):
 
 def calculateoutputTau(iterationoutput):
 
-        xx=iterationoutput[0]
-        vv=iterationoutput[1]
-        # tau=ModifiedKendalTau(xx,vv,0.5)
         tau,pv = ss.spearmanr(iterationoutput[1], iterationoutput[0])  
         if  np.isnan(tau):
             tau=0
@@ -235,7 +207,7 @@ def calculateoutputTau(iterationoutput):
 
 
 def  training(net,X,y, epochs,lrate,n_outputs,noofclassvalues,scale,dropout):
-    errors=[]    
+    errors=0 
     arr1=np.array(X)
     n=len(X)
     for epoch in range(epochs):     
@@ -244,14 +216,12 @@ def  training(net,X,y, epochs,lrate,n_outputs,noofclassvalues,scale,dropout):
             outputs,cache=forward_propagation(net,xxx1,noofclassvalues,scale,dropout)
             back_propagation(net,xxx1,y[ind],noofclassvalues,scale,dropout,cache)
             net1=updateWeights(net,xxx1,lrate,dropout,cache)
-            # print('>epoch=%d,error=%.18f'%(epoch,sum_Tau1))
-
             sum_Tau1+=calculateoutputTau([y[ind],outputs.tolist()])    
-        if epoch%100 ==0:
-            print('>-===========epoch=%d,error=%.18f'%(epoch,sum_Tau1/n))
-            errors.append(sum_Tau1)
-            # print_network(net)
-    return errors ,net1
+        # if epoch%10 ==0:
+        #     print('>-===========epoch=%d,error=%.18f'%(epoch,sum_Tau1/n))
+        errors+=(sum_Tau1/n)
+
+    return (errors/epochs) ,net1
 
 
 # Make a prediction with a network# Make a 
@@ -265,34 +235,32 @@ def Test(net1,X_test,y_test,noofclassvalues,scale,subrank,dropout):
     sum_Tau=0
     pred_values=[]
     n=len(X_test)
-    for ind in range(n):   #i,row in enumerate(X):
-       row=X_test[ind] 
+    for i,row in enumerate(X_test):    #i,row in enumerate(X):
        pred=predict(net1,np.array(row),noofclassvalues,scale,dropout) 
-       pred_values.append(pred.tolist())
-       sum_Tau+=calculateoutputTau([y_test[ind],pred.tolist()]) 
-       print("Test Predicted rank Error "+"{:.6f}".format(sum_Tau/(ind+1)))  
+       pred_values.append(pred.tolist()[0])
+       sum_Tau+=calculateoutputTau([y_test[i],pred.tolist()]) 
+       print("Test Predicted rank Error "+"{:.6f}".format(sum_Tau/(i+1)))  
     print("Test Predicted rank Error "+"{:.6f}".format(sum_Tau/n)) 
-    
-    # y_actu = pd.Series(pred_values, name='Actual')
-    # y_pred = pd.Series(labels[0:100], name='Predicted')
-
-    # df_confusion = pd.crosstab(y_actu, y_pred, rownames=['Actual'], colnames=['Predicted'])
-    # print (df_confusion)
     return sum_Tau/n ,pred_values
 
-def ProcessRoot(net,X,labels,iterations,noofclassvalues,scale,lr,dropout ):
+def ProcessRoot(net1,X,labels,iterations,noofclassvalues,scale,lr,dropout ):
     pred_values=[]
-    errors,net1=training(net,X,labels,iterations, lr,1,noofclassvalues,scale,dropout)
-    iterationoutput=[]
-    sum_Tau=0
-    arr1=np.array(X)
-    n=len(X)
-    for i,row in enumerate(X):  
-       pred=predict(net1,np.array(row),noofclassvalues,scale,dropout)
-       pred_values.append(pred.tolist()[0])
-       sum_Tau+=calculateoutputTau([labels[i],pred.tolist()])  
-    print("Predicted Error "+"{:.6f}".format(sum_Tau/n))
-    return net1 ,pred_values
+    kfold = KFold(5, True, 1)
+    avrError=0
+    for idx_train, idx_test in kfold.split(X):
+        errors,net2=training(net1,X[idx_train,:],labels,iterations, lr,1,noofclassvalues,scale,dropout)
+        sum_Tau=0
+        n=len(X[idx_test,:])
+        for i,row in enumerate(X[idx_test,:]):  
+            pred=predict(net2,np.array(row),noofclassvalues,scale,dropout)
+            pred_values.append(pred.tolist()[0])
+            sum_Tau+=calculateoutputTau([labels[idx_test[i]],pred.tolist()])
+        print("Predicted Fold Error "+"{:.8f}".format(sum_Tau/n))
+        avrError+=(sum_Tau/n) 
+    print("Avr. 10 folds Error "+"{:.6f}".format(avrError/10))
+
+    return net2 ,pred_values
+
 
 ###############################################################################################################################
 def rescale(values,featuresno,data_no, new_min , new_max ):

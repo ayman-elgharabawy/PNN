@@ -153,8 +153,8 @@ X,X1,y,y1 = loadData()
 ##############################################Building Tree 3 models#####################################
 print(len(X[0]))
 yb=binarySplitter(y,4)
-net1,trainedlabels1= PNN.loadData(X=X,y=yb, featuresno= 784, labelno=2,labelvalue=2, iteration=100,lrate=0.07,hn=5,recurrent=False,scale=30)
-# net1,trainedlabels1=PreferenceNeuron.loadData(X=X,y=yb,featuresno= 784,noofclassvalues=2,labelno=2,scale=30,epoches=500,lr=0.07,dropout=true) 
+# net1,trainedlabels1= PNN.loadData(X=X,y=yb, featuresno= 784, labelno=2,labelvalue=2, iteration=5,lrate=0.07,hn=5,recurrent=False,scale=30)
+net1,trainedlabels1=PreferenceNeuron.loadData(X=X,y=yb,featuresno= 784,noofclassvalues=2,labelno=2,scale=30,epoches=10000,lr=0.07,dropout=false) 
 
 # X2,y2,X22,y22=categorDataByBinaryResult(X,y,trainedlabels)
 
@@ -163,17 +163,17 @@ X22,y22=removeDataByLabelList(X,y,[5,6,7,8,9])
 
 
 y2_m=binarySplitter(y2,2)
-net1,trainedlabels2=PreferenceNeuron.loadData(X=X2,y=y2_m,featuresno= 784,noofclassvalues=2,labelno=2,scale=30,epoches=500,lr=0.07,dropout=true) 
+net1,trainedlabels2=PreferenceNeuron.loadData(X=X2,y=y2_m,featuresno= 784,noofclassvalues=2,labelno=2,scale=30,epoches=500,lr=0.07,dropout=false) 
 
 y22_m=binarySplitter(y22,7)
-net1,trainedlabels3=PreferenceNeuron.loadData(X=X22,y=y22_m,featuresno= 784,noofclassvalues=2,labelno=2,scale=30,epoches=500,lr=0.07,dropout=true) 
+net1,trainedlabels3=PreferenceNeuron.loadData(X=X22,y=y22_m,featuresno= 784,noofclassvalues=2,labelno=2,scale=30,epoches=500,lr=0.07,dropout=false) 
 
 
 X3,y3=removeDataByLabelList(X,y,[3,4])
 X33,y33=removeDataByLabelList(X,y,[0,1,2])
 
 y3_m=binarySplitter(y3,3)
-net1,trainedlabels3=PreferenceNeuron.loadData(X=X3,y=y3_m,featuresno= 784,noofclassvalues=2,labelno=2,scale=30,epoches=500,lr=0.07,dropout=true) 
+net1,trainedlabels3=PreferenceNeuron.loadData(X=X3,y=y3_m,featuresno= 784,noofclassvalues=2,labelno=2,scale=30,epoches=500,lr=0.07,dropout=false) 
 
 y33_m=binarySplitter(y33,1)
 net1,trainedlabels3=PreferenceNeuron.loadData(X=X33,y=y33_m,featuresno= 784,noofclassvalues=2,labelno=2,scale=30,epoches=500,lr=0.07,dropout=true) 

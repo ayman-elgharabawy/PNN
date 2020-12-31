@@ -90,7 +90,7 @@ def categorRankingResult(originalData,y,trainedlabels):
     newdata2=[]
 
     for index,lab in enumerate(originalData):
-        if(round(trainedlabels[index])==2):
+        if(round(trainedlabels[index,0])==2):
            newlabel1.append(y[index])
            newdata1.append(originalData[index])
         else:
@@ -118,35 +118,42 @@ def loadData(filename, featuresno, labelno,labelvalues):
     y = np.array(labels)
     X = np.array(data)  
  
-    train_features, test_features, train_labels, test_labels  =sklearn.model_selection.train_test_split(X, y,shuffle=True, test_size=0.2, random_state=1)
+    # train_features, test_features, train_labels, test_labels  =sklearn.model_selection.train_test_split(X, y,shuffle=True, test_size=0.2, random_state=1)
     
-    train_labels = [map(float, i) for i in train_labels]
-    train_features = [map(float, i) for i in train_features]
+    # y = [map(float, i) for i in y]
+    # train_features = [map(float, i) for i in train_features]
 
-    test_features = [map(float, i) for i in test_features]
-    test_labels = [map(float, i) for i in test_labels]
+    # test_features = [map(float, i) for i in test_features]
+    # test_labels = [map(float, i) for i in test_labels]
 
-    X = np.array([list(item) for item in train_features])
-    y = np.array([list(item) for item in train_labels])
-    X1 = np.array([list(item) for item in test_features])
-    y1 = np.array([list(item) for item in test_labels])
-    y=[g[0] for g in y ] 
-    y1=[g[0] for g in y1 ]
+    # X = np.array([list(item) for item in train_features])
+    # y = np.array([list(item) for item in train_labels])
+    # X1 = np.array([list(item) for item in test_features])
+    # y1 = np.array([list(item) for item in test_labels])
+    y=[(float)(g[0]) for g in y ] 
+    # X=[(float)(g) for g in X ] 
+    X =[[float(y) for y in x] for x in X]
+    # y1=[g[0] for g in y1 ]
 
-    return X,y,X1,y1
+    return X,y #,X1,y1
 
  
 filename='C:\\Github\\PNN\\Data\\ClassificationData\\glass.csv'
-X,y,X1,y1 = loadData(filename, featuresno=9,labelno=1,labelvalues=6) 
+XX,yy = loadData(filename, featuresno=9,labelno=1,labelvalues=6) 
 ##############################################Building Tree 3 models#####################################
-X_1,y_1,X_11,y_11=trainTestingSplitter(X,y)
 
-yb=binaryLabels(y)
-net1,trainedlabels=PreferenceNeuron.loadData(X=X,y=yb,featuresno= 9,noofclassvalues=2,labelno=2,scale=2,epoches=5000,lr=0.05,dropout=false) 
+yb=binaryLabels(yy)
+net1,trainedlabels=PreferenceNeuron.loadData(X=XX,y=yb,featuresno= 9,noofclassvalues=2,labelno=2,scale=2,epoches=5000,lr=0.05,dropout=false) 
+
+X_1,y_1,X_11,y_11=trainTestingSplitter(XX,yy)
+
+yb1=binaryLabels(y_11)
+rooterror,pred_values=PreferenceNeuron.Test(net1,X_11,yb1,noofclassvalues=2,scale=2,subrank=2,dropout=False)
+
 # X2,y2,X22,y22=categorRankingResult(X,y,trainedlabels)
 
-X2,y2=removeDataByLabelList(X,y,[4,5,6])
-X22,y22=removeDataByLabelList(X,y,[1,2,3])
+X2,y2=removeDataByLabelList(XX,yy,[4,5,6])
+X22,y22=removeDataByLabelList(XX,yy,[1,2,3])
 
 X_1,y_1,X_11,y_11=trainTestingSplitter(X2,y2)
 net2=ClassifierNeuron.loadData(X_1,y_1,X_1,y_1,featuresno= 9,steps=3,startindex=4,noofclassvalues=3,scale=5,epoches=5000,lr=0.07,dropout=false) 
@@ -158,10 +165,8 @@ net3=ClassifierNeuron.loadData(X_2,y_2,X_2,y_2,featuresno= 9,steps=3,startindex=
 ##############################################################################################
 ###################################Testing the 3 models#######################################
 
-
-
 y_1b=binaryLabels(y1)
-rooterror,pred_values=PreferenceNeuron.Test(net1,X1,y_1b,noofclassvalues=2,scale=2,subrank=2,dropout=False)
+
 
 X_test2,y_test2,X_test3,y_test3=categorRankingResult(X_11,y_11,pred_values)
 

@@ -8,6 +8,30 @@ from tqdm import tqdm
 import scipy.stats as ss
 
 
+def ModifiedKendalTau(output,expected,point):   
+    tanhrow1=list()
+    n=len(expected)  
+    for i in range (len(output)):
+        sum1=0
+        sum1+=(np.tanh(500*(expected[i]-point))*np.tanh(500*(output[i]-point)))         
+        tanhrow1.append(2*sum1/(n*(n-1)))
+    a=sum(tanhrow1)    
+    return a
+
+
+def DModifiedKendalTau(output,expected,point):   
+    tanhrow1=list()
+    n=len(expected)
+    for i in range (len(output)):
+        sum1=0
+        x1=((1-np.power(np.tanh(500*(expected[i]-point)),2))*np.tanh(500*(output[i]-point)))
+        x2=np.tanh(500*(expected[i]-point))*((1-np.power(np.tanh(500*(output[i]-point)),2)))  
+        sum1+=(x1+x2)       
+       # tanhrow1.append(2*sum1/(n*(n-1)))
+        tanhrow1.append(2*sum1)
+    return tanhrow1 
+    
+
 def extract_data(filename, num_images, IMAGE_WIDTH):
     '''
     Extract images by reading the file bytestream. Reshape the read values into a 3D matrix of dimensions [m, h, w], where m 
