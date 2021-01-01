@@ -33,8 +33,8 @@ import pandas as pd
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import classification_report
 import matplotlib.pyplot as plt
-import PreferenceNeuron
-import ClassifierNeuron
+import ClassifierNN
+import PNN
 
 def print_network(net):
     for i,layer in enumerate(net,1):
@@ -100,6 +100,15 @@ def categorRankingResult(originalData,y,trainedlabels):
     return newdata1 ,newlabel1,newdata2,newlabel2
 
 
+def binarySplitter(labels,splitpoint):
+    newlist=[]
+    for lab in labels:
+        if( lab>splitpoint):
+           newlist.append([2,1])
+        else:
+           newlist.append([1,2])   
+    return newlist
+
 def loadData(filename, featuresno, labelno,labelvalues):
     data = list()
     labels = list()
@@ -118,18 +127,6 @@ def loadData(filename, featuresno, labelno,labelvalues):
     y = np.array(labels)
     X = np.array(data)  
  
-    # train_features, test_features, train_labels, test_labels  =sklearn.model_selection.train_test_split(X, y,shuffle=True, test_size=0.2, random_state=1)
-    
-    # y = [map(float, i) for i in y]
-    # train_features = [map(float, i) for i in train_features]
-
-    # test_features = [map(float, i) for i in test_features]
-    # test_labels = [map(float, i) for i in test_labels]
-
-    # X = np.array([list(item) for item in train_features])
-    # y = np.array([list(item) for item in train_labels])
-    # X1 = np.array([list(item) for item in test_features])
-    # y1 = np.array([list(item) for item in test_labels])
     y=[(float)(g[0]) for g in y ] 
     # X=[(float)(g) for g in X ] 
     X =[[float(y) for y in x] for x in X]
@@ -143,12 +140,12 @@ XX,yy = loadData(filename, featuresno=9,labelno=1,labelvalues=6)
 ##############################################Building Tree 3 models#####################################
 
 yb=binaryLabels(yy)
-net1,trainedlabels=PreferenceNeuron.loadData(X=XX,y=yb,featuresno= 9,noofclassvalues=2,labelno=2,scale=2,epoches=5000,lr=0.05,dropout=false) 
 
+net1,trainedlabels1=PNN.loadData(X=XX,y=yb, featuresno= 9, labelno=2,labelvalue=2, iteration=100,lrate=0.07,hn=1,recurrent=False,scale=30)
 X_1,y_1,X_11,y_11=trainTestingSplitter(XX,yy)
 
 yb1=binaryLabels(y_11)
-rooterror,pred_values=PreferenceNeuron.Test(net1,X_11,yb1,noofclassvalues=2,scale=2,subrank=2,dropout=False)
+
 
 # X2,y2,X22,y22=categorRankingResult(X,y,trainedlabels)
 
@@ -156,10 +153,23 @@ X2,y2=removeDataByLabelList(XX,yy,[4,5,6])
 X22,y22=removeDataByLabelList(XX,yy,[1,2,3])
 
 X_1,y_1,X_11,y_11=trainTestingSplitter(X2,y2)
-net2=ClassifierNeuron.loadData(X_1,y_1,X_1,y_1,featuresno= 9,steps=3,startindex=4,noofclassvalues=3,scale=5,epoches=5000,lr=0.07,dropout=false) 
+
+# label2=binarySplitter(y2,5)
+
+net2=ClassifierNN.loadData(X_1,y_1,X_11,y_11,featuresno= 9,steps=3,startindex=4,noofclassvalues=3,scale=5,epoches=5000,hn=5,lr=0.07,dropout=false) 
+# net1,trainedlabels1=PNN.loadData(X=X2,y=label2, featuresno= 9, labelno=2,labelvalue=2, iteration=100,lrate=0.07,hn=1,recurrent=False,scale=30)
+
+
+X_1,y_1,X_11,y_11=trainTestingSplitter(X22,y22)
+net3=ClassifierNN.loadData(X_1,y_1,X_11,y_11,featuresno= 9,steps=3,startindex=1,noofclassvalues=3,scale=5,epoches=5000,hn=5,lr=0.07,dropout=false) 
+
+
+label22=binarySplitter(y22,2)
+net1,trainedlabels1=PNN.loadData(X=X22,y=label22, featuresno= 9, labelno=2,labelvalue=2, iteration=100,lrate=0.07,hn=1,recurrent=False,scale=30)
+
+
 
 X_2,y_2,X_2,y_2=trainTestingSplitter(X22,y22)
-net3=ClassifierNeuron.loadData(X_2,y_2,X_2,y_2,featuresno= 9,steps=3,startindex=1,noofclassvalues=3,scale=5,epoches=5000,lr=0.07,dropout=false) 
 
 
 ##############################################################################################

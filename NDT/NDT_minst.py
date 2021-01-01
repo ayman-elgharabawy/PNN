@@ -154,6 +154,7 @@ X,X1,y,y1 = loadData()
 print(len(X[0]))
 yb=binarySplitter(y,4)
 net1,trainedlabels1= PNN.loadData(X=X,y=yb, featuresno= 784, labelno=2,labelvalue=2, iteration=100,lrate=0.07,hn=5,recurrent=False,scale=30)
+
 # net1,trainedlabels1=PreferenceNeuron.loadData(X=X,y=yb,featuresno= 784,noofclassvalues=2,labelno=2,scale=30,epoches=500,lr=0.07,dropout=true) 
 
 # X2,y2,X22,y22=categorDataByBinaryResult(X,y,trainedlabels)

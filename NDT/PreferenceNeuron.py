@@ -245,7 +245,8 @@ def Test(net1,X_test,y_test,noofclassvalues,scale,subrank,dropout):
 
 def ProcessRoot(net1,X,labels,iterations,noofclassvalues,scale,lr,dropout ):
     pred_values=[]
-    kfold = KFold(5, True, 1)
+    kfoldindex=5
+    kfold = KFold(kfoldindex, True, 1)
     avrError=0
     for idx_train, idx_test in kfold.split(X):
         errors,net2=training(net1,X[idx_train,:],labels,iterations, lr,1,noofclassvalues,scale,dropout)
@@ -257,7 +258,7 @@ def ProcessRoot(net1,X,labels,iterations,noofclassvalues,scale,lr,dropout ):
             sum_Tau+=calculateoutputTau([labels[idx_test[i]],pred.tolist()])
         print("Predicted Fold Error "+"{:.8f}".format(sum_Tau/n))
         avrError+=(sum_Tau/n) 
-    print("Avr. 10 folds Error "+"{:.6f}".format(avrError/10))
+    print("Avr. "+"{%f}"+" folds Error "+"{:.6f}".format(kfoldindex,avrError/kfoldindex))
 
     return net2 ,pred_values
 

@@ -89,12 +89,12 @@ def print_network(net,epoch,tau,row1):
                 print("Neuron {} :".format(j), neuron)  
         print("==== Roh Correlation = "+str(tau)+"======\n")       
       
-def initialize_network(ins, hiddens, outs, n_hlayers):
+def initialize_network(ins, hiddens, outs):
     
     input_neurons = ins
     hidden_neurons = hiddens
     output_neurons = outs
-    n_hidden_layers = n_hlayers
+    n_hidden_layers = 1
     net = list()
 
     for h in range(n_hidden_layers):
@@ -213,7 +213,7 @@ def truncate(n, decimals=0):
     return v
 
 def trainingNoValidation(epochs, n_outputs, train_features,train_labels, featuresno, labelno,labelvalue,lrate,hn,b,recurrent):
-    net = initialize_network(featuresno, hn, n_outputs,1)
+    net = initialize_network(featuresno, hn, n_outputs)
     errorRate = np.array([])
     sum_Tau=np.array([])
     n=len(train_features)
@@ -230,7 +230,7 @@ def trainingNoValidation(epochs, n_outputs, train_features,train_labels, feature
 
 
 def CrossValidationAvg(kfold,foldindex,n,foldederrorrate,X_train,y_train,featuresno, noofhidden, labelno,labelvalue,lrate,bbs,epochs,bestvector,Datasetfilename,trainingdataresult,recurrent):
-    net = initialize_network(featuresno, noofhidden, labelno,1)
+    net = initialize_network(featuresno, noofhidden, labelno)
     avr_res=0
     for idx_train, idx_test in kfold.split(X_train):      
         foldindex += 1

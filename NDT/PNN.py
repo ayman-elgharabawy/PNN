@@ -89,22 +89,20 @@ def print_network(net,epoch,tau,row1):
                 print("Neuron {} :".format(j), neuron)  
         print("==== Roh Correlation = "+str(tau)+"======\n")       
       
-def initialize_network(ins, hiddens, outs, n_hlayers):
+def initialize_network(ins, hiddens, outs):
     
     input_neurons = ins
     hidden_neurons = hiddens
     output_neurons = outs
-    n_hidden_layers = n_hlayers
+
     net = list()
 
-    for h in range(n_hidden_layers):
-        if h != 0:
-            input_neurons = len(net[-1])
-        hidden_layer = {'middle':[ {'weights': np.random.uniform(low=-0.9, high=0.9,size=input_neurons)} for i in range(hidden_neurons)] }
-        # state_layer ={'state': [{'weights': np.random.uniform(low=-0.9, high=0.9,size=input_neurons)} for i in range(hidden_neurons)] }
-        net.append(hidden_layer)
-        # net.append(state_layer)
-    output_layer = {'output':[{'weights': np.random.uniform(low=-0.9, high=0.9,size=hidden_neurons)} for i in range(output_neurons)] }   
+    # for h in range(n_hidden_layers):
+    # if h != 0:
+    # input_neurons = len(net[-1])
+    hidden_layer = {'middle':[ {'weights': np.random.uniform(low=-0.5, high=0.5,size=input_neurons)} for i in range(hidden_neurons)] }
+    net.append(hidden_layer)
+    output_layer = {'output':[{'weights': np.random.uniform(low=-0.5, high=0.5,size=hidden_neurons)} for i in range(output_neurons)] }   
     net.append(output_layer)
 
     return net 
@@ -216,8 +214,8 @@ def truncate(n, decimals=0):
     return v
 
 
-def CrossValidationAvg(kfold,foldindex,X_train,y_train,featuresno, noofhidden, labelno,labelvalue,lrate,bbs,epochs,bestvector,recurrent):
-    net = initialize_network(featuresno, noofhidden, labelno,1)
+def CrossValidationAvg(kfold,foldcounter,foldindex,X_train,y_train,featuresno, noofhidden, labelno,labelvalue,lrate,bbs,epochs,bestvector,recurrent):
+    net = initialize_network(featuresno, noofhidden, labelno)
     avr_res=0
     tot_etau=0
     for idx_train, idx_test in kfold.split(X_train):      
@@ -232,15 +230,16 @@ def CrossValidationAvg(kfold,foldindex,X_train,y_train,featuresno, noofhidden, l
         iterationoutput=predict(net,X_train[idx_test,:],testlabel,  labelno,labelvalue,bbs,noofhidden,recurrent)
         print("-- Predition one fold Result %d",iterationoutput)
         tot_etau+=iterationoutput
-    avr_res=tot_etau/10  
-    print("Final average 10 Folds test Result %f",avr_res)
+    avr_res=tot_etau/foldcounter  
+    print("Final average %f Folds test Result %f",foldcounter,avr_res)
         
 
     return avr_res, net
   
 
 def training(epochs, X,y, featuresno, labelno,labelvalue,lrate,hn,scale,recurrent):
-    kfold = KFold(5, True, 1)
+    foldcounter=5
+    kfold = KFold(foldcounter, True, 1)
     foldindex = 0
     X_train, X_test, y_train, y_test = sklearn.model_selection.train_test_split(X, y, test_size=0.2, random_state=1)
     lrlist=[0.05]#,0.09,0.1,0.2,0.3,0.4,0.5]
@@ -252,7 +251,7 @@ def training(epochs, X,y, featuresno, labelno,labelvalue,lrate,hn,scale,recurren
     for hn1 in hnlist: 
         for lr1 in lrlist:
             for scl in scalelist:
-                avresult,bestnet=CrossValidationAvg(kfold,foldindex,X_train,y_train,featuresno, hn1, labelno,labelvalue,lr1,scl,epochs,bestvector,recurrent)
+                avresult,bestnet=CrossValidationAvg(kfold,foldcounter,foldindex,X_train,y_train,featuresno, hn1, labelno,labelvalue,lr1,scl,epochs,bestvector,recurrent)
                 print('crossv Prediction=%f , lr=%f',(avresult,lr1))
                 if(avresult>bestvresult):
                     bestvresult=avresult
