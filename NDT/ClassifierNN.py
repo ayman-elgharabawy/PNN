@@ -104,15 +104,6 @@ def print_network(net):
         for j,neuron in enumerate(layer,1):
             print("neuron {} :".format(j),neuron)
 
-
-# def initialize_network(features_norm):
-#     input_neurons=len(features_norm[0])
-#     output_neurons=1
-#     net=list()       
-#     OneNeuron = [ { 'weights': np.random.uniform(low=-0.1, high=0.1,size=input_neurons)} for i in range(output_neurons) ]
-#     net.append(OneNeuron)
-#     return net
-
 def initialize_network(ins, hiddens, outs):
     
     input_neurons = ins
@@ -129,74 +120,65 @@ def initialize_network(ins, hiddens, outs):
     return net 
 
 
-def  forward_propagation (net,input,steps,startindex,scale,dropout):
-    row=input
-    keep_prob=0.5
-    cache=[]
-    if dropout:
-        dropnet,dropnetperneuron=createDropNet(net)
-        cache=dropnetperneuron
+def  forward_propagation (net,input1,steps,startindex,scale):
+    row1 = input1
+    prev_input = np.array([])
+    for nindex,neuron in enumerate(net[0]['middle']):
+        sum1 = neuron['weights'].T.dot(row1)
+        result = SSS(sum1,steps,startindex,scale)  
+        if math.isnan(result):
+              result=0    
+        neuron['result'] = result 
+        prev_input = np.append(prev_input, [result])    
+    row1 = prev_input 
+    statelayer=prev_input 
+    
+    prev_input = np.array([])
+    for neuron in net[1]['output']:
+        sum1 = neuron['weights'].T.dot(row1)
+        result = SSS(sum1,steps,startindex,scale)   
+        if math.isnan(result):
+              result=0   
+        neuron['result'] = result 
+        prev_input = np.append(prev_input, [result])
+  
+    row1 = prev_input 
 
-    for lindex,layer in enumerate(net):
-        prev_input=np.array([])
-        for indexn,neuron in enumerate(layer):
+    #############################
+    # ###########################  
+    return row1
 
-            xx=neuron['weights']
-            nn=len(xx)
-            aa=list(xx)
-            if dropout:
-                D1=dropnet[lindex][indexn*nn:indexn*nn+nn]
-                aa = aa * D1    # Shutdown neurons
-                aa = aa / keep_prob    # Scales remaining values
-            sum = np.array(aa).T.dot(row)
-            result=SSS(sum,steps,startindex,scale)
-            neuron['result']=result           
-            prev_input=np.append(prev_input,[result])
-        row =prev_input   
-    return row ,cache
+def back_propagation(net,row,expected,nlabel,start,scale):
+    results = list()
+    errors = np.array([]) 
+    results = [neuron['result'] for neuron in net[1]['output']]
+    errors = (expected-np.array(results))/100
 
-def back_propagation(net,row,expected,nlabel,start,scale,dropout,cache):
-     for i in reversed(range(len(net))):
-            layer=net[i]
-            errors=np.array([])
-            if i==len(net)-1:
-                results=[neuron['result'] for neuron in layer]
-                errors = (expected-np.array(results))/100
-            else:
-                for j in range(len(layer)):
-                    herror=0
-                    nextlayer=net[i+1]
-                    for inn,neuron in enumerate(nextlayer):
-                        if dropout:  
-                          zzz=cache[i+1][inn][j]
-                          if(zzz):
-                              herror+=(neuron['weights'][j]*neuron['delta'])
-                        else:      
-                          herror+=(neuron['weights'][j]*neuron['delta'])
-                    errors=np.append(errors,[herror])
-            
-            for j in range(len(layer)):
-                neuron=layer[j]
-                results=[neuron1['result'] for neuron1 in layer]
-                neuron['delta']=errors[j]*dSSS(neuron['result'],nlabel,start,scale)
+    for indexsub,neuron in enumerate(net[1]['output']):   
+        neuron['delta'] =errors[indexsub] * dSSS(neuron['result'],nlabel,start,scale)
 
+    for indexsub,neuron in enumerate(net[0]['middle']):
+        herror = 0
+        for j,neuron in enumerate(net[1]['output']):
+            herror += (neuron['weights'][j]) * (neuron['delta'])   
+        errors=np.append(errors,[herror])
 
-def updateWeights(net,input,lrate,dropout,cache):   
-    for i in range(len(net)):
-        inputs = input
-        if i!=0:
-            inputs=[neuron['result'] for neuron in net[i-1]]
+    for indexsub,neuron in enumerate(net[0]['middle']):
+        neuron['delta'] =errors[indexsub] * dSSS(neuron['result'],nlabel,start,scale)
 
-        for inno,neuron in enumerate(net[i]):
-            for j in range(len(inputs)):
-                if dropout:
-                    zzz=cache[i][inno][j]
-                    if(zzz):
-                        neuron['weights'][j]+=lrate*neuron['delta']*inputs[j]
-                else:                        
-                    neuron['weights'][j]+=lrate*neuron['delta']*inputs[j]
-            neuron['weights'][-1]+=lrate*neuron['delta']
-    return net        
+def updateWeights(net,input1,lrate):         
+    inputs = list(input1)
+    for neuron in (net[0]['middle']):
+        for j in range(len(inputs)):
+            neuron['weights'][j] -= lrate * neuron['delta'] * inputs[j]
+        neuron['weights'][-1] -= lrate * neuron['delta']    
+    inputs = [neuron['result'] for neuron in net[0]['middle']]
+    for neuron in (net[1]['output']):
+        for j in range(len(inputs)):
+            neuron['weights'][j] -= lrate * neuron['delta'] * inputs[j]
+        neuron['weights'][-1] -= lrate * neuron['delta'] 
+    return net
+
 
 def  training(net,X,y, epochs,steps,startindex,lrate,n_outputs,noofclassvalues,scale,dropout):
     errors=[]
@@ -204,17 +186,15 @@ def  training(net,X,y, epochs,steps,startindex,lrate,n_outputs,noofclassvalues,s
         sum_error=0
         outlist=[]
         for i,row in enumerate(X):
-            outputs,cache=forward_propagation(net,row,steps,startindex,scale,dropout)
+            outputs,cache=forward_propagation(net,row,steps,startindex,scale)
             outlist.append(outputs)
-            back_propagation(net,row,y[i],steps,startindex,scale,dropout,cache)
-            net=updateWeights(net,row,lrate,dropout,cache)
+            back_propagation(net,row,y[i],steps,startindex,scale)
+            net=updateWeights(net,row,lrate)
 
         if epoch%100 ==0:
             mse = mean_squared_error(y, outlist)
             rmse = sqrt(mse)
             print('>epoch=%d,RMS error=%.9f'%(epoch,rmse))
-            # errors.append(sum_error)
-            # print_network(net)
     return rmse , net
 
 
@@ -244,14 +224,12 @@ def Test(net1,X_test,y_test,steps,startindex,scale,dropout=False):
     return rmse
 
 
-def ProcessRoot(net,X,labels,iterations,steps,startindex,noofclassvalues,scale,lr,dropout ):
-    # pred_error=0
+def ProcessRoot(net,X,labels,iterations,steps,startindex,noofclassvalues,scale,lr ):
     pred_values=[]
-    errors,net1=training(net,X,labels,iterations,steps,startindex, lr,1,noofclassvalues,scale,dropout)
+    errors,net1=training(net,X,labels,iterations,steps,startindex, lr,1,noofclassvalues,scale)
     for index,y in enumerate(X):
-       pred=predict(net,np.array(y),steps,startindex,scale,dropout)
+       pred=predict(net,np.array(y),steps,startindex,scale)
        pred_values.append(pred)
-    #    pred_error+=math.sqrt(math.pow(labels[index]-pred,2))
     mse = mean_squared_error(labels, pred_values)
     rmse = sqrt(mse)   
     print("Predicted Error "+str(rmse))
@@ -290,7 +268,7 @@ def rescale(values,featuresno,data_no, new_min , new_max ):
         ############################
     return totaloutput1
 
-def loadData(filename, featuresno,noofclassvalues,scale,epoches,hn,lr,dropout):
+def loadData(filename, featuresno,noofclassvalues,scale,epoches,hn,lr):
     data = list()
     labels = list()
     alldata = list()
@@ -322,13 +300,13 @@ def loadData(filename, featuresno,noofclassvalues,scale,epoches,hn,lr,dropout):
 
     y=[x[0] for x in y ]  
     net=initialize_network(ins=features_norm,hiddens=hn, outs=1)
-    net1=ProcessRoot(net,features_norm,y,epoches,noofclassvalues,scale,lr,dropout)
+    net1=ProcessRoot(net,features_norm,y,epoches,noofclassvalues,scale,lr)
     return net1
 
-def loadData(X,y,X_test,y_test,featuresno,steps,startindex,noofclassvalues,scale,epoches,hn,lr,dropout):
+def loadData(X,y,X_test,y_test,featuresno,steps,startindex,noofclassvalues,scale,epoches,hn,lr):
 
     net=initialize_network(ins=len(X[0]),hiddens=hn,outs=1)
-    net1=ProcessRoot(net,X,y,epoches,steps,startindex,noofclassvalues,scale,lr,dropout)
+    net1=ProcessRoot(net,X,y,epoches,steps,startindex,noofclassvalues,scale,lr)
     return net1
 ######################################################################################################
 ######################################################################################################

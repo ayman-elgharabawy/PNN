@@ -153,32 +153,28 @@ X2,y2=removeDataByLabelList(XX,yy,[4,5,6])
 X22,y22=removeDataByLabelList(XX,yy,[1,2,3])
 
 X_1,y_1,X_11,y_11=trainTestingSplitter(X2,y2)
-
-# label2=binarySplitter(y2,5)
-
-net2=ClassifierNN.loadData(X_1,y_1,X_11,y_11,featuresno= 9,steps=3,startindex=4,noofclassvalues=3,scale=5,epoches=5000,hn=5,lr=0.07,dropout=false) 
-# net1,trainedlabels1=PNN.loadData(X=X2,y=label2, featuresno= 9, labelno=2,labelvalue=2, iteration=100,lrate=0.07,hn=1,recurrent=False,scale=30)
+net2=ClassifierNN.loadData(X_1,y_1,X_11,y_11,featuresno= 9,steps=3,startindex=4,noofclassvalues=3,scale=5,epoches=5000,hn=5,lr=0.07) 
 
 
 X_1,y_1,X_11,y_11=trainTestingSplitter(X22,y22)
-net3=ClassifierNN.loadData(X_1,y_1,X_11,y_11,featuresno= 9,steps=3,startindex=1,noofclassvalues=3,scale=5,epoches=5000,hn=5,lr=0.07,dropout=false) 
+net3=ClassifierNN.loadData(X_1,y_1,X_11,y_11,featuresno= 9,steps=3,startindex=1,noofclassvalues=3,scale=5,epoches=5000,hn=5,lr=0.07) 
 
 
-label22=binarySplitter(y22,2)
-net1,trainedlabels1=PNN.loadData(X=X22,y=label22, featuresno= 9, labelno=2,labelvalue=2, iteration=100,lrate=0.07,hn=1,recurrent=False,scale=30)
+# label22=binarySplitter(y22,2)
+# net1,trainedlabels1=PNN.loadData(X=X22,y=label22, featuresno= 9, labelno=2,labelvalue=2, iteration=100,lrate=0.07,hn=1,recurrent=False,scale=30)
 
 
 
-X_2,y_2,X_2,y_2=trainTestingSplitter(X22,y22)
+# X_2,y_2,X_2,y_2=trainTestingSplitter(X22,y22)
 
 
 ##############################################################################################
 ###################################Testing the 3 models#######################################
 
-y_1b=binaryLabels(y1)
+# y_1b=binaryLabels(y1)
 
 
-X_test2,y_test2,X_test3,y_test3=categorRankingResult(X_11,y_11,pred_values)
+# X_test2,y_test2,X_test3,y_test3=categorRankingResult(X_11,y_11,pred_values)
 
-rootresult=ClassifierNeuron.Test(net2,X_test2,y_test2,steps=3,startindex=4,scale=5,dropout=False)
-rootresult=ClassifierNeuron.Test(net3,X_test3,y_test3,steps=3,startindex=1,scale=5,dropout=False)
+# rootresult=ClassifierNeuron.Test(net2,X_test2,y_test2,steps=3,startindex=4,scale=5,dropout=False)
+# rootresult=ClassifierNeuron.Test(net3,X_test3,y_test3,steps=3,startindex=1,scale=5,dropout=False)
