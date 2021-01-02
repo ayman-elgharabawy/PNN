@@ -241,7 +241,7 @@ def training(epochs, X,y, featuresno, labelno,labelvalue,lrate,hn,scale,recurren
     foldcounter=5
     kfold = KFold(foldcounter, True, 1)
     foldindex = 0
-    X_train, X_test, y_train, y_test = sklearn.model_selection.train_test_split(X, y, test_size=0.2, random_state=1)
+    # X_train, X_test, y_train, y_test = sklearn.model_selection.train_test_split(X, y, test_size=0.2, random_state=1)
     lrlist=[0.05]#,0.09,0.1,0.2,0.3,0.4,0.5]
     scalelist=[2]
     hnlist=[featuresno+100]
@@ -251,7 +251,7 @@ def training(epochs, X,y, featuresno, labelno,labelvalue,lrate,hn,scale,recurren
     for hn1 in hnlist: 
         for lr1 in lrlist:
             for scl in scalelist:
-                avresult,bestnet=CrossValidationAvg(kfold,foldcounter,foldindex,X_train,y_train,featuresno, hn1, labelno,labelvalue,lr1,scl,epochs,bestvector,recurrent)
+                avresult,bestnet=CrossValidationAvg(kfold,foldcounter,foldindex,X,y,featuresno, hn1, labelno,labelvalue,lr1,scl,epochs,bestvector,recurrent)
                 print('crossv Prediction=%f , lr=%f',(avresult,lr1))
                 if(avresult>bestvresult):
                     bestvresult=avresult
@@ -261,13 +261,13 @@ def training(epochs, X,y, featuresno, labelno,labelvalue,lrate,hn,scale,recurren
 
     # with open(Datasetfilename+str(timestamp)+'.txt', 'a') as f:
     # print(">>>>>>>>>>>>>>>>>>>>>>>>"+Datasetfilename+"<<<<<<"+str(timestamp)+"<<<<<<<<<<<<<<<<<<<<<")
-    print(">>>>>>>>Best Parameters<<<<<<<<<")
-    print(">>>>>>>>Best Vector Data<<<<<<<<<")
-    print('scale=%f,best result=%f',(bestvector[4],bestvresult))
-    print(">>>>>>>>Testing data result<<<<<<<<<")
-    X_test_norm = zscore(X_test, axis=0)
-    iterationoutput=predict(bestnet,X_test_norm, y_test, labelno,labelvalue,bestvector[4],hn1,recurrent)
-    print('Final Prediction=%f',iterationoutput)
+    # print(">>>>>>>>Best Parameters<<<<<<<<<")
+    # print(">>>>>>>>Best Vector Data<<<<<<<<<")
+    # print('scale=%f,best result=%f',(bestvector[4],bestvresult))
+    # print(">>>>>>>>Testing data result<<<<<<<<<")
+    # X_test_norm = zscore(X_test, axis=0)
+    # iterationoutput=predict(bestnet,X_test_norm, y_test, labelno,labelvalue,bestvector[4],hn1,recurrent)
+    # print('Final Prediction=%f',iterationoutput)
     print(">>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<<")
     return bestnet,avresult
 

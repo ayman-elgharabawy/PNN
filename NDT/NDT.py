@@ -33,8 +33,11 @@ import pandas as pd
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import classification_report
 import matplotlib.pyplot as plt
-import ClassifierNN
 import PNN
+import skfuzzy as fuzz
+from skfuzzy import control as ctrl
+
+
 
 def print_network(net):
     for i,layer in enumerate(net,1):
@@ -81,6 +84,43 @@ def binaryLabels(labels):
            newlist.append([1,2])   
     return newlist
 
+def fuzzyLabelsbinary(labels):
+    newlist=[]
+    # ranking = ctrl.Antecedent(np.arange(0, 6, 1), 'ranking')
+    # ranking.automf(3)
+    # ranking['low'] = fuzz.trimf(ranking.universe, [0, 0, 2])
+    # ranking['medium'] = fuzz.trimf(ranking.universe, [0, 13, 25])
+    # ranking['high'] = fuzz.trimf(ranking.universe, [13, 25, 25])
+    for lab in labels:
+        if (lab>4):
+            newlist.append([1,2,2])
+        elif(lab>2 and lab<=4) :
+            if (lab==3):
+               newlist.append([2,1,2])
+            elif(lab==4):
+               newlist.append([2,1,2]) 
+        else:
+            newlist.append([2,2,1])      
+    return newlist
+
+def fuzzyLabels(labels):
+    newlist=[]
+    # ranking = ctrl.Antecedent(np.arange(0, 6, 1), 'ranking')
+    # ranking.automf(3)
+    # ranking['low'] = fuzz.trimf(ranking.universe, [0, 0, 2])
+    # ranking['medium'] = fuzz.trimf(ranking.universe, [0, 13, 25])
+    # ranking['high'] = fuzz.trimf(ranking.universe, [13, 25, 25])
+    for lab in labels:
+        if (lab>4):
+            newlist.append([1,2,3])
+        elif(lab>2 and lab<=4) :
+            if (lab==3):
+               newlist.append([3,1,2])
+            elif(lab==4):
+               newlist.append([2,1,3]) 
+        else:
+            newlist.append([3,2,1])      
+    return newlist
 
 def categorRankingResult(originalData,y,trainedlabels):
     newlabel1=[]
@@ -123,47 +163,46 @@ def loadData(filename, featuresno, labelno,labelvalues):
             data.append(row[0:featuresno])
             labels.append(row[featuresno:featuresno + labelno])
             alldata.append(row[:])
-
     y = np.array(labels)
     X = np.array(data)  
- 
     y=[(float)(g[0]) for g in y ] 
-    # X=[(float)(g) for g in X ] 
     X =[[float(y) for y in x] for x in X]
-    # y1=[g[0] for g in y1 ]
-
     return X,y #,X1,y1
 
  
 filename='C:\\Github\\PNN\\Data\\ClassificationData\\glass.csv'
 XX,yy = loadData(filename, featuresno=9,labelno=1,labelvalues=6) 
 ##############################################Building Tree 3 models#####################################
-
-yb=binaryLabels(yy)
-
-net1,trainedlabels1=PNN.loadData(X=XX,y=yb, featuresno= 9, labelno=2,labelvalue=2, iteration=100,lrate=0.07,hn=1,recurrent=False,scale=30)
+print("===========================Ranking Root ==========================================")
+# yb=binaryLabels(yy)
+yb=fuzzyLabels(yy)
+net1,trainedlabels1=PNN.loadData(X=XX,y=yb, featuresno= 9, labelno=3,labelvalue=3, iteration=1000,lrate=0.07,hn=20,recurrent=False,scale=30)
 X_1,y_1,X_11,y_11=trainTestingSplitter(XX,yy)
-
-yb1=binaryLabels(y_11)
-
 
 # X2,y2,X22,y22=categorRankingResult(X,y,trainedlabels)
 
-X2,y2=removeDataByLabelList(XX,yy,[4,5,6])
-X22,y22=removeDataByLabelList(XX,yy,[1,2,3])
+X2,y2=removeDataByLabelList(XX,yy,[5,6])
+X22,y22=removeDataByLabelList(XX,yy,[3,4])
+X222,y222=removeDataByLabelList(XX,yy,[1,2])
 
-X_1,y_1,X_11,y_11=trainTestingSplitter(X2,y2)
-net2=ClassifierNN.loadData(X_1,y_1,X_11,y_11,featuresno= 9,steps=3,startindex=4,noofclassvalues=3,scale=5,epoches=5000,hn=5,lr=0.07) 
+# X_1,y_1,X_11,y_11=trainTestingSplitter(X22,y22)
 
+print("===========================Ranking [5,6] ==========================================")
+yb1=binaryLabels(y2)
+net1,trainedlabels1=PNN.loadData(X=X2,y=yb1, featuresno= 9, labelno=2,labelvalue=2, iteration=500,lrate=0.07,hn=5,recurrent=False,scale=30)
 
-X_1,y_1,X_11,y_11=trainTestingSplitter(X22,y22)
-net3=ClassifierNN.loadData(X_1,y_1,X_11,y_11,featuresno= 9,steps=3,startindex=1,noofclassvalues=3,scale=5,epoches=5000,hn=5,lr=0.07) 
+# X_1,y_1,X_11,y_11=trainTestingSplitter(X2,y2)
+print("===========================Ranking [3,4] ==========================================")
+yb2=binaryLabels(y22)
+net1,trainedlabels1=PNN.loadData(X=X22,y=yb2, featuresno= 9, labelno=2,labelvalue=2, iteration=500,lrate=0.07,hn=5,recurrent=False,scale=30)
 
+# X_1,y_1,X_11,y_11=trainTestingSplitter(X222,y222)
+print("===========================Ranking [1,2] ==========================================")
+yb3=binaryLabels(y222)
+net1,trainedlabels1=PNN.loadData(X=X222,y=yb3, featuresno= 9, labelno=2,labelvalue=2, iteration=500,lrate=0.07,hn=5,recurrent=False,scale=30)
 
 # label22=binarySplitter(y22,2)
 # net1,trainedlabels1=PNN.loadData(X=X22,y=label22, featuresno= 9, labelno=2,labelvalue=2, iteration=100,lrate=0.07,hn=1,recurrent=False,scale=30)
-
-
 
 # X_2,y_2,X_2,y_2=trainTestingSplitter(X22,y22)
 
