@@ -160,8 +160,8 @@ def back_propagation(net, row, expected, outputs, n_outputs,labelvalue,datalengt
 
     for indexsub,neuron in enumerate(net[0]['middle']):
         herror = 0
-        for j,neuron in enumerate(net[1]['output']):
-            herror += (neuron['weights'][j]) * (neuron['delta'])   
+        for j,outneuron in enumerate(net[1]['output']):
+            herror += (neuron['weights'][j]) * (outneuron['delta'])   
         errors=np.append(errors,[herror])
 
     for indexsub,neuron in enumerate(net[0]['middle']):
@@ -359,6 +359,6 @@ alldata = []
 
 
 # tot_erro1,tot_rms1 = loadData('calhousing',4,4, 1000,0.09,50,'SSS') 
-train_error = loadData(filename='Data\\LRData\\iris.txt', featuresno=4,labelno=3,labelvalue=3,iteration=500,lrate=0.05,hn=100,recurrent=true) 
+train_error = loadData(filename='C:\\Github\\PNN\\Data\\LRData\\iris.txt', featuresno=4,labelno=3,labelvalue=3,iteration=500,lrate=0.05,hn=100,recurrent=true) 
 # train_error = loadData(filename='Data\\SGPNData\\sushi_ranked_subgrouped.csv', featuresno=10,labelno=10,labelvalue=10,iteration=10,lrate=0.05,hn=50,recurrent=false) 
 # train_error = loadData('Data\\LRData\\german2005.csv', 31,5,500,0.05,100,false) 

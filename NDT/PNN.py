@@ -158,8 +158,8 @@ def back_propagation(net, row, expected, outputs, n_outputs,labelvalue,b):
 
     for indexsub,neuron in enumerate(net[0]['middle']):
         herror = 0
-        for j,neuron in enumerate(net[1]['output']):
-            herror += (neuron['weights'][j]) * (neuron['delta'])   
+        for j,outneuron in enumerate(net[1]['output']):
+            herror += (neuron['weights'][j]) * (outneuron['delta'])   
         errors=np.append(errors,[herror])
 
     for indexsub,neuron in enumerate(net[0]['middle']):
@@ -244,7 +244,7 @@ def training(epochs, X,y, featuresno, labelno,labelvalue,lrate,hn,scale,recurren
     # X_train, X_test, y_train, y_test = sklearn.model_selection.train_test_split(X, y, test_size=0.2, random_state=1)
     lrlist=[0.05]#,0.09,0.1,0.2,0.3,0.4,0.5]
     scalelist=[2]
-    hnlist=[featuresno+100]
+    hnlist=[hn]
     bestvector=[0,0,0,0,0]
     avresult=0
     bestvresult=0

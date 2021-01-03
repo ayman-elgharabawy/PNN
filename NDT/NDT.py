@@ -176,7 +176,7 @@ XX,yy = loadData(filename, featuresno=9,labelno=1,labelvalues=6)
 print("===========================Ranking Root ==========================================")
 # yb=binaryLabels(yy)
 yb=fuzzyLabels(yy)
-net1,trainedlabels1=PNN.loadData(X=XX,y=yb, featuresno= 9, labelno=3,labelvalue=3, iteration=1000,lrate=0.07,hn=20,recurrent=False,scale=30)
+net1,trainedlabels1=PNN.loadData(X=XX,y=yb, featuresno= 9, labelno=3,labelvalue=3, iteration=1000,lrate=0.07,hn=3,recurrent=False,scale=10)
 X_1,y_1,X_11,y_11=trainTestingSplitter(XX,yy)
 
 # X2,y2,X22,y22=categorRankingResult(X,y,trainedlabels)

@@ -33,8 +33,6 @@ import pandas as pd
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import classification_report
 import matplotlib.pyplot as plt
-import PreferenceNeuron
-import ClassifierNeuron
 import PNN
 
 def print_network(net):
@@ -128,6 +126,47 @@ def convertMultilabel(train_labels,labelno):
 
     return newLabels
 
+
+def fuzzy5Labels(labels):
+    newlist=[]
+    # ranking = ctrl.Antecedent(np.arange(0, 6, 1), 'ranking')
+    # ranking.automf(3)
+    # ranking['low'] = fuzz.trimf(ranking.universe, [0, 0, 2])
+    # ranking['medium'] = fuzz.trimf(ranking.universe, [0, 13, 25])
+    # ranking['high'] = fuzz.trimf(ranking.universe, [13, 25, 25])
+    for lab in labels:
+        if (lab>7):
+            newlist.append([1,2,3,4,5])
+        elif(lab>5 and lab<=7) :
+            if (lab==7):
+               newlist.append([2,1,3,4,5])
+            elif(lab==6):
+               newlist.append([3,1,2,4,5]) 
+        elif(lab>3 and lab<=5) :
+            if (lab==5):
+               newlist.append([5,2,1,3,4])
+            elif(lab==4):
+               newlist.append([5,3,1,2,4]) 
+        elif(lab>1 and lab<=3) : 
+            if (lab==3):
+               newlist.append([5,4,2,1,3])
+            elif(lab==2):
+               newlist.append([5,4,3,1,2]) 
+        elif(lab<=1) :
+            newlist.append([5,4,3,2,1])
+            
+   
+    return newlist
+
+def binaryLabels(labels):
+    newlist=[]
+    for lab in labels:
+        if( lab>=4):
+           newlist.append([2,1])
+        else:
+           newlist.append([1,2])   
+    return newlist
+
 def loadData():
     data = list()
     labels = list()
@@ -143,52 +182,45 @@ def loadData():
 
     y = np.array(train_labels)
     X = np.array(flatterd)  
- 
-    train_features, test_features, train_labels, test_labels  =sklearn.model_selection.train_test_split(X, y,stratify = y, test_size=0.3, random_state=1)
-    return train_features, test_features, train_labels, test_labels 
+    return X,y
+    # train_features, test_features, train_labels, test_labels  =sklearn.model_selection.train_test_split(X, y,stratify = y, test_size=0.3, random_state=1)
+    # return train_features, test_features, train_labels, test_labels 
 
  
 
-X,X1,y,y1 = loadData() 
+X,y = loadData() 
 ##############################################Building Tree 3 models#####################################
 print(len(X[0]))
-yb=binarySplitter(y,4)
-net1,trainedlabels1= PNN.loadData(X=X,y=yb, featuresno= 784, labelno=2,labelvalue=2, iteration=100,lrate=0.07,hn=5,recurrent=False,scale=30)
+# yb=binarySplitter(y,4)
+
+yb=fuzzy5Labels(y)
+
+net1,trainedlabels1= PNN.loadData(X=X,y=yb, featuresno= 784, labelno=5,labelvalue=5, iteration=100,lrate=0.07,hn=20,recurrent=False,scale=30)
 
 # net1,trainedlabels1=PreferenceNeuron.loadData(X=X,y=yb,featuresno= 784,noofclassvalues=2,labelno=2,scale=30,epoches=500,lr=0.07,dropout=true) 
 
 # X2,y2,X22,y22=categorDataByBinaryResult(X,y,trainedlabels)
 
-X2,y2=removeDataByLabelList(X,y,[0,1,2,3,4])
-X22,y22=removeDataByLabelList(X,y,[5,6,7,8,9])
+X2,y2=removeDataByLabelList(X,y,[0,1])
+X22,y22=removeDataByLabelList(X,y,[2,3])
+X222,y222=removeDataByLabelList(X,y,[4,5])
+X2222,y2222=removeDataByLabelList(X,y,[6,7])
+X22222,y22222=removeDataByLabelList(X,y,[8,9])
 
+print("===========================Ranking [5,6] ==========================================")
+yb1=binaryLabels(y2)
+net1,trainedlabels1=PNN.loadData(X=X2,y=yb1, featuresno= 784, labelno=2,labelvalue=2, iteration=500,lrate=0.07,hn=5,recurrent=False,scale=30)
 
-y2_m=binarySplitter(y2,2)
-net1,trainedlabels2=PreferenceNeuron.loadData(X=X2,y=y2_m,featuresno= 784,noofclassvalues=2,labelno=2,scale=30,epoches=500,lr=0.07,dropout=true) 
+# X_1,y_1,X_11,y_11=trainTestingSplitter(X2,y2)
+print("===========================Ranking [3,4] ==========================================")
+yb2=binaryLabels(y22)
+net1,trainedlabels1=PNN.loadData(X=X22,y=yb2, featuresno= 784, labelno=2,labelvalue=2, iteration=500,lrate=0.07,hn=5,recurrent=False,scale=30)
 
-y22_m=binarySplitter(y22,7)
-net1,trainedlabels3=PreferenceNeuron.loadData(X=X22,y=y22_m,featuresno= 784,noofclassvalues=2,labelno=2,scale=30,epoches=500,lr=0.07,dropout=true) 
+# X_1,y_1,X_11,y_11=trainTestingSplitter(X222,y222)
+print("===========================Ranking [1,2] ==========================================")
+yb3=binaryLabels(y222)
+net1,trainedlabels1=PNN.loadData(X=X222,y=yb3, featuresno= 784, labelno=2,labelvalue=2, iteration=500,lrate=0.07,hn=5,recurrent=False,scale=30)
 
-
-X3,y3=removeDataByLabelList(X,y,[3,4])
-X33,y33=removeDataByLabelList(X,y,[0,1,2])
-
-y3_m=binarySplitter(y3,3)
-net1,trainedlabels3=PreferenceNeuron.loadData(X=X3,y=y3_m,featuresno= 784,noofclassvalues=2,labelno=2,scale=30,epoches=500,lr=0.07,dropout=true) 
-
-y33_m=binarySplitter(y33,1)
-net1,trainedlabels3=PreferenceNeuron.loadData(X=X33,y=y33_m,featuresno= 784,noofclassvalues=2,labelno=2,scale=30,epoches=500,lr=0.07,dropout=true) 
-
-
-X4,y4=removeDataByLabelList(X,y,[8,9])
-X44,y44=removeDataByLabelList(X,y,[5,6,7])
-
-
-X_1,y_1,X_1,y_1=trainTestingSplitter(X44,y44)
-net2=ClassifierNeuron.loadData(X_1,y_1,X_1,y_1,featuresno= 784,steps=2,startindex=6,noofclassvalues=5,scale=5,epoches=5000,lr=0.05,dropout=false) 
-
-X_2,y_2,X_2,y_2=trainTestingSplitter(X33,y33)
-net3=ClassifierNeuron.loadData(X_2,y_2,X_2,y_2,featuresno= 784,steps=2,startindex=1,noofclassvalues=5,scale=5,epoches=5000,lr=0.05,dropout=false) 
 ##############################################################################################
 ##############################################################################################
 ###################################Testing the 3 models#######################################
