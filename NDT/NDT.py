@@ -105,6 +105,14 @@ def fuzzyLabelsbinary(labels):
 
 def fuzzyLabels(labels):
     newlist=[]
+<<<<<<< HEAD
+=======
+    # ranking = ctrl.Antecedent(np.arange(0, 6, 1), 'ranking')
+    # ranking.automf(3)
+    # ranking['low'] = fuzz.trimf(ranking.universe, [0, 0, 2])
+    # ranking['medium'] = fuzz.trimf(ranking.universe, [0, 13, 25])
+    # ranking['high'] = fuzz.trimf(ranking.universe, [13, 25, 25])
+>>>>>>> 2e9c48c051b1439132267b33e2d1090f18a805e3
     for lab in labels:
         if (lab>4):
             newlist.append([1,2,3])

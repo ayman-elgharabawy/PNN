@@ -34,8 +34,11 @@ from sklearn.metrics import confusion_matrix
 from sklearn.metrics import classification_report
 import matplotlib.pyplot as plt
 import PNN
+<<<<<<< HEAD
 from PNN import PNN
 
+=======
+>>>>>>> 2e9c48c051b1439132267b33e2d1090f18a805e3
 
 def print_network(net):
     for i,layer in enumerate(net,1):
@@ -194,10 +197,17 @@ X,y = loadData()
 ##############################################Building Tree 3 models#####################################
 print(len(X[0]))
 # yb=binarySplitter(y,4)
+<<<<<<< HEAD
 pnn = PNN()
 yb=fuzzy5Labels(y)
 
 net1,trainedlabels1= pnn.loadData(X=X,y=yb, featuresno= 784, labelno=5,labelvalue=5, iteration=100,lrate=0.07,hn=20,scale=30)
+=======
+
+yb=fuzzy5Labels(y)
+
+net1,trainedlabels1= PNN.loadData(X=X,y=yb, featuresno= 784, labelno=5,labelvalue=5, iteration=100,lrate=0.07,hn=20,recurrent=False,scale=30)
+>>>>>>> 2e9c48c051b1439132267b33e2d1090f18a805e3
 
 # net1,trainedlabels1=PreferenceNeuron.loadData(X=X,y=yb,featuresno= 784,noofclassvalues=2,labelno=2,scale=30,epoches=500,lr=0.07,dropout=true) 
 
@@ -211,23 +221,36 @@ X22222,y22222=removeDataByLabelList(X,y,[8,9])
 
 print("===========================Ranking [5,6] ==========================================")
 yb1=binaryLabels(y2)
+<<<<<<< HEAD
 
 net1,trainedlabels1=pnn.loadData(X=X2,y=yb1, featuresno= 784, labelno=2,labelvalue=2, iteration=500,lrate=0.07,hn=5,scale=30)
+=======
+net1,trainedlabels1=PNN.loadData(X=X2,y=yb1, featuresno= 784, labelno=2,labelvalue=2, iteration=500,lrate=0.07,hn=5,recurrent=False,scale=30)
+>>>>>>> 2e9c48c051b1439132267b33e2d1090f18a805e3
 
 # X_1,y_1,X_11,y_11=trainTestingSplitter(X2,y2)
 print("===========================Ranking [3,4] ==========================================")
 yb2=binaryLabels(y22)
+<<<<<<< HEAD
 net1,trainedlabels1=pnn.loadData(X=X22,y=yb2, featuresno= 784, labelno=2,labelvalue=2, iteration=500,lrate=0.07,hn=5,scale=30)
+=======
+net1,trainedlabels1=PNN.loadData(X=X22,y=yb2, featuresno= 784, labelno=2,labelvalue=2, iteration=500,lrate=0.07,hn=5,recurrent=False,scale=30)
+>>>>>>> 2e9c48c051b1439132267b33e2d1090f18a805e3
 
 # X_1,y_1,X_11,y_11=trainTestingSplitter(X222,y222)
 print("===========================Ranking [1,2] ==========================================")
 yb3=binaryLabels(y222)
+<<<<<<< HEAD
 net1,trainedlabels1=pnn.loadData(X=X222,y=yb3, featuresno= 784, labelno=2,labelvalue=2, iteration=500,lrate=0.07,hn=5,scale=30)
+=======
+net1,trainedlabels1=PNN.loadData(X=X222,y=yb3, featuresno= 784, labelno=2,labelvalue=2, iteration=500,lrate=0.07,hn=5,recurrent=False,scale=30)
+>>>>>>> 2e9c48c051b1439132267b33e2d1090f18a805e3
 
 ##############################################################################################
 ##############################################################################################
 ###################################Testing the 3 models#######################################
 
+<<<<<<< HEAD
 # X_1,y_1,X_11,y_11=trainTestingSplitter(X2,y2)
 
 # y_11b=binarySplitter(y_11,4)
@@ -237,3 +260,14 @@ net1,trainedlabels1=pnn.loadData(X=X222,y=yb3, featuresno= 784, labelno=2,labelv
 
 # rootresult=ClassifierNeuron.Test(net2,X_test2,y_test2,steps=5,startindex=0,scale=5,dropout=False)
 # rootresult=ClassifierNeuron.Test(net3,X_test3,y_test3,steps=5,startindex=5,scale=5,dropout=False)
+=======
+X_1,y_1,X_11,y_11=trainTestingSplitter(X2,y2)
+
+y_11b=binarySplitter(y_11,4)
+rooterror,pred_values=PreferenceNeuron.Test(net1,X_11,y_11b,noofclassvalues=2,scale=5,subrank=2,dropout=False)
+
+X_test2,y_test2,X_test3,y_test3=categorDataByBinaryResult(X_11,y,pred_values)
+
+rootresult=ClassifierNeuron.Test(net2,X_test2,y_test2,steps=5,startindex=0,scale=5,dropout=False)
+rootresult=ClassifierNeuron.Test(net3,X_test3,y_test3,steps=5,startindex=5,scale=5,dropout=False)
+>>>>>>> 2e9c48c051b1439132267b33e2d1090f18a805e3
