@@ -33,10 +33,9 @@ import pandas as pd
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import classification_report
 import matplotlib.pyplot as plt
-import PartialRankerNeuron
-import ClassifierNeuron
-
-
+import PNN
+import skfuzzy as fuzz
+from skfuzzy import control as ctrl
 
 
 
@@ -45,11 +44,6 @@ def print_network(net):
         print("Layer {} ".format(i))
         for j,neuron in enumerate(layer,1):
             print("neuron {} :".format(j),neuron)
-
-
-
-    
-
 
 ###############################################################################################################################
 def removeDataByLabelIndex(X,y,labelIndex):
@@ -72,54 +66,82 @@ def removeDataByLabelList(X,y,labelList):
     return  outputData , outputLabels
 
 
-# def ProcessRoot(net,X,labels,X1,labels1,iterations,loop ,steps,startindex,lrate,scale,Afunction):
-#     pred_error=0
-#     pred_values=[]
-    
-#     # errors,net=training(net,X,labels,iterations,lrate,1,steps,startindex,scale,Afunction)
-#     for index,y in enumerate(X1):
-#        pred=predict(net,np.array(y),steps,startindex,scale,Afunction)
-#        pred_values.append(pred.tolist()[0])
-#        if(Afunction=='SS'):
-#          pred_error+=math.sqrt(math.pow(labels1[index]-pred,2))
-#     if(Afunction=='SS'):     
-#        print("Predicted Error "+str(pred_error))
-#     else:
-#         print("Predicted Ranking Error "+str(ss.spearmanr(pred_values,labels1)))
+def trainTestingSplitter(train_features,train_labels):
 
-###############################################################################################################################
-
-# def testData(net,X1,labels1,steps,startindex,scale,Afunction):
-#     pred_values=[]
-#     pred_error=0
-#     for index,y in enumerate(X1):
-#        pred=predict(net,np.array(y),steps,startindex,scale,Afunction)
-#        pred_values.append(pred.tolist()[0])
-#        if(Afunction=='SS'):
-#           pred_error+=math.sqrt(math.pow(labels1[index]-pred,2))
-#     if Afunction=='SS':
-#        print("Predicted Test Error "+str(pred_error))
-#     else:
-#        print("Predicted Ranking Error "+str(ss.spearmanr(pred_values,labels1)))
-    
-#     return pred_values
-
-def splitterData(train_features,train_labels):
-
-    train_features, test_features, train_labels, test_labels  =sklearn.model_selection.train_test_split(train_features, train_labels, test_size=0.3, stratify=train_labels,random_state=1)
+    train_features, test_features, train_labels, test_labels  =sklearn.model_selection.train_test_split(train_features, train_labels,shuffle=true, test_size=0.2, random_state=1)
     X = np.array([list(item) for item in train_features])
     y = train_labels
     X1 = np.array([list(item) for item in test_features])
     y1 = test_labels
     return X,y,X1,y1
 
-def categoryLabels(labels,noofclasses):
+def binaryLabels(labels):
     newlist=[]
     for lab in labels:
-        if(lab>=(round(noofclasses/2))):
-           newlist.extend([2])
+        if( lab>=4):
+           newlist.append([2,1])
         else:
-           newlist.extend([1])
+           newlist.append([1,2])   
+    return newlist
+
+def fuzzyLabelsbinary(labels):
+    newlist=[]
+    # ranking = ctrl.Antecedent(np.arange(0, 6, 1), 'ranking')
+    # ranking.automf(3)
+    # ranking['low'] = fuzz.trimf(ranking.universe, [0, 0, 2])
+    # ranking['medium'] = fuzz.trimf(ranking.universe, [0, 13, 25])
+    # ranking['high'] = fuzz.trimf(ranking.universe, [13, 25, 25])
+    for lab in labels:
+        if (lab>4):
+            newlist.append([1,2,2])
+        elif(lab>2 and lab<=4) :
+            if (lab==3):
+               newlist.append([2,1,2])
+            elif(lab==4):
+               newlist.append([2,1,2]) 
+        else:
+            newlist.append([2,2,1])      
+    return newlist
+
+def fuzzyLabels(labels):
+    newlist=[]
+    for lab in labels:
+        if (lab>4):
+            newlist.append([1,2,3])
+        elif(lab>2 and lab<=4) :
+            if (lab==3):
+               newlist.append([3,1,2])
+            elif(lab==4):
+               newlist.append([2,1,3]) 
+        else:
+            newlist.append([3,2,1])      
+    return newlist
+
+def categorRankingResult(originalData,y,trainedlabels):
+    newlabel1=[]
+    newlabel2=[]
+
+    newdata1=[]
+    newdata2=[]
+
+    for index,lab in enumerate(originalData):
+        if(round(trainedlabels[index,0])==2):
+           newlabel1.append(y[index])
+           newdata1.append(originalData[index])
+        else:
+           newlabel2.append(y[index])
+           newdata2.append(originalData[index])  
+
+    return newdata1 ,newlabel1,newdata2,newlabel2
+
+
+def binarySplitter(labels,splitpoint):
+    newlist=[]
+    for lab in labels:
+        if( lab>splitpoint):
+           newlist.append([2,1])
+        else:
+           newlist.append([1,2])   
     return newlist
 
 def loadData(filename, featuresno, labelno,labelvalues):
@@ -136,58 +158,57 @@ def loadData(filename, featuresno, labelno,labelvalues):
             data.append(row[0:featuresno])
             labels.append(row[featuresno:featuresno + labelno])
             alldata.append(row[:])
-
     y = np.array(labels)
     X = np.array(data)  
- 
-    train_features, test_features, train_labels, test_labels  =sklearn.model_selection.train_test_split(X, y,stratify = y, test_size=0.3, random_state=1)
-    
-    train_labels = [map(float, i) for i in train_labels]
-    train_features = [map(float, i) for i in train_features]
-
-    test_features = [map(float, i) for i in test_features]
-    test_labels = [map(float, i) for i in test_labels]
-
-    X = np.array([list(item) for item in train_features])
-    y = np.array([list(item) for item in train_labels])
-    X1 = np.array([list(item) for item in test_features])
-    y1 = np.array([list(item) for item in test_labels])
-    y=[g[0] for g in y ] 
-    y1=[g[0] for g in y1 ]
-
-    return X,y,X1,y1
+    y=[(float)(g[0]) for g in y ] 
+    X =[[float(y) for y in x] for x in X]
+    return X,y #,X1,y1
 
  
 filename='C:\\Github\\PNN\\Data\\ClassificationData\\glass.csv'
-X,y,X1,y1 = loadData(filename, featuresno=9,labelno=1,labelvalues=6) 
+XX,yy = loadData(filename, featuresno=9,labelno=1,labelvalues=6) 
 ##############################################Building Tree 3 models#####################################
+print("===========================Ranking Root ==========================================")
+# yb=binaryLabels(yy)
+yb=fuzzyLabels(yy)
+net1,trainedlabels1=PNN.loadData(X=XX,y=yb, featuresno= 9, labelno=3,labelvalue=3, iteration=1000,lrate=0.07,hn=3,recurrent=False,scale=10)
+X_1,y_1,X_11,y_11=trainTestingSplitter(XX,yy)
 
+# X2,y2,X22,y22=categorRankingResult(X,y,trainedlabels)
 
-yb=categoryLabels(y,6)
-yb1=categoryLabels(y1,6)
+X2,y2=removeDataByLabelList(XX,yy,[5,6])
+X22,y22=removeDataByLabelList(XX,yy,[3,4])
+X222,y222=removeDataByLabelList(XX,yy,[1,2])
 
-net1=PartialRankerNeuron.loadData(filename=filename,featuresno= 9,noofclassvalues=6,labelno=9,scale=5,epoches=50,lr=0.07,dropout=false,point=3) 
+# X_1,y_1,X_11,y_11=trainTestingSplitter(X22,y22)
 
-X2,y2=removeDataByLabelList(X,y,[1,2,3])
-X22,y22=removeDataByLabelList(X,y,[4,5,6])
+print("===========================Ranking [5,6] ==========================================")
+yb1=binaryLabels(y2)
+net1,trainedlabels1=PNN.loadData(X=X2,y=yb1, featuresno= 9, labelno=2,labelvalue=2, iteration=500,lrate=0.07,hn=5,recurrent=False,scale=30)
 
-X4,y4,X3,y3=splitterData(X2,y2)
-net2=ClassifierNeuron.loadData(X4,y4,X3,y3,featuresno= 9,steps=3,startindex=1,noofclassvalues=7,labelno=1,scale=5,epoches=50,lr=0.05,dropout=false) 
+# X_1,y_1,X_11,y_11=trainTestingSplitter(X2,y2)
+print("===========================Ranking [3,4] ==========================================")
+yb2=binaryLabels(y22)
+net1,trainedlabels1=PNN.loadData(X=X22,y=yb2, featuresno= 9, labelno=2,labelvalue=2, iteration=500,lrate=0.07,hn=5,recurrent=False,scale=30)
 
-X4,y4,X3,y3=splitterData(X22,y22)
-net3=ClassifierNeuron.loadData(X4,y4,X3,y3,featuresno= 9,steps=3,startindex=1,noofclassvalues=7,labelno=1,scale=5,epoches=50,lr=0.05,dropout=false) 
+# X_1,y_1,X_11,y_11=trainTestingSplitter(X222,y222)
+print("===========================Ranking [1,2] ==========================================")
+yb3=binaryLabels(y222)
+net1,trainedlabels1=PNN.loadData(X=X222,y=yb3, featuresno= 9, labelno=2,labelvalue=2, iteration=500,lrate=0.07,hn=5,recurrent=False,scale=30)
+
+# label22=binarySplitter(y22,2)
+# net1,trainedlabels1=PNN.loadData(X=X22,y=label22, featuresno= 9, labelno=2,labelvalue=2, iteration=100,lrate=0.07,hn=1,recurrent=False,scale=30)
+
+# X_2,y_2,X_2,y_2=trainTestingSplitter(X22,y22)
 
 
 ##############################################################################################
 ###################################Testing the 3 models#######################################
 
-X_train, X_test,y_train , y_test  =sklearn.model_selection.train_test_split(X, y,stratify = y, test_size=0.3, random_state=1)
-y_train=categoryLabels(y_train,6)
-y_test=categoryLabels(y_test,6)
-rootresult=PartialRankerNeuron.Test(net1,X_test,y_test,noofclassvalues=6,scale=5,point=3,dropout=False)
+# y_1b=binaryLabels(y1)
 
-X_test2,y_test2=removeDataByLabelList(X_train,rootresult,[1,2,3])
-X_test3,y_test3=removeDataByLabelList(X_train,rootresult,[4,5,6])
 
-rootresult=ClassifierNeuron.Test(net2,X_test2,y_test2,steps=3,startindex=1,scale=5,dropout=False)
-rootresult=ClassifierNeuron.Test(net3,X_test3,y_test3,steps=3,startindex=4,scale=5,dropout=False)
+# X_test2,y_test2,X_test3,y_test3=categorRankingResult(X_11,y_11,pred_values)
+
+# rootresult=ClassifierNeuron.Test(net2,X_test2,y_test2,steps=3,startindex=4,scale=5,dropout=False)
+# rootresult=ClassifierNeuron.Test(net3,X_test3,y_test3,steps=3,startindex=1,scale=5,dropout=False)
