@@ -202,8 +202,8 @@ class ExtremePNN:
                 newnets=[]
                 for index,rownet in enumerate(nets):
                     xxx1=np.array(list(row))                          
-                    outputs ,statelayer = self.forward_propagation(rownet, xxx1,trainfoldexpected[index], n_outputs,labelvalue,b,statelayer)
-                    self.back_propagation(rownet, features_no, trainfoldexpected[index], outputs, n_outputs,labelvalue,b)
+                    outputs ,statelayer = self.forward_propagation(rownet, xxx1,trainfoldexpected[i], n_outputs,labelvalue,b,statelayer)
+                    self.back_propagation(rownet, features_no, trainfoldexpected[i], outputs, n_outputs,labelvalue,b)
                     net=self.updateWeights(rownet, xxx1, lrate) 
                     newnets.append(net)  
             nets=newnets   
@@ -231,33 +231,32 @@ class ExtremePNN:
             testlabel=[] 
             trainfeatures=[]
             testfeaatures=[] 
-            trainingnets=[] #
-            testingnets=[]    
+            # trainingnets=[] #
+            # testingnets=[]    
             for i in idx_train:
                 trainlabel.append(y_train[i]) 
                 trainfeatures.append(X_train[i])
-                trainingnets.append(nets[i])
+                # trainingnets.append(nets[i])
             for i in idx_test:
                 testlabel.append(y_train[i]) 
                 testfeaatures.append(X_train[i])
-                testingnets.append(nets[i])
-            nets=self.PNNFit(trainingnets,epochs,trainfeatures,trainlabel,featuresno,labelno,labelvalue,lrate,noofhidden,bbs)
+                # testingnets.append(nets[i])
+            nets=self.PNNFit(nets,epochs,trainfeatures,trainlabel,featuresno,labelno,labelvalue,lrate,noofhidden,bbs)
             # self.print_network(net)
-            iterationoutput=self.predict(testingnets,testfeaatures,testlabel,  labelno,labelvalue,bbs,noofhidden)
+            iterationoutput=self.predict(nets,testfeaatures,testlabel,  labelno,labelvalue,bbs,noofhidden)
             # self.print_network(net)
             print("-- Predition one fold Result %d",iterationoutput)
             tot_etau+=iterationoutput
         avr_res=tot_etau/foldcounter  
         print("Final average %.2f Folds test Result %.8f",foldcounter,avr_res)
             
-        return avr_res, net
+        return avr_res, nets
     
 
     def training(self,epochs, X,y, featuresno, labelno,labelvalue,lrate,hn,scale):
         foldcounter=10
         kfold = sklearn.model_selection.KFold(foldcounter,shuffle= True,random_state= 1)
         foldindex = 0
-        # X_train, X_test, y_train, y_test = sklearn.model_selection.train_test_split(X, y, test_size=0.2, random_state=1)
         lrlist=[0.05]#,0.09,0.1,0.2,0.3,0.4,0.5]
         scalelist=[2]
         hnlist=[hn]
@@ -288,7 +287,7 @@ class ExtremePNN:
                 xxx1=np.array(list(row))    
                 testfoldlabels=list(test_fold_labels[i])
                 predicted,statelayer= self.forward_propagation(rownet, row,testfoldlabels, n_outputs,labelvalue,bx,statelayer)
-                iterationoutput=np.append(iterationoutput,[self.calculateoutputTau([predicted,np.array(testfoldlabels)])])      
+                iterationoutput=np.append(iterationoutput,[self.calculateoutputTau([predicted,np.array(testfoldlabels[index])])])      
         avrre=sum(iterationoutput)/len(test_fold_features) 
         return  avrre
 
