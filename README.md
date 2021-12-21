@@ -1,7 +1,19 @@
 # Preference Neural Network (PNN)
+
+
+![ScreenShot](/Images/PNN.png)
+
+
 # Subgroup Preference Neural Network (SGPNN)
 
+
+![ScreenShot](/Images/SGPNN.png)
+
+
 This repo contain the source and examples of two PPNN and NSGPNN networks
+
+These two networks use a new type of multi-values activation functions, Positive smooth staircase (PSS) and Smooth Staircase (SS) employed for ranking
+![ScreenShot](/Images/SS.png)
 
 For feedback kindly connunicate using my email aaaeg@hotmail.com
 
