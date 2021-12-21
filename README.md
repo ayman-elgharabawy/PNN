@@ -1,6 +1,6 @@
 # Preference Neural Network (PNN) 
 ![ScreenShot](/Images/PNN.png)
-PNN is a native ranker neural network implemented for label ranking using Spearman ranking error function and Positive/Smooth Staircase activation function (SS) and (PSS) to enhance the prediction probability.
+PNN is a native ranker neural network implemented for label ranking using Spearman ranking error function and Positive/Smooth Staircase activation function (SS) and (PSS) to enhance the prediction probability to produce almost discrete value without data freedom between layers, thus it use one middle layer for learning.
 
 # Subgroup Preference Neural Network (SGPNN)
 
@@ -10,8 +10,7 @@ PNN is a native ranker neural network implemented for label ranking using Spearm
 
 ![ScreenShot](/Images/SGPNN.png)
 
-
-This repo contain the source and examples of two PPNN and NSGPNN networks
+SGPNN is extended PNN to ranke subgroup of labels using one learning model. the subgroups are combined from multiple domains to find a hidden relations between these groups.
 
 These two networks use a new type of multi-values activation functions, Positive smooth staircase (PSS) and Smooth Staircase (SS) employed for ranking
 ![ScreenShot](/Images/SS.png)
