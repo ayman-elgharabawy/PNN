@@ -3,6 +3,10 @@
 
 # Subgroup Preference Neural Network (SGPNN)
 
+<p align="center">
+<img src="/Images/MAFN.png" width="600" height="300">
+</p>
+
 ![ScreenShot](/Images/SGPNN.png)
 
 
