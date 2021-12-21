@@ -1,12 +1,17 @@
 # Subgroup Preference Neural Network (SGPNN)
 
-This repo contain the source and examples of two PPNN and NSGPNN networks
+This repo contain the source and examples of NSGPNN network
 
 
 
+![ScreenShot](/Images/SGPNN.png)
+
+Sub group Preference Neural Network is a multi output layers. Each layer rank a subgroup of labels separately.
 
 
 
+![ScreenShot](/Images/SGPNN3.png)
+This SGPNN has 3 layers , each group can represent a group of label or a preference relation that can be encoded to multi value.
 
 Please Cite using the following links
 
