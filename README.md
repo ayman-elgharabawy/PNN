@@ -1,5 +1,6 @@
 # Preference Neural Network (PNN) 
 ![ScreenShot](/Images/PNN.png)
+PNN is a native ranker neural network implemented for label ranking using Spearman ranking error function and Positive/Smooth Staircase activation function (SS) and (PSS) to enhance the prediction probability.
 
 # Subgroup Preference Neural Network (SGPNN)
 
