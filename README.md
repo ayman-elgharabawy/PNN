@@ -1,4 +1,4 @@
-# Preference Neural Network (PNN)  ![ScreenShot](/Images/uts_logo_grey.jpg)
+# Preference Neural Network (PNN) 
 
 
 ![ScreenShot](/Images/PNN.png)
