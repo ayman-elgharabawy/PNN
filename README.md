@@ -1,11 +1,7 @@
 # Preference Neural Network (PNN) 
-
-
 ![ScreenShot](/Images/PNN.png)
 
-
 # Subgroup Preference Neural Network (SGPNN)
-
 
 ![ScreenShot](/Images/SGPNN.png)
 
