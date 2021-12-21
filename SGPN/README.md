@@ -1,7 +1,7 @@
 # Subgroup Preference Neural Network (SGPNN)
-
-<img src="/Images/MAFN.png" width="500" height="300">
-
+<p align="center">
+<img src="/Images/MAFN.png" width="800" height="400">
+</p>
 This repo contain the source and examples of NSGPNN network to learn subgroup of labels using new type of mullti activation function neurons (MAFN) to learn subgroups using one model.
 
 ![ScreenShot](/Images/SGPNN.png)
