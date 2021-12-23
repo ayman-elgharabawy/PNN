@@ -10,7 +10,6 @@ For feedback kindly connunicate using my email aaaeg@hotmail.com
 
 
 
-Please Cite using the following links
 
-Elgharabawy, A.; Parsad, M.; Lin, C. Preference Neural Network. Preprints 2019, 2019040091 (doi: 10.20944/preprints201904.0091.v3).
+Elgharabawy, A.; Prasad, M.; Lin, C.-T. Preference Neural Network. 2021 arXiv:1904.02345 [cs.LG]
 
