@@ -15,6 +15,11 @@ SGPNN is extended PNN to ranke subgroup of labels using one learning model. the 
 These two networks use a new type of multi-values activation functions, Positive smooth staircase (PSS) and Smooth Staircase (SS) employed for ranking
 ![ScreenShot](/Images/SS.png)
 
+Mathematica Code : Manipulate[Plot[
+  (-0.5*Sum[( Tanh[(-x*100)/b + c*(1 - (2*i/(n - 1)))] ), {i, 0, 
+       3}]) + ((n)/2), {x, -4, 4}], {n, 4, 4}, {c, -100, -100}, {b, 1,
+   1}]
+
 For feedback kindly connunicate using my email aaaeg@hotmail.com
 
 Video Demo available at  https://drive.google.com/drive/folders/1yxuqYoQ3Kiuch-2sLeVe2ocMj12QVsRM?usp=sharing
