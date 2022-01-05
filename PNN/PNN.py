@@ -98,20 +98,21 @@ class PNN:
             for i in range(len(y_test)):
                 cc = self.calculate_rank(predictedList[i].tolist())
                 ss = self.calculate_rank(y_test[i])
-                cm1 = confusion_matrix(ss, cc)
+                cm1 = confusion_matrix(ss, cc,normalize='all')
+                cm1=np.nan_to_num(cm1)
                 # print('Confusion Matrix : \n', cm1)
 
                 total1 = sum(sum(cm1))
                 #####from confusion matrix calculate accuracy
-                accuracy1 = round((cm1[0, 0] + cm1[1, 1]) / (cm1[0, 0] + cm1[0, 1]+cm1[1, 0] + cm1[1, 1]))
+                accuracy1 = (cm1[0, 0] + cm1[1, 1]) / (cm1[0, 0] + cm1[0, 1]+cm1[1, 0] + cm1[1, 1])
                 acc_sum += accuracy1
 
-                sensitivity1 = round( cm1[0, 0] / (cm1[0, 0] + cm1[0, 1]))
+                sensitivity1 =  cm1[0, 0] / (cm1[0, 0] + cm1[0, 1])
                 if(np.isnan(sensitivity1)):
                     sensitivity1=0
                 sens_sum += sensitivity1
 
-                specificity1 = round(cm1[1, 1] / (cm1[1, 0] + cm1[1, 1]))
+                specificity1 = cm1[1, 1] / (cm1[1, 0] + cm1[1, 1])
                 if(np.isnan(specificity1)):
                     specificity1=0
                 spec_sum += specificity1
@@ -163,31 +164,31 @@ class PNN:
                                             ''.format(i, roc_auc[i]))
             #################################################
             ##################################
-            testY1, probs1=self.rocForIndex(probs,testY, 2,nolabels)
-            for i in range(nolabels):
-                fpr[i], tpr[i], _ = roc_curve(testY1[:, i], probs1[:, i])
-                roc_auc[i] = auc(fpr[i], tpr[i])
-            fpr["micro"], tpr["micro"], _ = roc_curve(testY1.ravel(), probs1.ravel())
-            roc_auc["micro"] = auc(fpr["micro"], tpr["micro"])
-            plt.plot(fpr["micro"], tpr["micro"],label='micro-average ROC curve (area = {0:0.2f})'
-                        ''.format(roc_auc["micro"]))
-            for i in range(nolabels):
-                plt.plot(fpr[i], tpr[i], label='ROC curve of Rank 2 for label {0} (area = {1:0.2f})'
-                                            ''.format(i, roc_auc[i]))
+            # testY1, probs1=self.rocForIndex(probs,testY, 2,nolabels)
+            # for i in range(nolabels):
+            #     fpr[i], tpr[i], _ = roc_curve(testY1[:, i], probs1[:, i])
+            #     roc_auc[i] = auc(fpr[i], tpr[i])
+            # fpr["micro"], tpr["micro"], _ = roc_curve(testY1.ravel(), probs1.ravel())
+            # roc_auc["micro"] = auc(fpr["micro"], tpr["micro"])
+            # plt.plot(fpr["micro"], tpr["micro"],label='micro-average ROC curve (area = {0:0.2f})'
+            #             ''.format(roc_auc["micro"]))
+            # for i in range(nolabels):
+            #     plt.plot(fpr[i], tpr[i], label='ROC curve of Rank 2 for label {0} (area = {1:0.2f})'
+            #                                 ''.format(i, roc_auc[i]))
             #################################################
 
             ##################################
-            testY1, probs1=rocForIndex(probs,testY, 3,nolabels)
-            for i in range(nolabels):
-                fpr[i], tpr[i], _ = roc_curve(testY1[:, i], probs1[:, i])
-                roc_auc[i] = auc(fpr[i], tpr[i])
-            fpr["micro"], tpr["micro"], _ = roc_curve(testY1.ravel(), probs1.ravel())
-            roc_auc["micro"] = auc(fpr["micro"], tpr["micro"])
-            plt.plot(fpr["micro"], tpr["micro"],label='micro-average ROC curve (area = {0:0.2f})'
-                        ''.format(roc_auc["micro"]))
-            for i in range(nolabels):
-                plt.plot(fpr[i], tpr[i], label='ROC curve of Rank 3 for label {0} (area = {1:0.2f})'
-                                            ''.format(i, roc_auc[i]))
+            # testY1, probs1=self.rocForIndex(probs,testY, 3,nolabels)
+            # for i in range(nolabels):
+            #     fpr[i], tpr[i], _ = roc_curve(testY1[:, i], probs1[:, i])
+            #     roc_auc[i] = auc(fpr[i], tpr[i])
+            # fpr["micro"], tpr["micro"], _ = roc_curve(testY1.ravel(), probs1.ravel())
+            # roc_auc["micro"] = auc(fpr["micro"], tpr["micro"])
+            # plt.plot(fpr["micro"], tpr["micro"],label='micro-average ROC curve (area = {0:0.2f})'
+            #             ''.format(roc_auc["micro"]))
+            # for i in range(nolabels):
+            #     plt.plot(fpr[i], tpr[i], label='ROC curve of Rank 3 for label {0} (area = {1:0.2f})'
+            #                                 ''.format(i, roc_auc[i]))
             #################################################
             plt.plot([0, 1], [0, 1], 'k--')
             plt.xlim([0.0, 1.0])
@@ -369,7 +370,8 @@ class PNN:
         print("###################################### Testing 20% of data ###########################") 
         iterationoutput = self.predict(w1=w1,w2=w2 , testFeatures=X_test, testlabel=y_test, labelno=labelno,
                                             ssteps=ssteps, scale=scale, hnnolist=hnnolist, dropout=dropout) 
-        self.calcConfusion(iterationoutput[1],y_test,ssteps)                                                                                        
+        self.calcConfusion(iterationoutput[1],y_test,ssteps)     
+        self.drawROC(y_test, np.array(iterationoutput[1]), 3)                                                                                     
         tot_etau = iterationoutput[0]
         avr_res = tot_etau
         return avr_res, w1,w2, cache
@@ -483,7 +485,7 @@ class PNN:
         alldata = [map(float, i) for i in alldataarray]
 
 
-        train_features, test_features, train_labels, test_labels  =sklearn.model_selection.train_test_split(train_features, train_labels, test_size=0.2, random_state=1)
+        train_features, test_features, train_labels, test_labels  =sklearn.model_selection.train_test_split(train_features, train_labels, test_size=0.2, random_state=0)
     
     #Train Data
         train_features_list = np.array([list(item) for item in train_features])

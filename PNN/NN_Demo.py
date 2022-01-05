@@ -16,19 +16,15 @@
 # Use Python +3.7
 import PNN 
 from PNN import PNN
-# import NN 
-# from NN import NN
+import NN 
+from NN import NN
 import os.path
 
 ############################## Demo PNN ##############################
 
 my_path = os.path.abspath(os.path.dirname(__file__))
-path = os.path.join(my_path, "..//Data//LRData//iris_rank.txt")
+path = os.path.join(my_path, "..//Data//iris_classification.txt")
 
-pnn = PNN()
-train_error = pnn.loadData(filename=path,featuresno= 4,labelno=3,ssteps=2,epochs=500,lrate=0.005,hn=100,Fold=10,useFold=False) 
-
-
-# nn = NN()
-# train_error = nn.loadData(filename=path,featuresno= 4,labelno=3,ssteps=3,epochs=100,lrate=0.005,hn=100,Fold=10,useFold=False) 
+nn = NN()
+train_error = nn.loadData(filename=path,featuresno= 4,labelno=3,epochs=5000,lrate=0.05,hn=100,Fold=10,useFold=False) 
 
