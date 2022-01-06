@@ -16,7 +16,7 @@ These two networks use a new type of multi-values activation functions, Positive
 ![ScreenShot](/Images/SS.png)
 
 
-####wolframe Mathematica Code#### 
+Markup : ####wolframe Mathematica Code#### 
 Smooth Staircase (SS) function where # steps = 5 and boundaries between -1 and 1 :
 
 **Manipulate[Plot[(-0.5*Sum[( Tanh[(-x*100)/b + c*(1 - (2*i/(n - 1)))] ), {i, 0,  n - 1}]) + ((n)/2), {x, -4, 4}], {n, 5}, {c, -100}, {b, 1}]**
