@@ -16,7 +16,7 @@ These two networks use a new type of multi-values activation functions, Positive
 ![ScreenShot](/Images/SS.png)
 
 
-Markup :  =============  wolframe Mathematica Code 
+## wolframe Mathematica Code 
 
 Smooth Staircase (SS) function where # steps = 5 and boundaries between -1 and 1 :
 
