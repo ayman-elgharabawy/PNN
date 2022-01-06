@@ -16,14 +16,22 @@ These two networks use a new type of multi-values activation functions, Positive
 ![ScreenShot](/Images/SS.png)
 
 
-## wolframe Mathematica Code 
+## Wolframe Mathematica Code 
 
 Smooth Staircase (SS) function where # steps = 5 and boundaries between -1 and 1 :
 
 **Manipulate[Plot[(-0.5*Sum[( Tanh[(-x*100)/b + c*(1 - (2*i/(n - 1)))] ), {i, 0,  n - 1}]) + ((n)/2), {x, -4, 4}], {n, 5}, {c, -100}, {b, 1}]**
 
 
+## How to run the example 
 
+Using pythin +3.7
+
+pnn = PNN()
+train_error = pnn.loadData(filename=path,featuresno= 4,labelno=3,ssteps=2,epochs=500,lrate=0.005,hn=100,Fold=10,useFold=False) 
+
+
+## References 
 For feedback kindly connunicate using my email aaaeg@hotmail.com
 
 Video Demo available at  https://drive.google.com/drive/folders/1yxuqYoQ3Kiuch-2sLeVe2ocMj12QVsRM?usp=sharing
