@@ -28,6 +28,7 @@ Smooth Staircase (SS) function where # steps = 5 and boundaries between -1 and 1
 Using pythin +3.7
 
 pnn = PNN()
+
 train_error = pnn.loadData(filename=path,featuresno= 4,labelno=3,ssteps=2,epochs=500,lrate=0.005,hn=100,Fold=10,useFold=False) 
 
 
