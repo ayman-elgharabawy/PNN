@@ -22,6 +22,7 @@ Smooth Staircase (SS) function where # steps = 5 and boundaries between -1 and 1
 
 **Manipulate[Plot[(-0.5*Sum[( Tanh[(-x*100)/b + c*(1 - (2*i/(n - 1)))] ), {i, 0,  n - 1}]) + ((n)/2), {x, -4, 4}], {n, 5}, {c, -100}, {b, 1}]**
 
+![ScreenShot](/Images/SS_wm.png)
 
 ## How to run the example 
 
