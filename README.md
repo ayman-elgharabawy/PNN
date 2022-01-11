@@ -16,7 +16,13 @@ These two networks use a new type of multi-values activation functions, Positive
 ![ScreenShot](/Images/SS.png)
 
 
-## Wolframe Mathematica Smooth Staircase (SS) 
+## Wolframe Mathematica Positive Smotth Staircase (PSS) and Smooth Staircase (SS) 
+
+The Positive Smooth Staircase (PSS) function Mathematica code where # steps = 4 and step width =1  is:
+
+**Manipulate[Plot[(Sum[-0.5*Tanh[-100*(x - (w*i))], {i, 0, n - 1}]) + (n/2), {x, -1, 6}], {n, 4}, {w, 1}]**
+
+![ScreenShot](/Images/PSS_wm.png)
 
 Smooth Staircase (SS) function Mathematica code where # steps = 5 and boundaries between -1 and 1  is:
 
