@@ -1,0 +1,129 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 11.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[      4437,        121]
+NotebookOptionsPosition[      4119,        105]
+NotebookOutlinePosition[      4466,        120]
+CellTagsIndexPosition[      4423,        117]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[
+ RowBox[{"Manipulate", "[", 
+  RowBox[{
+   RowBox[{"Plot", "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"Sum", "[", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"-", "0.5"}], "*", 
+          RowBox[{"Tanh", "[", 
+           RowBox[{
+            RowBox[{"-", "100"}], "*", 
+            RowBox[{"(", 
+             RowBox[{"x", "-", 
+              RowBox[{"(", 
+               RowBox[{"w", "*", "i"}], ")"}]}], ")"}]}], "]"}]}], ",", 
+         RowBox[{"{", 
+          RowBox[{"i", ",", "0", ",", 
+           RowBox[{"n", "-", "1"}]}], "}"}]}], "]"}], ")"}], "+", 
+      RowBox[{"(", 
+       RowBox[{"n", "/", "2"}], ")"}]}], ",", 
+     RowBox[{"{", 
+      RowBox[{"x", ",", 
+       RowBox[{"-", "1"}], ",", "6"}], "}"}]}], "]"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"n", ",", "4"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"w", ",", "1"}], "}"}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.751963178254282*^9, 3.7519631789663825`*^9}, {
+   3.7519632116235137`*^9, 3.7519632317524877`*^9}, 3.7519632820085044`*^9, 
+   3.7519633250897565`*^9, 3.8508680109022255`*^9, {3.850868556469264*^9, 
+   3.8508686760784936`*^9}, {3.8508687291222997`*^9, 3.850868756666167*^9}, 
+   3.8508688419848337`*^9, 3.8508688912976694`*^9, {3.8508689314204793`*^9, 
+   3.85086896239931*^9}, {3.850869028843087*^9, 3.850869041030802*^9}, {
+   3.850869168326466*^9, 3.850869341906558*^9}, {3.850869478805213*^9, 
+   3.8508695641164083`*^9}}],
+
+Cell[BoxData[
+ TagBox[
+  StyleBox[
+   DynamicModuleBox[{$CellContext`n$$ = 4, $CellContext`w$$ = 1, 
+    Typeset`show$$ = True, Typeset`bookmarkList$$ = {}, 
+    Typeset`bookmarkMode$$ = "Menu", Typeset`animator$$, Typeset`animvar$$ = 
+    1, Typeset`name$$ = "\"untitled\"", Typeset`specs$$ = {{
+      Hold[$CellContext`n$$], 4}, {
+      Hold[$CellContext`w$$], 1}}, Typeset`size$$ = {484., {148., 152.}}, 
+    Typeset`update$$ = 0, Typeset`initDone$$, Typeset`skipInitDone$$ = True}, 
+    DynamicBox[Manipulate`ManipulateBoxes[
+     1, StandardForm, 
+      "Variables" :> {$CellContext`n$$ = 4, $CellContext`w$$ = 1}, 
+      "ControllerVariables" :> {}, 
+      "OtherVariables" :> {
+       Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
+        Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
+        Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
+         Typeset`skipInitDone$$}, "Body" :> 
+      Plot[Sum[(-0.5) 
+          Tanh[(-100) ($CellContext`x - $CellContext`w$$ $CellContext`i)], \
+{$CellContext`i, 0, $CellContext`n$$ - 1}] + $CellContext`n$$/
+         2, {$CellContext`x, -1, 6}], 
+      "Specifications" :> {{$CellContext`n$$, 4}, {$CellContext`w$$, 1}}, 
+      "Options" :> {}, "DefaultOptions" :> {}],
+     ImageSizeCache->{535., {201., 207.}},
+     SingleEvaluation->True],
+    Deinitialization:>None,
+    DynamicModuleValues:>{},
+    SynchronousInitialization->True,
+    UndoTrackedVariables:>{Typeset`show$$, Typeset`bookmarkMode$$},
+    UnsavedVariables:>{Typeset`initDone$$},
+    UntrackedVariables:>{Typeset`size$$}], "Manipulate",
+   Deployed->True,
+   StripOnInput->False],
+  Manipulate`InterpretManipulate[1]]], "Output",
+ CellChangeTimes->{
+  3.8508688941223297`*^9, {3.8508689358678703`*^9, 3.850868964805099*^9}, {
+   3.8508690308335085`*^9, 3.850869037219548*^9}, 3.850869178887282*^9, {
+   3.8508692127713537`*^9, 3.850869223899884*^9}, {3.850869256302593*^9, 
+   3.850869277729838*^9}, {3.850869319017351*^9, 3.85086934493556*^9}, {
+   3.85086948154482*^9, 3.85086956692183*^9}}]
+}, Open  ]]
+},
+WindowSize->{1920, 1037},
+WindowMargins->{{1912, Automatic}, {Automatic, 178}},
+FrontEndVersion->"11.0 for Microsoft Windows (64-bit) (July 28, 2016)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 1458, 37, 30, "Input"],
+Cell[2041, 61, 2062, 41, 458, "Output"]
+}, Open  ]]
+}
+]
+*)
+
