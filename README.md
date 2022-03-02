@@ -15,11 +15,31 @@ SGPNN is extended PNN to ranke subgroup of labels using one learning model. the 
 These two networks use a new type of multi-values activation functions, Positive smooth staircase (PSS) and Smooth Staircase (SS) employed for ranking
 ![ScreenShot](/Images/SS.png)
 
-Mathematica Code : Manipulate[Plot[
-  (-0.5*Sum[( Tanh[(-x*100)/b + c*(1 - (2*i/(n - 1)))] ), {i, 0, 
-       3}]) + ((n)/2), {x, -4, 4}], {n, 4, 4}, {c, -100, -100}, {b, 1,
-   1}]
 
+## Wolframe Mathematica Positive Smotth Staircase (PSS) and Smooth Staircase (SS) 
+
+The Positive Smooth Staircase (PSS) function Mathematica code where # steps = 4 and step width =1  is:
+
+**Manipulate[Plot[(Sum[-0.5*Tanh[-100*(x - (w*i))], {i, 0, n - 1}]) + (n/2), {x, -1, 6}], {n, 4}, {w, 1}]**
+
+![ScreenShot](/Images/PSS_wm.png)
+
+Smooth Staircase (SS) function Mathematica code where # steps = 5 and boundaries between -1 and 1  is:
+
+**Manipulate[Plot[(-0.5*Sum[( Tanh[(-x*100)/b + c*(1 - (2*i/(n - 1)))] ), {i, 0,  n - 1}]) + ((n)/2), {x, -4, 4}], {n, 5}, {c, -100}, {b, 1}]**
+
+![ScreenShot](/Images/SS_wm.png)
+
+## Python example 
+
+Using pythin +3.7
+
+pnn = PNN()
+
+train_error = pnn.loadData(filename=path,featuresno= 4,labelno=3,ssteps=2,epochs=500,lrate=0.005,hn=100,Fold=10,useFold=False) 
+
+
+## References 
 For feedback kindly connunicate using my email aaaeg@hotmail.com
 
 Video Demo available at  https://drive.google.com/drive/folders/1yxuqYoQ3Kiuch-2sLeVe2ocMj12QVsRM?usp=sharing
