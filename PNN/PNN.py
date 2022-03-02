@@ -38,6 +38,8 @@ from datetime import datetime
 import pandas as pd
 from statistics import mean
 from sklearn.metrics import confusion_matrix
+from timeit import default_timer as timer
+
 
 
 class PNN:
@@ -199,7 +201,7 @@ class PNN:
             plt.legend(loc="lower right")
             plt.show()
 
-    def rescale(self,values,featuresno,data_no, new_min , new_max ): 
+    def rescale(self,values,new_min , new_max ): 
         totalrowoutput=[] 
         for rowvalues in (values):
             old_min, old_max = min(rowvalues), max(rowvalues)
@@ -254,7 +256,7 @@ class PNN:
         for ldrop in (layerdrop):
             narr = np.array(ldrop)
             NeuronDropcache = []
-            D1 = np.random.uniform(low=-0.05, high=0.05, size=narr.size)
+            D1 = np.random.uniform(low=-0.5, high=0.5, size=narr.size)
             D1 = D1 < keep_prob
             cache.append(D1)
 
@@ -275,6 +277,7 @@ class PNN:
 
     def forward_propagation(self, w1,w2, input1, n_outputs, ssteps, scale, dropout):
         cache=[]
+
         z1 = input1.dot(w1)# input from layer 1
         a1 = self.PSS(z1, ssteps, scale)# out put of layer 2
 
@@ -308,6 +311,7 @@ class PNN:
     def PNNChannels( self, w1,w2, epochs, train_fold_features, train_fold_labels, InNetInputNo, n_outputs,
                     ssteps, lrate, hn, scale, dropout):
         z = len(train_fold_features)
+        start1 = timer()
         cache = []
         for epoch in range(epochs):
             iterationoutput = np.array([])
@@ -324,7 +328,9 @@ class PNN:
 
             print(' Epoch ' + str(epoch) + " rho=" + str(rr))
         w1,w2  = w1,w2 
-
+        end1 = timer()
+        print("Elapsed Training time")
+        print(end1 - start1) # 
         return w1,w2 , outputs, cache
 
 
@@ -334,6 +340,32 @@ class PNN:
         sum_Tau += tau
         return sum_Tau
 
+
+
+    def createDropNet(w1, w2, keep_prob):
+        layerdrop = []
+        for lindex in range(1):
+            NeuronDropcache = []
+            for neuron in w1:
+                aa = list(neuron)
+                NeuronDropcache = list(itertools.chain(NeuronDropcache, aa))
+            layerdrop.append(NeuronDropcache)
+
+        NeuronDropcache = []
+        for neuron in w2:
+            aa = list(neuron)
+            NeuronDropcache = list(itertools.chain(NeuronDropcache, aa))
+        layerdrop.append(NeuronDropcache)
+        # ####
+        cache = []
+        for ldrop in (layerdrop):
+            narr = np.array(ldrop)
+            NeuronDropcache = []
+            D1 = np.random.uniform(low=-0.05, high=0.05, size=narr.size)
+            D1 = D1 < keep_prob
+            cache.append(D1)
+
+        return cache[0], cache[1]
 
     def CrossValidationAvg(self, X_train, y_train,X_test,y_test, kfold, foldcounter, foldindex, InNetInputNo, hnnolist,
                         labelno, ssteps, lrate, scale, epochs, bestvector, useFold,
@@ -354,24 +386,29 @@ class PNN:
                 print("Fold Index="+str(foldindex))
                 w1,w2 , output, cache = self.PNNChannels(w1,w2, epochs, trainFeatures, trainlabel,
                                         InNetInputNo,labelno, ssteps, lrate, hnnolist, scale,dropout)
-
+                
                 iterationoutput = self.predict(w1=w1,w2=w2 , testFeatures=testFeatures, testlabel=testlabel, labelno=labelno,
                                             ssteps=ssteps, scale=scale, hnnolist=hnnolist, dropout=dropout)
 
                 tot_etau += iterationoutput[0]
                
-            avr_res = tot_etau / foldcounter
-            print(' Validation ' + str(avr_res) + " Fold index=" + str(foldindex))
+                avr_res = tot_etau / foldcounter
+                print(' Validation ' + str(avr_res) + " Fold index=" + str(foldindex))
         else:
             trainFeatures = [i for i in X_train]
             w1,w2, output, cache = self.PNNChannels(w1,w2, epochs, trainFeatures, y_train,
                                             InNetInputNo,labelno, ssteps, lrate, hnnolist, scale,dropout)
 
         print("###################################### Testing 20% of data ###########################") 
+        start = timer()
         iterationoutput = self.predict(w1=w1,w2=w2 , testFeatures=X_test, testlabel=y_test, labelno=labelno,
                                             ssteps=ssteps, scale=scale, hnnolist=hnnolist, dropout=dropout) 
+                                            # ...
+        end = timer()
+        print("Elapsed Testing time")
+        print(end - start) # 
         self.calcConfusion(iterationoutput[1],y_test,ssteps)     
-        self.drawROC(y_test, np.array(iterationoutput[1]), 3)                                                                                     
+        # self.drawROC(y_test, np.array(iterationoutput[1]), 3)                                                                                     
         tot_etau = iterationoutput[0]
         avr_res = tot_etau
         return avr_res, w1,w2, cache
@@ -394,7 +431,7 @@ class PNN:
     def training(self, chunk, epochs, X, y, X_test,y_test,InNetInputNo, labelno, ssteps, lrate,
                 hnnolist, scale, useFold, dropout, Fold):
         foldcounter = Fold
-        kfold = sklearn.model_selection.KFold(foldcounter, shuffle=True, random_state=1)
+        kfold = sklearn.model_selection.KFold(foldcounter, shuffle=False)
         foldindex = 0
         lrlist = [lrate]
         scalelist = [scale]
@@ -420,10 +457,11 @@ class PNN:
                 if (avresult > bestvresult):
                     bestvresult = avresult
                     bestvector = [w1,w2, lr1, bestvresult, scl]
-
+        # print('Best Vector = ',bestvector)
         return w1,w2, avresult
 
     def predict(self, w1,w2 , testFeatures, testlabel, labelno, ssteps, scale, hnnolist, dropout):
+        
         iterationoutput = np.array([])
         predictedList = []
         cache=[]
@@ -460,11 +498,11 @@ class PNN:
                 rank = rank + 1
         return [a[i] for i in vector]
 
-    def loadData(self,filename, featuresno, labelno, ssteps,epochs,lrate,hn,Fold,useFold):
+    def loadData(self,filename, featuresno, labelno, ssteps,epochs,lrate,hn,Fold,useFold,scale):
         data = list()
         labels = list()
         alldata = list()
-        scale=2*labelno
+        scale=scale
         print("=================================="+filename+"=============================")
         filename1 =  filename
         gpsTrack = open(filename1, "r")
@@ -473,32 +511,27 @@ class PNN:
         for row in csvReader :
                 data.append(row[0:featuresno])
                 labels.append(row[featuresno:featuresno + labelno])
-                alldata.append(row[:])
+                # alldata.append(row[:])
 
         y = np.array(labels)
         X = np.array(data)  
 
-        dataarray = np.asarray(data)
-        alldataarray = np.asarray(alldata)
-        train_labels = [map(float, i) for i in y]
-        train_features = [map(float, i) for i in X]
-        alldata = [map(float, i) for i in alldataarray]
-
-
-        train_features, test_features, train_labels, test_labels  =sklearn.model_selection.train_test_split(train_features, train_labels, test_size=0.2, random_state=0)
+        train_features, test_features, train_labels, test_labels  =sklearn.model_selection.train_test_split(X, y, test_size=0.2)
     
-    #Train Data
-        train_features_list = np.array([list(item) for item in train_features])
-        train_labels_list = [list(item) for item in train_labels]
-    
-    # Test Data
-        test_features_list = np.array([list(item) for item in test_features])
-        test_labels_list = [list(item) for item in test_labels]
+        X = X.astype(float)
+        y = y.astype(float)
 
+        train_features = train_features.astype(float)
+        test_features = test_features.astype(float)
 
+        train_labels = train_labels.astype(float)
+        test_labels = test_labels.astype(float)
 
-        w1,w2,tot_error=self.training(chunk=1,epochs=epochs,ssteps=ssteps,Fold=Fold, X=train_features_list,y=train_labels_list,
-        X_test=test_features_list , y_test=test_labels_list,InNetInputNo=featuresno,
+        train_features_norm=preprocessing.normalize(train_features)  #X
+        test_features_norm=preprocessing.normalize(test_features)
+
+        w1,w2,tot_error=self.training(chunk=1,epochs=epochs,ssteps=ssteps,Fold=Fold, X=train_features_norm,y=train_labels,
+        X_test=test_features_norm , y_test=test_labels,InNetInputNo=featuresno,
         labelno=labelno,lrate=lrate,hnnolist=hn,scale=scale,dropout=False,useFold=useFold)
                             
         print('Done')
