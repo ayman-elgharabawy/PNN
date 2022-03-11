@@ -23,10 +23,31 @@ import os.path
 my_path = os.path.abspath(os.path.dirname(__file__))
 pnn = PNN()
 ############################## IRIS Dataset ##############################
-path = os.path.join(my_path, "..//Data//LRData//iris.txt")
-train_error = pnn.loadData(filename=path,featuresno= 4,labelno=3,ssteps=3,epochs=100,lrate=0.005,hn=100,Fold=5,useFold=True,scale=3) 
+# path = os.path.join(my_path, "..//Data//LRData//iris.txt")
+# train_error = pnn.loadData(filename=path,featuresno= 4,labelno=3,ssteps=3,epochs=100,lrate=0.005,hn=100,Fold=5,useFold=True,scale=3) 
+############################## WINE Dataset ##############################
+# path = os.path.join(my_path, "..//Data//LRData//wine.txt")
+# train_error = pnn.loadData(filename=path,featuresno= 13,labelno=3,ssteps=3,epochs=100,lrate=0.005,hn=100,Fold=5,useFold=True,scale=3) 
+############################## Vehicle Dataset ##############################
+# path = os.path.join(my_path, "..//Data//LRData//vehicle.txt")
+# train_error = pnn.loadData(filename=path,featuresno= 18,labelno=4,ssteps=4,epochs=100,lrate=0.005,hn=100,Fold=5,useFold=True,scale=3) 
+############################## Stock Dataset ##############################
+# path = os.path.join(my_path, "..//Data//LRData//stock.txt")
+# train_error = pnn.loadData(filename=path,featuresno= 5,labelno=5,ssteps=5,epochs=100,lrate=0.005,hn=100,Fold=5,useFold=True,scale=3) 
+############################## Segment Dataset ##############################
+# path = os.path.join(my_path, "..//Data//LRData//segment.txt")
+# train_error = pnn.loadData(filename=path,featuresno= 18,labelno=7,ssteps=7,epochs=100,lrate=0.007,hn=100,Fold=5,useFold=True,scale=3) 
 
+# ############################## pendigits Dataset ##############################
+# path = os.path.join(my_path, "..//Data//LRData//pendigits.txt")
+# train_error = pnn.loadData(filename=path,featuresno= 16,labelno=10,ssteps=10,epochs=100,lrate=0.005,hn=100,Fold=5,useFold=True,scale=3) 
+# ############################## Vowl Dataset ##############################
+# path = os.path.join(my_path, "..//Data//LRData//vowel.txt")
+# train_error = pnn.loadData(filename=path,featuresno= 10,labelno=11,ssteps=11,epochs=100,lrate=0.005,hn=100,Fold=5,useFold=True,scale=3) 
 
-# nn = NN()
-# train_error = nn.loadData(filename=path,featuresno= 4,labelno=3,ssteps=3,epochs=100,lrate=0.005,hn=100,Fold=10,useFold=False) 
-
+# ############################## Wisconsin Dataset ##############################
+path = os.path.join(my_path, "..//Data//LRData//wisconsin.txt")
+train_error = pnn.loadData(filename=path,featuresno= 16,labelno=16,ssteps=16,epochs=200,lrate=0.0005,hn=300,Fold=20,useFold=False,scale=2,dropout=True,dropno=50) 
+# ############################## Housing Dataset ##############################
+# path = os.path.join(my_path, "..//Data//LRData//housing.txt")
+# train_error = pnn.loadData(filename=path,featuresno= 6,labelno=6,ssteps=6,epochs=100,lrate=0.005,hn=100,Fold=5,useFold=True,scale=3) 

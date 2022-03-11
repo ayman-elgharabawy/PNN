@@ -21,6 +21,7 @@ import math
 from scipy.stats import zscore
 from itertools import combinations, permutations
 import csv
+from random import randint
 from scipy.stats.mstats import spearmanr
 import scipy.stats as ss
 import random
@@ -237,30 +238,19 @@ class PNN:
             return np.array(newexpected2) , np.array(newpredicted2)
 
 
-    def createDropNet( self,w1,w2, keep_prob):
-        layerdrop = []
-        for lindex in range(1):
-            NeuronDropcache = []
-            for neuron in w1:
-                aa = list(neuron)
-                NeuronDropcache = list(itertools.chain(NeuronDropcache, aa))
-            layerdrop.append(NeuronDropcache)
+    def generate_wt_drop(self,x, y,dropno):
+        l =[]
+        for i in range(x * y):
+            D1=np.random.uniform(low=-0.005, high=0.005)
+            l.append(D1)
 
-        NeuronDropcache = []
-        for neuron in w2:
-            aa = list(neuron)
-            NeuronDropcache = list(itertools.chain(NeuronDropcache, aa))
-        layerdrop.append(NeuronDropcache)
-        # ####
-        cache = []
-        for ldrop in (layerdrop):
-            narr = np.array(ldrop)
-            NeuronDropcache = []
-            D1 = np.random.uniform(low=-0.5, high=0.5, size=narr.size)
-            D1 = D1 < keep_prob
-            cache.append(D1)
+        aa=(np.array(l).reshape(x, y))
+        x = [randint(0, dropno) for p in range(0, y)]
+        for ind ,i in enumerate(aa):
+            if(ind in x):
+              aa[ind]=[0]*y
 
-        return cache[0] , cache[1]
+        return aa , x
 
     def generate_wt(self,x, y):
         l =[]
@@ -270,25 +260,39 @@ class PNN:
         
         return aa
 
-    def initialize_network(self,InNetInputNons, hiddenlist, outs):
+    def initialize_network(self,InNetInputNons, hiddenlist, outs,dropno):
         w1 = self.generate_wt(InNetInputNons, hiddenlist)
-        w2 = self.generate_wt(hiddenlist, outs)
-        return w1,w2
+        w2 ,drop1= self.generate_wt_drop(hiddenlist, outs,dropno)
+        return w1,w2 ,drop1
 
-    def forward_propagation(self, w1,w2, input1, n_outputs, ssteps, scale, dropout):
-        cache=[]
+    
+
+
+    def forward_propagation(self, w1,w2,drop1, input1, n_outputs, ssteps, scale, dropout):
+
+        if dropout:
+            for ind ,i in enumerate(w2):
+                if(ind in drop1):
+                  w2[ind]=[0]*16
+
 
         z1 = input1.dot(w1)# input from layer 1
         a1 = self.PSS(z1, ssteps, scale)# out put of layer 2
 
+
         z2 = a1.dot(w2)# input of out layer
         a2 = self.PSS(z2, ssteps, scale)# output of out layer
 
-        return a2, cache
+        return a2, drop1
 
-    def back_propagation(self, w1,w2,lrate, input1,InNetInputNo, expected, outputs, n_outputs, ssteps, scale, cache,
+    def back_propagation(self, w1,w2,drop1,lrate, input1,InNetInputNo, expected, outputs, n_outputs, ssteps, scale, cache,
                         dropout):
-    
+            if dropout:
+                for ind ,i in enumerate(w2):
+                    if(ind in drop1):
+                       w2[ind]=[0]*16
+
+
             z1 = input1.dot(w1)# input from layer 1
             a1 = self.PSS(np.array([z1]), ssteps, scale)# out put of layer 2
             z2 = a1.dot(w2)# input of out layer
@@ -308,8 +312,8 @@ class PNN:
             return  w1,w2
 
 
-    def PNNChannels( self, w1,w2, epochs, train_fold_features, train_fold_labels, InNetInputNo, n_outputs,
-                    ssteps, lrate, hn, scale, dropout):
+    def PNNChannels( self, w1,w2,drop1, epochs, train_fold_features, train_fold_labels, InNetInputNo, n_outputs,
+                    ssteps, lrate, hn, scale, dropout,dropno):
         z = len(train_fold_features)
         start1 = timer()
         cache = []
@@ -318,8 +322,8 @@ class PNN:
             for i, row in enumerate((train_fold_features)):
                 xxx = np.array(list(row))
                 trainfoldexpected = list(train_fold_labels[i])
-                outputs, cache = self.forward_propagation(w1,w2, xxx, n_outputs, ssteps, scale, dropout)
-                w1,w2 = self.back_propagation(w1,w2,lrate,xxx, InNetInputNo, trainfoldexpected, outputs, n_outputs,
+                outputs, drop1 = self.forward_propagation(w1,w2,drop1, xxx, n_outputs, ssteps, scale, dropout)
+                w1,w2 = self.back_propagation(w1,w2,drop1,lrate,xxx, InNetInputNo, trainfoldexpected, outputs, n_outputs,
                                                     ssteps, scale, cache, dropout)
                 cc = self.calculateoutputTau([outputs, np.array(trainfoldexpected)])
                 iterationoutput = np.append(iterationoutput, cc)
@@ -340,37 +344,10 @@ class PNN:
         sum_Tau += tau
         return sum_Tau
 
-
-
-    def createDropNet(w1, w2, keep_prob):
-        layerdrop = []
-        for lindex in range(1):
-            NeuronDropcache = []
-            for neuron in w1:
-                aa = list(neuron)
-                NeuronDropcache = list(itertools.chain(NeuronDropcache, aa))
-            layerdrop.append(NeuronDropcache)
-
-        NeuronDropcache = []
-        for neuron in w2:
-            aa = list(neuron)
-            NeuronDropcache = list(itertools.chain(NeuronDropcache, aa))
-        layerdrop.append(NeuronDropcache)
-        # ####
-        cache = []
-        for ldrop in (layerdrop):
-            narr = np.array(ldrop)
-            NeuronDropcache = []
-            D1 = np.random.uniform(low=-0.05, high=0.05, size=narr.size)
-            D1 = D1 < keep_prob
-            cache.append(D1)
-
-        return cache[0], cache[1]
-
     def CrossValidationAvg(self, X_train, y_train,X_test,y_test, kfold, foldcounter, foldindex, InNetInputNo, hnnolist,
                         labelno, ssteps, lrate, scale, epochs, bestvector, useFold,
-                        dropout):
-        w1,w2 = self.initialize_network(InNetInputNo, hnnolist, labelno)
+                        dropout,dropno):
+        w1,w2,drop1 = self.initialize_network(InNetInputNo, hnnolist, labelno,dropno)
 
         avr_res = 0
         tot_etau = 0
@@ -384,11 +361,11 @@ class PNN:
                 testFeatures = [X_train[i]  for i in idx_test]
                 testlabel = [y_train[i]  for i in idx_test]
                 print("Fold Index="+str(foldindex))
-                w1,w2 , output, cache = self.PNNChannels(w1,w2, epochs, trainFeatures, trainlabel,
-                                        InNetInputNo,labelno, ssteps, lrate, hnnolist, scale,dropout)
+                w1,w2 , output, cache = self.PNNChannels(w1,w2,drop1, epochs, trainFeatures, trainlabel,
+                                        InNetInputNo,labelno, ssteps, lrate, hnnolist, scale,dropout,dropno)
                 
                 iterationoutput = self.predict(w1=w1,w2=w2 , testFeatures=testFeatures, testlabel=testlabel, labelno=labelno,
-                                            ssteps=ssteps, scale=scale, hnnolist=hnnolist, dropout=dropout)
+                                            ssteps=ssteps, scale=scale, hnnolist=hnnolist, dropout=dropout,dropno=dropno)
 
                 tot_etau += iterationoutput[0]
                
@@ -396,13 +373,13 @@ class PNN:
                 print(' Validation ' + str(avr_res) + " Fold index=" + str(foldindex))
         else:
             trainFeatures = [i for i in X_train]
-            w1,w2, output, cache = self.PNNChannels(w1,w2, epochs, trainFeatures, y_train,
-                                            InNetInputNo,labelno, ssteps, lrate, hnnolist, scale,dropout)
+            w1,w2, output, cache = self.PNNChannels(w1,w2,drop1, epochs, trainFeatures, y_train,
+                                            InNetInputNo,labelno, ssteps, lrate, hnnolist, scale,dropout,dropno)
 
         print("###################################### Testing 20% of data ###########################") 
         start = timer()
         iterationoutput = self.predict(w1=w1,w2=w2 , testFeatures=X_test, testlabel=y_test, labelno=labelno,
-                                            ssteps=ssteps, scale=scale, hnnolist=hnnolist, dropout=dropout) 
+                                            ssteps=ssteps, scale=scale, hnnolist=hnnolist, dropout=dropout,dropno=dropno) 
                                             # ...
         end = timer()
         print("Elapsed Testing time")
@@ -429,7 +406,7 @@ class PNN:
         return outputf
 
     def training(self, chunk, epochs, X, y, X_test,y_test,InNetInputNo, labelno, ssteps, lrate,
-                hnnolist, scale, useFold, dropout, Fold):
+                hnnolist, scale, useFold, dropout,dropno, Fold):
         foldcounter = Fold
         kfold = sklearn.model_selection.KFold(foldcounter, shuffle=False)
         foldindex = 0
@@ -451,7 +428,8 @@ class PNN:
                                                                                 scale=scale,
                                                                                 epochs=epochs, bestvector=bestvector,
                                                                                 dropout=dropout,
-                                                                                useFold=useFold
+                                                                                useFold=useFold,
+                                                                                dropno=dropno
                                                                                 )
                 print('Testing Data Prediction= ',avresult)
                 if (avresult > bestvresult):
@@ -460,7 +438,7 @@ class PNN:
         # print('Best Vector = ',bestvector)
         return w1,w2, avresult
 
-    def predict(self, w1,w2 , testFeatures, testlabel, labelno, ssteps, scale, hnnolist, dropout):
+    def predict(self, w1,w2 , testFeatures, testlabel, labelno, ssteps, scale, hnnolist, dropout,dropoutno):
         
         iterationoutput = np.array([])
         predictedList = []
@@ -468,7 +446,7 @@ class PNN:
         for i, row in enumerate((testFeatures)):
             xxx1 = np.array(list(row))
             testfoldlabels = list(testlabel[i])
-            predicted, cache = self.forward_propagation(w1,w2, xxx1, labelno, ssteps, scale, dropout)
+            predicted, drop1,drop2 = self.forward_propagation(w1,w2, xxx1, labelno, ssteps, scale, dropout,dropoutno)
             predictedList.append(predicted)
             iterationoutput = np.append(iterationoutput,
                                         [self.calculateoutputTau([predicted, np.array(testfoldlabels)])])
@@ -498,7 +476,7 @@ class PNN:
                 rank = rank + 1
         return [a[i] for i in vector]
 
-    def loadData(self,filename, featuresno, labelno, ssteps,epochs,lrate,hn,Fold,useFold,scale):
+    def loadData(self,filename, featuresno, labelno, ssteps,epochs,lrate,hn,Fold,useFold,scale,dropout,dropno):
         data = list()
         labels = list()
         alldata = list()
@@ -532,7 +510,7 @@ class PNN:
 
         w1,w2,tot_error=self.training(chunk=1,epochs=epochs,ssteps=ssteps,Fold=Fold, X=train_features_norm,y=train_labels,
         X_test=test_features_norm , y_test=test_labels,InNetInputNo=featuresno,
-        labelno=labelno,lrate=lrate,hnnolist=hn,scale=scale,dropout=False,useFold=useFold)
+        labelno=labelno,lrate=lrate,hnnolist=hn,scale=scale,dropout=dropout,dropno=dropno,useFold=useFold)
                             
         print('Done')
         return tot_error

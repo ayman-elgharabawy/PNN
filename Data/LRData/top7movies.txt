@@ -1,0 +1,602 @@
+user_id,gender,age,city,state,latitude,longitude,occupations,ranking
+17,M,50,Modesto,CA,37.671778,-121.01249,academic/educator,abcfg>de
+19,M,1,Royal Oak,MI,42.518635,-83.16357,K-12 student,ac>defg>b
+36,M,25,San Francisco,CA,37.801028,-122.43836,clerical/admin,bcdeg>af
+48,M,25,San Diego,CA,32.7409,-117.24434,college/grad_student,bcdef>ag
+53,M,25,Tamuning,GU,13.48,144.77,other,abcfg>de
+58,M,25,Atlanta,GA,33.752856,-84.39013,artist,bdf>aceg
+118,M,35,Alexandria,VA,38.757924,-77.15284,technician/engineer,bcdefg>a
+123,M,35,Wichita,KS,37.701997,-97.28114,homemaker,f>bcdeg>a
+147,M,18,Thousand Oaks,CA,34.208837,-118.87348,college/grad_student,abf>cdeg
+149,M,25,Columbia,SC,33.990555,-80.99826,academic/educator,abcdg>ef
+151,F,25,Phoenix,AZ,33.50711,-112.08483,writer,abfg>c>de
+157,M,35,Saratoga Springs,NY,43.080399,-73.77038,self-employed,acf>be>dg
+163,M,18,Phoenix,AZ,33.50711,-112.08483,college/grad_student,ag>f>e>bcd
+166,M,18,Anaheim,CA,33.806965,-117.92594,college/grad_student,bcd>aeg>f
+169,M,25,Minneapolis,MN,44.875997,-93.37021,executive/managerial,bcdeg>f>a
+170,M,25,Bayonne,NJ,40.666552,-74.11768,lawyer,bcd>afg>e
+173,M,25,Cincinnati,OH,39.188859,-84.45798,other,abcf>dg>e
+195,M,25,Bronx,NY,40.864166,-73.88881,programmer,abcg>def
+199,M,18,Boise,ID,43.593523,-116.19903,college/grad_student,abdfg>ce
+202,M,18,Madison,WI,43.074296,-89.40774,college/grad_student,abcdef>g
+222,M,25,Saint Paul,MN,44.913815,-93.17459,academic/educator,bcg>adef
+224,F,18,Ithaca,NY,42.449454,-76.49685,college/grad_student,abc>dfg>e
+229,M,18,Southport,ME,43.823008,-69.66661,K-12 student,abcd>f>e>g
+245,M,35,Lawrence,KS,38.932303,-95.22513,self-employed,bcf>deg>a
+258,M,25,Minneapolis,MN,44.903864,-93.37056,executive/managerial,abcdef>g
+284,M,25,Chula Vista,CA,32.638654,-117.06686,programmer,abf>cd>eg
+295,M,18,Denver,CO,39.731286,-104.98306,other,abcdfg>e
+301,M,18,Champaign,IL,40.114931,-88.24322,college/grad_student,abefg>cd
+302,M,18,Waterville,ME,44.554965,-69.61297,college/grad_student,abcdf>eg
+308,M,25,New York,NY,40.798502,-73.96811,artist,bc>defg>a
+329,M,35,Boston,MA,42.34308,-71.09268,executive/managerial,g>bcdef>a
+355,M,18,Saint Paul,MN,44.928315,-93.08876,clerical/admin,abcdf>g>e
+372,F,18,Little Rock,AR,34.771024,-92.37117,college/grad_student,abcde>fg
+377,M,25,Minneapolis,MN,45.019315,-93.24304,technician/engineer,bcdef>a>g
+409,M,18,Saint Paul,MN,44.804548,-93.19871,programmer,abcdef>g
+415,F,35,Minneapolis,MN,44.938615,-93.22082,other,bcf>ag>de
+424,M,25,Saint Paul,MN,45.076365,-93.19335,technician/engineer,abc>defg
+426,M,18,Minneapolis,MN,44.971965,-93.23588,college/grad_student,abceg>df
+429,M,18,Oshkosh,WI,44.043984,-88.53528,other,abcf>eg>d
+431,M,18,Anoka,MN,45.247509,-93.418,K-12 student,acdf>beg
+436,M,18,Granville,OH,40.070985,-82.52134,college/grad_student,f>bcdeg>a
+438,M,18,Madison,WI,43.073395,-89.45049,lawyer,abcd>efg
+442,M,25,Saint Paul,MN,44.934465,-93.16554,academic/educator,bcd>aef>g
+453,M,18,Saint Paul,MN,44.935315,-93.12049,college/grad_student,bcdf>ag>e
+457,M,18,Eau Claire,WI,44.82961,-91.50521,college/grad_student,acf>bdeg
+480,F,18,Minneapolis,MN,45.014764,-93.33965,college/grad_student,aeg>bcdf
+482,M,25,Hopkins,MN,44.953763,-93.43346,sales/marketing,af>bdeg>c
+509,M,25,Saint Paul,MN,44.921982,-92.94234,artist,abcd>efg
+531,F,18,Arlington,VA,38.843466,-77.08973,sales/marketing,a>bdef>cg
+533,M,25,Chapel Hill,NC,35.915083,-79.02939,programmer,abg>cdef
+585,M,18,Madison,WI,43.078646,-89.37727,academic/educator,c>eg>abf>d
+604,M,45,Jacksonville,FL,30.206922,-81.54604,technician/engineer,bdfg>e>c>a
+610,M,25,Houston,TX,29.69023,-95.43474,college/grad_student,acfg>bde
+623,M,25,Warrenville,IL,41.82552,-88.19452,technician/engineer,abcfg>e>d
+624,M,25,Dallas,TX,32.78643,-96.81992,academic/educator,bg>cef>ad
+626,M,18,Houston,TX,29.717529,-95.42821,college/grad_student,acdf>be>g
+646,M,35,Bordentown,NJ,40.132784,-74.71778,executive/managerial,bdef>cg>a
+651,M,35,Kensington,MD,39.027259,-77.07745,executive/managerial,b>acdf>eg
+660,M,45,Lafayette,LA,30.2786,-92.02759,self-employed,afg>bcde
+674,M,25,Falls Church,VA,38.864669,-77.18781,technician/engineer,abcdf>eg
+676,M,18,Saint Paul,MN,44.896938,-92.90241,self-employed,abcdf>eg
+678,M,25,Port Saint Lucie,FL,27.291694,-80.29691,other,abg>cdef
+687,F,25,Silver Creek,NY,42.535276,-79.16539,executive/managerial,abcdeg>f
+692,F,25,Mesa,AZ,33.436767,-111.64338,other,acdf>bg>e
+696,M,25,San Francisco,CA,37.758434,-122.43512,programmer,abfg>cd>e
+698,M,18,Stephenville,TX,32.242816,-98.21058,college/grad_student,a>eg>f>bcd
+699,M,18,Lawton,OK,34.613973,-98.46255,other,af>eg>d>bc
+710,M,25,Mesa,AZ,33.436767,-111.64338,writer,bcfg>ade
+712,M,25,San Jose,CA,37.269343,-121.84939,other,bcf>aeg>d
+713,M,35,El Paso,TX,31.848055,-106.54487,executive/managerial,bef>g>cd>a
+714,M,18,Arlington,TX,32.721632,-97.14698,college/grad_student,abcdef>g
+716,M,18,Seattle,WA,47.450321,-122.27472,college/grad_student,abfg>cde
+721,F,35,Ashland,OR,42.169751,-122.61772,homemaker,beg>acd>f
+735,M,25,Lewiston,ME,44.094773,-70.19141,sales/marketing,abf>cde>g
+737,M,1,Madison,WI,43.036696,-89.44499,unemployed,a>bcdefg
+746,F,18,Freedom,CA,36.935552,-121.77972,unemployed,f>ag>bcde
+752,F,25,Eugene,OR,44.06092,-123.08275,clerical/admin,af>b>d>ceg
+770,M,18,Lakewood,WA,47.16632,-122.50844,college/grad_student,g>de>acf>b
+774,M,18,Charlottesville,VA,38.026342,-78.5348,college/grad_student,abc>deg>f
+777,M,18,Llano,NM,36.129822,-105.66493,unemployed,bcdf>eg>a
+796,M,50,Concrete,WA,48.497601,-121.70018,doctor/health_care,bdf>ace>g
+802,M,25,Harrisonburg,VA,38.426786,-78.88153,self-employed,abcf>eg>d
+839,M,25,Seattle,WA,47.671346,-122.34166,other,bcdef>ag
+869,M,18,Escondido,CA,33.181543,-117.11136,writer,acdefg>b
+877,M,25,La Habra,CA,33.934513,-117.95159,other,bcg>ade>f
+881,M,18,Stephenville,TX,32.242816,-98.21058,sales/marketing,abc>dg>ef
+888,F,1,Edison,NJ,40.575503,-74.35781,K-12 student,ag>e>bcf>d
+889,M,45,New York,NY,40.786387,-73.97709,writer,g>bc>def>a
+899,F,25,Athens,GA,33.925085,-83.34529,academic/educator,bc>dfg>a>e
+905,F,45,Morganton,NC,35.742752,-81.71625,programmer,bf>aceg>d
+919,F,35,Oceanside,CA,33.195354,-117.28232,academic/educator,acdefg>b
+937,M,25,Brookfield,IL,41.822681,-87.84753,scientist,abcdfg>e
+949,M,50,Kihei,HI,20.771418,-156.45769,technician/engineer,bcdefg>a
+963,M,25,Ypsilanti,MI,42.223482,-83.63316,other,abcg>df>e
+975,M,35,Seattle,WA,47.538887,-122.38803,other,abcdeg>f
+984,M,50,San Diego,CA,32.961014,-117.1251,self-employed,b>cdefg>a
+985,M,25,Gainesville,FL,29.611545,-82.3941,college/grad_student,abd>cfg>e
+996,M,25,Seattle,WA,47.63287,-122.32253,technician/engineer,bcdf>eg>a
+1004,M,25,San Jose,CA,37.269343,-121.84939,clerical/admin,abcdg>f>e
+1010,M,25,Staten Island,NY,40.63212,-74.11551,other,abc>d>efg
+1015,M,35,Brooklyn,NY,40.641436,-74.01574,clerical/admin,bfg>acde
+1019,M,35,Chicago,IL,41.973181,-87.6665,academic/educator,cfg>abde
+1051,F,25,Brookfield,IL,41.822681,-87.84753,other,abcdf>g>e
+1057,M,45,Norman,OK,35.228649,-97.45629,technician/engineer,bc>aefg>d
+1058,M,25,Albany,OR,44.635395,-123.0896,academic/educator,abcde>fg
+1063,M,35,West Des Moines,IA,41.570916,-93.73568,executive/managerial,bcdfg>ae
+1086,M,18,Bellingham,WA,48.747578,-122.48508,college/grad_student,abcd>efg
+1087,M,25,Glen Gardner,NJ,40.716332,-74.91405,self-employed,bcdef>ag
+1088,F,1,Seattle,WA,47.671346,-122.34166,K-12 student,abcd>efg
+1101,M,35,Deep River,CT,41.37934,-72.44578,academic/educator,ab>cde>fg
+1105,M,35,Ann Arbor,MI,42.307288,-83.70443,doctor/health_care,ag>bcef>d
+1112,M,18,Philadelphia,PA,39.961612,-75.19957,doctor/health_care,abcfg>de
+1113,M,18,Portland,OR,45.514241,-122.60089,college/grad_student,cg>abdef
+1117,M,18,New York,NY,40.752159,-73.97231,sales/marketing,abc>deg>f
+1120,M,18,Davis,CA,38.549256,-121.73655,college/grad_student,abf>cde>g
+1125,F,18,Madison,WI,43.061546,-89.40024,college/grad_student,abdg>cf>e
+1130,M,18,Crystal Lake,IL,42.265643,-88.31664,executive/managerial,abcf>de>g
+1134,M,18,Philadelphia,PA,40.064257,-75.00155,writer,abcdf>eg
+1137,M,18,Waterloo,NY,42.911377,-76.87027,college/grad_student,ag>def>bc
+1151,M,25,Fort Wayne,IN,41.098248,-85.12061,scientist,bcdg>af>e
+1155,M,25,Redondo Beach,CA,33.871214,-118.37177,programmer,bf>ce>adg
+1179,M,50,South Pasadena,CA,34.112958,-118.15577,academic/educator,bcdfg>e>a
+1181,M,35,Bowie,MD,38.93193,-76.72457,executive/managerial,g>bcf>ad>e
+1182,M,1,Northridge,CA,34.276154,-118.54581,K-12 student,ad>cfg>be
+1184,F,25,Loma Linda,CA,34.050764,-117.25327,college/grad_student,af>bcde>g
+1194,F,25,Davis,CA,38.619545,-121.961532,academic/educator,a>bcdef>g
+1202,M,35,Beaverton,OR,45.517695,-122.85826,programmer,abcdef>g
+1207,M,50,Toledo,OH,41.667361,-83.71609,other,e>bcd>afg
+1215,M,35,Newport News,VA,37.115698,-76.5183,technician/engineer,abcef>dg
+1230,M,25,San Jose,CA,37.295092,-121.89649,lawyer,bcdg>aef
+1244,M,25,Fairfax,VA,38.846212,-77.32787,college/grad_student,bc>aeg>df
+1246,M,18,Bellingham,WA,48.747578,-122.48508,college/grad_student,acd>bfg>e
+1260,M,25,Charlotte,NC,35.321279,-80.7405,technician/engineer,abcf>d>g>e
+1264,M,25,Madison,WI,43.036696,-89.44499,academic/educator,bcf>adg>e
+1266,M,25,Allentown,PA,40.601996,-75.52104,college/grad_student,a>bcdfg>e
+1267,M,25,Albany,NY,42.678112,-73.82983,scientist,bg>f>acde
+1274,M,45,Hixson,TN,35.167987,-85.21158,executive/managerial,a>bcg>ef>d
+1285,M,35,Seattle,WA,47.716648,-122.30308,college/grad_student,abcefg>d
+1297,M,25,San Diego,CA,32.791246,-117.24343,executive/managerial,abcf>deg
+1299,M,25,Franklin,MA,42.089104,-71.4069,sales/marketing,abcdfg>e
+1301,F,25,Bronx,NY,40.878522,-73.82541,artist,abcdeg>f
+1304,M,25,Portland,OR,45.589689,-122.73875,sales/marketing,bcdefg>a
+1306,M,25,Liberty,MO,39.246179,-94.41763,clerical/admin,abcdf>eg
+1317,M,45,Kenmore,WA,47.75287,-122.24736,executive/managerial,b>acdefg
+1329,M,18,Schaumburg,IL,42.037108,-88.10719,sales/marketing,abcdf>eg
+1333,M,25,Milford,CT,41.21953,-73.0554,technician/engineer,abcfg>e>d
+1340,M,25,Niagara Falls,NY,43.32684,-78.830681,executive/managerial,acg>bef>d
+1354,F,25,Mountain View,CA,37.380207,-122.08787,artist,bcd>a>efg
+1356,F,18,Baldwin Park,CA,34.087108,-117.96966,college/grad_student,b>cf>ad>g>e
+1369,M,25,Schenectady,NY,42.820909,-73.92002,customer service,bcdfg>a>e
+1383,F,25,Wilmington,DE,39.758563,-75.56413,executive/managerial,bcdf>ae>g
+1389,M,25,Wilmington,DE,39.738563,-75.54833,technician/engineer,abcdg>f>e
+1393,M,18,Fairfield,CT,41.163445,-73.2629,college/grad_student,bcdf>aeg
+1399,M,18,Wykagyl,NY,40.946805,-73.78797,technician/engineer,abg>cdef
+1413,M,18,Seattle,WA,47.61157,-122.30406,clerical/admin,b>acde>fg
+1418,M,18,Ypsilanti,MI,42.223482,-83.63316,college/grad_student,cf>abdeg
+1420,M,18,Sunderland,MA,42.449978,-72.56302,college/grad_student,abcdeg>f
+1426,M,18,San Carlos,CA,37.499175,-122.26655,sales/marketing,abf>deg>c
+1427,M,25,Annapolis,MD,38.997511,-76.49803,programmer,abcefg>d
+1447,M,18,Fort Collins,CO,40.586282,-105.10494,college/grad_student,abcdg>ef
+1449,M,35,Harrisburg,PA,40.343261,-76.7808,writer,a>bcf>deg
+1451,M,35,Los Angeles,CA,34.061611,-118.23944,writer,bcefg>ad
+1457,M,25,Sebastopol,CA,38.393314,-122.83666,academic/educator,abdf>c>g>e
+1466,M,18,Columbia,SC,33.998454,-81.03519,college/grad_student,abcdg>f>e
+1470,M,18,San Francisco,CA,37.782029,-122.46158,college/grad_student,cef>abg>d
+1491,M,18,New Haven,CT,41.317197,-72.92798,college/grad_student,abcde>fg
+1496,M,25,San Francisco,CA,37.792678,-122.40793,technician/engineer,aefg>c>bd
+1497,M,50,Denver,CO,39.734387,-104.91678,customer service,abcdef>g
+1503,M,25,Rancho Santa Margarita,CA,33.639994,-117.60351,programmer,bg>cdf>ae
+1509,M,1,Plainview,NY,40.779911,-73.47948,other,acdef>bg
+1542,M,18,Delmar,NY,42.614979,-73.84086,technician/engineer,bcdefg>a
+1579,M,25,Evanston,IL,42.056391,-87.69684,other,bc>adefg
+1584,M,25,Athens,OH,39.322847,-82.09728,unemployed,bcdefg>a
+1586,M,45,Livingston,TX,30.712538,-94.89915,executive/managerial,bcefg>ad
+1587,F,25,Atlanta,GA,33.771755,-84.38065,clerical/admin,cd>abeg>f
+1592,M,35,Grimes,IA,41.67822,-93.7935,executive/managerial,abcf>d>eg
+1599,M,25,Huntington Beach,CA,33.666269,-117.9693,other,bc>d>ae>fg
+1605,F,18,Charlotte,NC,35.113906,-80.7613,other,bg>acde>f
+1611,M,25,Rochester,NH,43.304163,-70.99816,other,abcf>d>eg
+1616,M,25,New Castle,PA,40.992023,-80.32747,other,abcdf>e>g
+1617,M,25,Mentor,OH,41.688162,-81.33378,programmer,bceg>ad>f
+1624,M,25,Danbury,CT,41.390194,-73.45441,other,abcd>f>eg
+1628,M,18,Los Angeles,CA,34.098859,-118.32745,writer,bcde>afg
+1632,M,25,San Francisco,CA,37.784827,-122.727802,self-employed,bcd>af>e>g
+1635,M,25,Portland,OR,45.54424,-122.64353,other,abcdf>eg
+1639,M,25,Santa Rosa,CA,38.438161,-122.67419,technician/engineer,aef>bg>cd
+1647,M,18,Seattle,WA,47.543348,-122.27496,tradesman/craftsman,bcd>aefg
+1650,M,25,Oakland,CA,37.806427,-122.28898,unemployed,bcde>fg>a
+1655,M,18,Alamo,CA,37.856683,-122.02488,college/grad_student,abdf>ceg
+1666,M,25,Pittsburgh,PA,40.329619,-80.07364,sales/marketing,abdefg>c
+1680,M,25,Turlock,CA,37.48858,-120.85196,writer,acefg>d>b
+1685,M,35,Sacramento,CA,38.616891,-121.49623,programmer,a>bcdfg>e
+1694,M,25,Seattle,WA,47.57487,-122.39392,programmer,bcdg>ae>f
+1698,M,35,Portland,OR,45.51379,-122.6458,artist,abcg>f>de
+1712,M,25,Edmond,OK,35.681402,-97.5331,other,aef>bcdg
+1717,F,50,Atlanta,GA,33.768205,-84.33786,doctor/health_care,abc>f>eg>d
+1724,M,18,Bayamon,PR,18.412462,-66.16033,college/grad_student,abcdf>eg
+1764,M,18,Mesquite,TX,32.767329,-96.60759,other,abcdeg>f
+1767,M,25,Dallas,TX,32.836094,-96.79524,writer,abcef>dg
+1775,M,25,New Orleans,LA,29.927305,-90.10197,college/grad_student,bc>adef>g
+1778,M,18,Berkeley,CA,37.868575,-122.25855,college/grad_student,abdefg>c
+1780,M,35,Vienna,VA,38.896361,-77.29102,academic/educator,bef>acdg
+1794,M,25,Gaithersburg,MD,39.11755,-77.23548,lawyer,bcdg>e>f>a
+1800,M,18,New Orleans,LA,29.952305,-90.12347,college/grad_student,abcdf>eg
+1804,M,25,Alexandria,VA,38.806163,-77.05139,executive/managerial,bcdf>e>g>a
+1812,F,25,Ann Arbor,MI,42.280887,-83.79147,programmer,ag>bcdef
+1817,M,35,Madison,WI,43.074296,-89.40774,academic/educator,f>abcdg>e
+1820,M,25,West Des Moines,IA,41.570916,-93.73568,writer,abcg>ef>d
+1837,M,25,Edison,NJ,40.516104,-74.39754,artist,abcg>def
+1842,M,18,Whitewater,WI,42.818747,-88.73279,college/grad_student,abcdf>eg
+1851,M,25,Helena,MT,46.696501,-111.96895,unemployed,abcdf>g>e
+1855,M,18,Ventura,CA,34.278812,-119.16784,college/grad_student,abcdef>g
+1860,M,56,Vallejo,CA,38.099119,-122.21035,self-employed,bcef>dg>a
+1873,M,35,Boston,MA,42.33499,-71.04562,executive/managerial,efg>bcd>a
+1880,M,35,Arcadia,CA,34.134057,-118.02662,other,bcdfg>ae
+1884,M,45,Santa Barbara,CA,34.433687,-119.63184,writer,af>bcdeg
+1889,M,18,Broomfield,CO,39.96,-105.02,sales/marketing,bcd>aef>g
+1899,F,45,Brighton,MA,42.348418,-71.15349,doctor/health_care,abef>c>dg
+1904,M,18,Canton,GA,34.194029,-84.43884,academic/educator,bcdef>ag
+1912,M,25,Northridge,CA,34.235055,-118.51766,college/grad_student,abc>deg>f
+1922,F,25,Palo Alto,CA,37.449888,-122.12749,executive/managerial,b>e>acdfg
+1930,M,25,Livermore,CA,37.65778,-121.73011,scientist,af>bce>dg
+1941,M,35,Livermore,CA,37.65778,-121.73011,technician/engineer,bcdef>g>a
+1943,M,18,Burbank,CA,34.186755,-118.30153,college/grad_student,acd>bf>eg
+1958,F,25,Mechanicsburg,PA,40.215939,-76.99827,academic/educator,bcde>af>g
+1969,F,25,San Diego,CA,32.76235,-117.12246,clerical/admin,bcdef>g>a
+1974,M,35,Slingerlands,NY,42.646978,-73.87151,technician/engineer,abcf>deg
+1980,M,35,Milford,CT,41.21953,-73.0554,executive/managerial,af>bcdeg
+1984,M,18,San Diego,CA,32.946776,-117.21918,K-12 student,bcd>afg>e
+1996,M,35,Nogales,AZ,31.37737,-110.9264,other,bf>acdeg
+2010,M,18,Clifton,CO,39.085981,-108.44444,college/grad_student,abcf>dg>e
+2015,M,18,Amherst,MA,42.369562,-72.63599,college/grad_student,bcg>ade>f
+2020,M,25,Hamilton,OH,39.404856,-84.52271,executive/managerial,bg>ae>cf>d
+2022,M,25,Glen Ellyn,IL,41.869779,-88.06285,executive/managerial,abcdf>eg
+2023,M,18,Mankato,MN,44.15644,-93.99388,college/grad_student,abcdf>eg
+2025,M,56,Antrim,NH,43.060424,-71.95068,retired,bcd>ef>ag
+2030,M,25,Humble,TX,30.062436,-95.16945,college/grad_student,abcg>f>de
+2054,M,25,Bedford,NH,42.942551,-71.51993,programmer,bcdefg>a
+2056,M,25,Saint Cloud,MN,45.526066,-94.20649,college/grad_student,abcdg>ef
+2063,M,25,Logan,OH,39.530972,-82.40801,college/grad_student,a>bcde>fg
+2071,M,45,Worcester,MA,42.286543,-71.78846,executive/managerial,bce>dfg>a
+2073,F,18,Seneca Falls,NY,42.924166,-76.78366,college/grad_student,af>beg>cd
+2077,M,18,Saint Paul,MN,45.076365,-93.19335,other,ag>bcdef
+2092,M,56,Kalamazoo,MI,42.295005,-85.62247,academic/educator,b>afg>cde
+2105,M,25,Blacksburg,VA,37.232027,-80.42127,academic/educator,abcf>d>eg
+2114,M,18,Hagerstown,MD,39.633946,-77.73025,tradesman/craftsman,bcdefg>a
+2116,M,18,Grand Rapids,MI,42.927801,-85.54582,college/grad_student,abcdfg>e
+2119,M,35,New York,NY,40.759511,-73.99019,college/grad_student,bc>dfg>ae
+2125,M,35,Carmel,IN,39.973731,-86.08875,clerical/admin,abdeg>c>f
+2129,M,25,Portland,ME,43.685882,-70.2903,customer service,abdg>f>ce
+2131,M,25,Framingham,MA,42.318695,-71.42344,other,abcf>dg>e
+2140,M,45,Fort Wayne,IN,41.054247,-85.23878,sales/marketing,ab>cdefg
+2148,F,18,Durango,CO,37.295888,-107.84945,other,acde>bg>f
+2165,M,25,Orlando,FL,28.401151,-81.52488,executive/managerial,aefg>bcd
+2177,F,35,Kelseyville,CA,38.939725,-122.78548,writer,abcdf>eg
+2181,M,25,Cincinnati,OH,39.075329,-84.27311,other,bcd>ae>fg
+2205,F,25,New York,NY,40.74618,-73.97759,executive/managerial,b>ceg>af>d
+2215,F,25,Monterey,CA,36.586193,-121.88667,other,af>bcdeg
+2223,M,25,Elgin,IL,42.034776,-88.32393,artist,bce>dfg>a
+2232,M,25,Vernon Hills,IL,42.229856,-87.96779,sales/marketing,abcdef>g
+2239,M,18,Lombard,IL,41.875429,-88.01723,K-12 student,abcdg>ef
+2240,M,45,Kansas City,MO,39.165253,-94.53158,programmer,bcdeg>a>f
+2242,M,18,Dekalb,IL,41.924127,-88.74617,college/grad_student,abdg>cef
+2244,M,1,Naperville,IL,41.728738,-88.12824,K-12 student,abcef>dg
+2265,M,56,Aurora,IL,41.766029,-88.35254,retired,bcf>deg>a
+2271,M,50,Syracuse,NY,43.037166,-76.12653,sales/marketing,abef>cdg
+2288,M,1,Fayetteville,NY,43.028516,-76.00876,K-12 student,a>bcdfg>e
+2307,M,25,Cambridge,MA,42.393327,-71.12837,technician/engineer,abcdfg>e
+2340,M,35,Ann Arbor,MI,42.266805,-83.72297,artist,abfg>cde
+2411,F,35,North Grafton,MA,42.231444,-71.70523,sales/marketing,bcdfg>a>e
+2429,M,25,Charlottesville,VA,38.026342,-78.5348,artist,adfg>bc>e
+2436,M,25,Charlottesville,VA,38.00847,-78.47803,executive/managerial,abdef>c>g
+2446,M,18,New York,NY,40.709677,-74.00365,executive/managerial,abcdf>g>e
+2453,M,25,Minneapolis,MN,45.064714,-93.34155,executive/managerial,fg>abcd>e
+2457,M,25,Chicago,IL,41.97508,-87.8163,other,bcd>fg>e>a
+2466,M,25,Palo Alto,CA,37.449888,-122.12749,scientist,abc>defg
+2484,M,45,Columbus,GA,32.471492,-84.98005,customer service,bcdf>eg>a
+2504,M,25,Seattle,WA,47.68382,-122.30122,executive/managerial,abcdfg>e
+2537,M,35,Bristol,TN,36.561341,-82.16869,lawyer,abcdef>g
+2544,M,45,Dubuque,IA,42.515252,-90.6794,academic/educator,g>be>acdf
+2562,M,18,Bothell,WA,47.790653,-122.22021,other,abcdf>g>e
+2566,M,35,Los Altos,CA,37.37714,-122.12412,technician/engineer,bg>cdef>a
+2567,M,25,Meriden,CT,41.536048,-72.81973,other,abcf>d>eg
+2572,M,35,-999,-999,-999,-999,sales/marketing,abcfg>d>e
+2573,M,45,Fremont,CA,37.562218,-121.99433,self-employed,abfg>cde
+2595,M,18,Pittsburgh,PA,40.443269,-79.95487,college/grad_student,bdf>c>eg>a
+2620,M,18,Muncie,IN,40.202293,-85.408221,college/grad_student,fg>ade>bc
+2664,M,35,Cedar Rapids,IA,42.021016,-91.65231,executive/managerial,bcdeg>af
+2679,F,18,Somerville,MA,42.381929,-71.09908,college/grad_student,abc>defg
+2683,M,35,Carol Stream,IL,41.918578,-88.13688,executive/managerial,abcdfg>e
+2691,M,18,Middletown,CT,41.556463,-72.658179,college/grad_student,abcdef>g
+2748,M,25,Tucson,AZ,32.240625,-110.94791,college/grad_student,bc>g>d>aef
+2756,M,18,Corvallis,OR,44.565648,-123.27906,college/grad_student,abcfg>de
+2761,M,35,Colorado Springs,CO,38.888394,-104.73975,doctor/health_care,bcdfg>ae
+2765,M,50,Lexington,MA,42.452895,-71.21619,executive/managerial,abcefg>d
+2771,M,18,La Jolla,CA,32.838761,-117.26159,academic/educator,ab>ef>cdg
+2786,M,25,Evanston,IL,42.056391,-87.69684,college/grad_student,abf>cdeg
+2790,M,25,Phoenix,AZ,33.50711,-112.08483,writer,abcdf>eg
+2793,M,35,New Orleans,LA,29.968054,-90.06403,executive/managerial,abcdfg>e
+2814,M,35,Boston,MA,42.33499,-71.04562,executive/managerial,bcefg>d>a
+2824,M,18,Boston,MA,42.349838,-71.06101,college/grad_student,ag>bcef>d
+2837,M,18,Grand Rapids,MI,42.945727,-85.61899,other,abcf>d>eg
+2841,M,50,Renton,WA,47.510739,-122.18372,programmer,ab>cd>fg>e
+2847,M,18,New York,NY,40.812665,-73.95499,college/grad_student,abcd>eg>f
+2866,M,25,Madison,WI,43.072994,-89.51992,executive/managerial,bcdf>e>a>g
+2868,M,35,Menlo Park,CA,37.451688,-122.18385,programmer,bf>acg>d>e
+2873,F,18,Warrensburg,MO,38.772117,-93.73519,college/grad_student,bcd>ef>g>a
+2887,M,25,Shawnee Mission,KS,39.030172,-94.63097,clerical/admin,abcdfg>e
+2888,M,25,Minneapolis,MN,44.8257,-93.38212,sales/marketing,abcd>fg>e
+2895,M,25,Livingston,NJ,40.788733,-74.32134,lawyer,abcef>dg
+2896,M,18,Round Lake,IL,42.366253,-88.09647,sales/marketing,bcdef>g>a
+2899,M,35,San Francisco,CA,37.801878,-122.41018,sales/marketing,abf>cdeg
+2900,M,18,San Jose,CA,37.213624,-121.85671,programmer,abcdf>eg
+2909,M,25,Columbus,OH,39.954363,-83.123,executive/managerial,abcdef>g
+2918,M,25,Seattle,WA,47.629653,-122.29752,programmer,ac>bfg>de
+2928,M,25,Los Angeles,CA,34.122058,-118.3379,artist,abc>fg>de
+2929,M,18,Chicago,IL,41.922682,-87.65432,artist,abcdfg>e
+2931,M,18,State College,PA,40.802661,-77.89936,college/grad_student,abcf>dg>e
+2946,M,35,Lake Forest,CA,33.640223,-117.69108,self-employed,f>abde>cg
+2972,M,25,Corvallis,OR,44.608694,-123.2752,college/grad_student,abcg>d>ef
+2994,M,35,Campbell,CA,37.278843,-121.95446,customer service,afg>bcde
+2995,M,25,Corvallis,OR,44.52789,-123.2791,scientist,abcd>efg
+3029,M,18,La Jolla,CA,32.838761,-117.26159,college/grad_student,abcdeg>f
+3033,M,18,Providence,RI,41.83635,-71.39427,college/grad_student,bcg>de>af
+3048,M,18,Scituate,MA,42.205038,-70.7513,artist,cg>abdef
+3051,M,18,Redwood City,CA,37.483504,-122.2144,technician/engineer,bcdg>af>e
+3067,F,25,Malden,MA,42.428549,-71.06059,other,abfg>cde
+3069,M,18,Roseburg,OR,43.227287,-123.35138,college/grad_student,af>bcg>de
+3075,F,25,W Hartford,CT,41.75275,-72.7546,lawyer,abc>defg
+3108,M,50,Fairfax Station,VA,38.760747,-77.31684,doctor/health_care,afg>bcd>e
+3110,M,25,New York,NY,40.71704,-73.987,other,bf>a>cde>g
+3129,M,25,Owings Mills,MD,39.419105,-76.78388,executive/managerial,fg>abcde
+3154,F,25,Davis,CA,38.549256,-121.73655,college/grad_student,a>bcdfg>e
+3158,M,25,Pittsburgh,PA,40.430919,-79.92569,scientist,abcdf>e>g
+3163,M,18,Davis,CA,38.549256,-121.73655,scientist,abcdf>eg
+3182,M,25,Saratoga Springs,NY,43.080399,-73.77038,programmer,abcdf>g>e
+3189,M,25,Marina Del Rey,CA,33.976373,-118.45458,self-employed,acd>befg
+3192,M,18,Providence,RI,41.826737,-71.397699,college/grad_student,bcdg>aef
+3205,F,35,Boulder,CO,40.039784,-105.27938,self-employed,abdg>c>ef
+3224,F,25,Cambria,CA,35.563246,-121.07736,sales/marketing,a>eg>bcdf
+3227,F,25,Chicago,IL,41.940832,-87.65852,sales/marketing,aef>cd>b>g
+3228,M,25,East Fairfield,VT,44.751801,-72.88247,sales/marketing,bc>defg>a
+3259,F,18,Davis,CA,38.549256,-121.73655,college/grad_student,abcdef>g
+3260,M,25,Youngstown,OH,41.016159,-80.61549,college/grad_student,abefg>cd
+3265,M,25,Madison,WI,43.121416,-89.34968,scientist,abcdfg>e
+3272,M,35,Mays Landing,NJ,39.478771,-74.7581,other,bcdef>ag
+3280,M,25,Boca Raton,FL,26.344955,-80.11226,executive/managerial,b>acdg>e>f
+3281,M,25,Midland,TX,32.029022,-102.08618,technician/engineer,abcdf>eg
+3285,M,25,Canton,OH,40.776858,-81.40593,college/grad_student,abcf>d>eg
+3311,M,25,Los Angeles,CA,34.110425,-118.25832,college/grad_student,ag>bcde>f
+3312,F,18,Los Angeles,CA,34.110425,-118.25832,college/grad_student,ad>bc>g>f>e
+3313,M,35,Marina Del Rey,CA,33.976373,-118.45458,writer,abe>cdfg
+3336,M,35,Lompoc,CA,34.639682,-120.4471,technician/engineer,abcf>dg>e
+3353,M,35,Rancho Santa Margarita,CA,33.639994,-117.60351,technician/engineer,abcdfg>e
+3356,M,35,Los Gatos,CA,37.189396,-121.705327,executive/managerial,acefg>bd
+3358,F,25,West Covina,CA,34.068059,-117.93835,academic/educator,abf>cdeg
+3368,M,25,Minneapolis,MN,44.875614,-93.33487,sales/marketing,ag>bcdef
+3370,M,18,Fullerton,CA,33.874314,-117.9637,college/grad_student,ac>bd>efg
+3389,M,18,Watertown,NY,44.030204,-75.81845,other,abcdf>eg
+3394,M,35,West Hollywood,CA,34.090975,-118.3813,executive/managerial,ac>befg>d
+3400,M,25,Point Pleasant Beach,NJ,40.081165,-74.06003,sales/marketing,abcdf>e>g
+3401,M,35,Fort Worth,TX,32.699565,-97.37808,executive/managerial,bcd>efg>a
+3410,M,35,Lexington Park,MD,38.234838,-76.44889,academic/educator,abc>de>fg
+3411,M,18,Cambridge,MA,42.364347,-71.10431,college/grad_student,a>bcdfg>e
+3412,M,25,Mesa,AZ,33.434192,-111.76892,tradesman/craftsman,bceg>adf
+3423,M,25,West Jordan,UT,40.594222,-111.97889,executive/managerial,abcef>dg
+3425,M,18,Garden City,MI,42.324338,-83.3382,writer,abcf>de>g
+3430,F,45,Pittsburgh,PA,40.455168,-79.89709,academic/educator,bd>acf>e>g
+3434,M,18,Owosso,MI,42.99605,-84.17896,college/grad_student,bcdf>ag>e
+3453,M,35,Whippany,NJ,40.821482,-74.42648,executive/managerial,af>b>cdeg
+3462,F,25,Oklahoma City,OK,35.34377,-97.48596,college/grad_student,afg>bce>d
+3469,M,45,Melrose,MA,42.459045,-71.06233,technician/engineer,abcfg>d>e
+3471,M,18,Boulder,CO,40.020885,-105.29673,college/grad_student,abcdfg>e
+3475,M,25,Miami,FL,25.730678,-80.2441,sales/marketing,af>bc>dg>e
+3476,M,50,Cleveland,OH,41.441697,-81.85738,other,abcdf>e>g
+3483,F,45,Morrow,GA,33.58776,-84.33011,executive/managerial,adefg>c>b
+3491,M,25,Camp Lejeune,NC,34.664035,-77.463687,self-employed,ac>bdefg
+3503,M,18,Bozeman,MT,45.707153,-110.9878,college/grad_student,abcd>ef>g
+3507,M,25,Watertown,MA,42.371296,-71.18196,other,abcd>f>eg
+3509,M,18,Boston,MA,42.34308,-71.09268,college/grad_student,abcdfg>e
+3512,M,18,Cambridge,MA,42.393327,-71.12837,technician/engineer,bf>acdg>e
+3513,M,25,Winchester,MA,42.451945,-71.14276,self-employed,ab>cefg>d
+3539,F,25,Houston,TX,29.741878,-95.38944,college/grad_student,abcdf>g>e
+3540,M,18,Sioux Falls,SD,43.514392,-96.80375,technician/engineer,abcdef>g
+3550,M,25,Minneapolis,MN,45.003363,-93.49262,customer service,a>bcefg>d
+3556,M,25,Derry,NH,42.886486,-71.30019,technician/engineer,acf>bdeg
+3557,M,18,Westland,MI,42.335937,-83.378,customer service,abcd>f>eg
+3558,M,18,Lawrence,KS,38.983551,-95.23202,technician/engineer,abcdef>g
+3565,M,25,Mount Horeb,WI,42.985255,-89.73647,tradesman/craftsman,bcd>e>af>g
+3569,F,18,East Lansing,MI,42.747922,-84.47143,artist,abcdf>e>g
+3590,F,18,Boston,MA,42.34308,-71.09268,scientist,abcdfg>e
+3607,M,35,Pensacola,FL,30.408807,-87.31919,technician/engineer,bef>cdg>a
+3610,M,18,Marietta,GA,33.946735,-84.602,doctor/health_care,f>deg>bc>a
+3618,M,56,Strasburg,VA,39.00127,-78.36485,technician/engineer,abe>cdfg
+3620,M,25,San Francisco,CA,37.770937,-122.44276,executive/managerial,abf>cde>g
+3626,M,25,Plano,TX,33.024721,-96.74038,technician/engineer,bcdefg>a
+3641,M,25,Carlsbad,CA,33.158137,-117.32646,other,af>bce>dg
+3643,M,25,Alexandria,VA,38.829512,-77.08204,technician/engineer,bf>c>adeg
+3648,M,18,Mesa,AZ,33.391233,-111.84129,college/grad_student,acdfg>be
+3652,M,25,Emeryville,CA,37.834724,-122.28316,programmer,abcdfg>e
+3654,M,25,San Rafael,CA,37.972423,-122.51484,technician/engineer,bc>adeg>f
+3669,M,25,Lombard,IL,41.875429,-88.01723,sales/marketing,abcdfg>e
+3671,M,25,Seattle,WA,47.63287,-122.32253,college/grad_student,bcdeg>af
+3675,M,35,-999,-999,-999,-999,executive/managerial,bdf>acg>e
+3679,M,25,Omaha,NE,41.240562,-95.93353,college/grad_student,bcg>def>a
+3681,M,25,Mauldin,SC,34.774657,-82.30432,executive/managerial,abcde>f>g
+3683,M,25,Athens,GA,33.945619,-83.41732,artist,bc>ef>dg>a
+3685,M,25,-999,-999,-999,-999,customer service,abcdf>eg
+3691,M,25,Cockeysville,MD,39.477506,-76.64114,executive/managerial,abfg>cd>e
+3693,M,25,Redwood City,CA,37.444879,-122.26253,scientist,bc>adfg>e
+3713,F,25,Arlington,VA,38.885337,-77.09512,executive/managerial,bcdf>a>eg
+3717,M,35,Fairfield,CA,38.269582,-122.03701,technician/engineer,befg>cd>a
+3724,M,35,Houston,TX,29.691714,-95.64978,doctor/health_care,bcdfg>ae
+3729,M,18,Washington,DC,38.900394,-77.05126,college/grad_student,abd>cefg
+3746,M,25,Eau Claire,WI,44.82961,-91.50521,customer service,abcdf>eg
+3751,F,35,Young America,MN,44.805487,-93.766524,programmer,bcdef>g>a
+3757,M,25,Irvine,CA,33.650813,-117.81771,executive/managerial,abcde>fg
+3768,M,25,Prescott Valley,AZ,34.621743,-112.32176,college/grad_student,abf>cdeg
+3778,M,25,Danville,IL,40.133786,-87.62898,other,ag>bcdf>e
+3792,M,25,Omaha,NE,41.240562,-95.93353,doctor/health_care,bcdef>ag
+3819,M,25,Montgomery,AL,32.404754,-86.24963,programmer,bcdf>aeg
+3824,M,25,Tallahassee,FL,30.531677,-84.16049,technician/engineer,bcefg>ad
+3825,M,18,Willington,CT,41.896875,-72.27456,academic/educator,bc>a>dfg>e
+3833,M,25,Lincoln,NE,40.749224,-96.64566,academic/educator,bcd>ef>ag
+3847,M,25,Glens Falls,NY,43.312104,-73.64825,executive/managerial,abcf>de>g
+3859,M,25,Las Vegas,NV,36.167731,-115.26791,other,abcdf>eg
+3878,M,35,Oakton,VA,38.88619,-77.32402,self-employed,abcdef>g
+3892,M,25,Burbank,CA,34.166906,-118.34366,writer,abef>cdg
+3900,F,25,Hopkins,MN,44.921599,-93.40857,sales/marketing,af>bcdeg
+3910,M,25,Burbank,CA,34.166906,-118.34366,writer,abf>eg>cd
+3914,M,35,Salt Lake City,UT,40.659514,-111.92226,college/grad_student,fg>abce>d
+3916,M,25,Allston,MA,42.355147,-71.13164,college/grad_student,abcf>de>g
+3922,M,18,Milwaukee,WI,43.083012,-87.8859,college/grad_student,bcd>f>aeg
+3929,M,25,Denver,CO,39.668576,-105.09191,customer service,bcdefg>a
+3937,M,56,El Cajon,CA,32.7991,-116.97334,artist,bcdef>ag
+3942,M,18,Marquette,MI,46.554402,-87.42223,college/grad_student,abcd>f>eg
+3963,M,50,Decatur,GA,33.771705,-84.29407,writer,af>bcde>g
+3992,M,25,Gainesville,FL,29.735832,-82.39008,college/grad_student,dg>abcef
+3993,M,25,Burke,VA,38.788646,-77.27888,other,a>bcdg>e>f
+3995,M,35,Basye,VA,38.81913,-78.77149,technician/engineer,ag>bef>cd
+4007,M,35,Las Cruces,NM,32.347752,-106.81463,programmer,bf>acdg>e
+4013,M,25,Bryan,TX,30.678097,-96.37639,academic/educator,bcfg>ad>e
+4022,M,35,Racine,WI,42.704519,-87.80062,sales/marketing,bfg>ace>d
+4041,M,18,Armada,MI,42.842554,-82.91471,clerical/admin,abcdf>eg
+4042,M,35,Belmont,CA,37.516687,-122.29026,scientist,ad>bfg>ce
+4058,M,25,Oklahoma City,OK,35.515008,-97.53106,doctor/health_care,abcf>deg
+4064,M,45,Rockville,MD,39.076608,-77.1232,other,acf>be>d>g
+4070,M,25,Santa Barbara,CA,34.421795,-119.863722,scientist,abcg>d>ef
+4085,F,25,Lubbock,TX,33.591877,-101.94754,doctor/health_care,b>defg>ac
+4089,M,25,Lubbock,TX,33.591877,-101.94754,executive/managerial,bcefg>ad
+4094,M,25,Battle Creek,MI,42.35714,-85.20257,technician/engineer,abcdef>g
+4101,M,18,Richmond,VA,37.622465,-77.61965,college/grad_student,af>eg>d>bc
+4116,M,35,Maplewood,NJ,40.728901,-74.26821,executive/managerial,f>abceg>d
+4126,M,25,Waukesha,WI,43.020762,-88.26852,technician/engineer,bcdeg>f>a
+4132,M,25,Englewood,CO,39.579454,-104.88288,technician/engineer,bcdfg>ae
+4156,M,56,San Jose,CA,37.244426,-121.83246,writer,af>bcdeg
+4167,M,25,Fairfax,VA,38.821753,-77.29293,writer,ac>bfg>de
+4169,M,50,Leavenworth,KS,39.298776,-94.93555,other,abcdef>g
+4186,M,25,Fort Lauderdale,FL,26.191111,-80.10846,executive/managerial,c>bg>aef>d
+4217,M,18,Easton,PA,40.681798,-75.22082,college/grad_student,abcdf>eg
+4238,M,35,Wooster,OH,40.800086,-81.95726,self-employed,abeg>cf>d
+4253,M,45,Concord,NH,43.213705,-71.53774,lawyer,bdef>cg>a
+4277,M,35,Seattle,WA,47.733852,-122.34461,self-employed,abcefg>d
+4279,M,25,Columbus,OH,39.965131,-83.00431,self-employed,bce>g>adf
+4303,M,25,Chula Vista,CA,32.638654,-117.06686,artist,abcfg>de
+4305,F,45,Raleigh,NC,35.865441,-78.54929,technician/engineer,acef>g>bd
+4312,M,25,Austin,TX,30.349455,-97.73328,tradesman/craftsman,abcdef>g
+4318,M,25,Westerly,RI,41.354881,-71.80387,customer service,af>bdeg>c
+4342,M,25,Topeka,KS,39.015374,-95.76057,other,abcfg>e>d
+4344,M,25,Kent,OH,41.148756,-81.35302,academic/educator,abcd>eg>f
+4351,M,25,Knoxville,TN,35.922881,-84.00384,programmer,aef>bcdg
+4356,M,35,Tucson,AZ,32.179227,-110.81032,self-employed,bf>ae>cdg
+4363,M,35,North Hollywood,CA,34.152476,-118.36841,sales/marketing,bcdefg>a
+4368,M,18,Falls Church,VA,38.901311,-77.19777,technician/engineer,abcdg>ef
+4379,M,25,Hillsborough,NC,36.079726,-79.09459,college/grad_student,abcg>df>e
+4387,F,18,Saint Louis,MO,38.586052,-90.2941,college/grad_student,ag>cd>bef
+4388,M,45,Plano,TX,33.028921,-96.68102,clerical/admin,f>abcdeg
+4425,M,35,Camas,WA,45.60916,-122.40547,executive/managerial,bcdf>aeg
+4446,M,18,Joliet,IL,41.54338,-88.11963,tradesman/craftsman,abcdf>eg
+4448,M,25,Westport,CT,41.140896,-73.35178,sales/marketing,abcefg>d
+4477,M,25,Yakima,WA,46.605303,-120.61762,executive/managerial,b>acdefg
+4478,M,1,Cambridge,MA,42.379146,-71.12803,programmer,abcd>eg>f
+4482,F,35,Pacifica,CA,37.613806,-122.48229,academic/educator,f>abcdg>e
+4489,M,18,Cedar Park,TX,30.501272,-97.83087,college/grad_student,abcdeg>f
+4499,M,25,Springfield,IL,39.819,-89.64379,doctor/health_care,abcf>de>g
+4508,M,25,Indiana,PA,40.626307,-79.16146,writer,g>abcd>ef
+4509,M,25,Union City,TN,36.426933,-89.0727,executive/managerial,abcdef>g
+4510,M,45,Riverside,CA,33.91355,-117.46052,executive/managerial,bc>df>aeg
+4517,F,18,Royal Oak,MI,42.488735,-83.13752,academic/educator,abc>def>g
+4520,M,25,Ada,OH,40.774039,-83.81821,college/grad_student,cdfg>abe
+4543,M,25,Astoria,NY,40.774686,-73.90816,artist,abeg>cdf
+4560,M,25,Alliance,NE,42.13928,-102.84937,other,bc>adefg
+4578,M,25,Allston,MA,42.355147,-71.13164,other,abcdeg>f
+4661,M,45,Scottsdale,AZ,33.697268,-111.88321,scientist,acf>bdeg
+4708,M,25,Chicago,IL,41.921126,-87.70085,other,a>bcdf>eg
+4732,M,25,Lexington,VA,37.794344,-79.47658,sales/marketing,abcfg>e>d
+4734,M,50,Santa Barbara,CA,34.44005,-119.75496,academic/educator,ab>cdfg>e
+4747,M,18,Buckhannon,WV,38.997267,-80.20915,college/grad_student,bcde>g>af
+4786,M,45,Front Royal,VA,38.926615,-78.17499,doctor/health_care,abcefg>d
+4802,M,56,Frankfort,KY,38.201649,-84.86935,academic/educator,abfg>cde
+4810,M,18,Fort Collins,CO,40.539432,-105.11576,programmer,af>bcd>eg
+4823,M,18,Indianapolis,IN,39.78001,-86.04889,college/grad_student,ac>bd>fg>e
+4826,M,45,Minneapolis,MN,44.903864,-93.37056,programmer,abcf>deg
+4862,M,25,Sunnyvale,CA,37.378341,-122.02398,other,bc>adfg>e
+4884,M,35,Manhattan Beach,CA,33.88898,-118.40535,sales/marketing,abcdfg>e
+4889,M,18,Saint Louis,MO,38.646201,-90.25435,college/grad_student,bcdefg>a
+4901,M,25,Brooklyn,NY,40.617563,-74.01168,executive/managerial,abcdg>e>f
+4918,F,18,Salt Lake City,UT,40.659997,-111.88394,programmer,abcdf>eg
+4964,M,35,San Francisco,CA,37.74873,-122.41545,other,b>ag>cdef
+5002,M,25,Torrance,CA,33.810848,-118.35096,technician/engineer,a>bcdefg
+5015,M,35,San Clemente,CA,33.427078,-117.61401,doctor/health_care,acf>bdeg
+5026,M,25,Menifee,CA,33.66035,-117.18987,technician/engineer,bc>defg>a
+5034,F,25,Carbondale,IL,37.707763,-89.19246,scientist,bef>acdg
+5054,M,35,Cabin John,MD,38.97511,-77.15928,artist,be>cdfg>a
+5061,F,18,South Strafford,VT,43.830375,-72.36228,unemployed,abcd>efg
+5071,F,25,Plano,TX,33.03505,-96.80492,executive/managerial,df>abceg
+5074,M,1,Purcellville,VA,39.146479,-77.72798,other,abcdfg>e
+5087,F,25,Philadelphia,PA,39.952962,-75.16558,doctor/health_care,bcg>def>a
+5090,F,35,McKinney,TX,33.195073,-96.60363,unemployed,abcf>deg
+5100,M,50,-999,-999,-999,-999,doctor/health_care,bcdfg>ae
+5102,M,25,Downey,CA,33.958363,-118.11987,programmer,abcef>dg
+5107,F,45,Sicklerville,NJ,39.741385,-74.99035,other,abcd>g>ef
+5156,M,18,New York,NY,40.786387,-73.97709,sales/marketing,ab>cdefg
+5161,M,25,Loganville,GA,33.823809,-83.89423,college/grad_student,bc>adf>g>e
+5167,M,18,Hartford,CT,41.7387,-72.67889,scientist,a>bc>deg>f
+5193,M,35,Rochester,NY,43.136363,-77.64685,programmer,bfg>ce>d>a
+5205,M,25,Providence,RI,41.839296,-71.43802,academic/educator,aefg>cd>b
+5219,M,18,Albany,CA,37.889125,-122.29371,college/grad_student,abcfg>d>e
+5222,M,25,Alameda,CA,37.769528,-122.25937,programmer,a>cf>bdeg
+5226,M,35,Seattle,WA,47.61157,-122.30406,other,abf>cg>de
+5264,M,18,Pittsburgh,PA,40.430919,-79.92569,college/grad_student,ag>bcdf>e
+5312,M,25,Bronx,NY,40.881086,-73.90749,academic/educator,befg>acd
+5323,M,25,San Francisco,CA,37.75838,-122.48478,writer,ac>fg>bde
+5324,M,25,Chelsea,MA,42.396382,-71.03352,executive/managerial,abf>cdeg
+5333,F,25,Duxbury,MA,42.031371,-70.70105,executive/managerial,af>bcdeg
+5339,M,18,Schaumburg,IL,42.01299,-88.09675,technician/engineer,cdfg>b>ae
+5350,M,18,Eden Prairie,MN,44.867013,-93.42557,customer service,cf>ab>deg
+5367,M,18,Eden Prairie,MN,44.867013,-93.42557,college/grad_student,ac>bfg>de
+5376,M,25,Fremont,CA,37.527237,-121.9679,technician/engineer,cf>abdeg
+5386,M,25,Lake Forest,IL,42.238087,-87.86093,sales/marketing,abcdf>eg
+5387,F,25,Oxford,OH,39.498751,-84.7407,academic/educator,abcg>def
+5390,M,1,New Braunfels,TX,29.699844,-98.10754,other,bcdf>aeg
+5394,M,18,Chicago,IL,41.945681,-87.7048,other,af>bcde>g
+5397,M,18,New Lenox,IL,41.509231,-87.96475,other,abc>dfg>e
+5412,M,25,Corvallis,OR,44.608694,-123.2752,programmer,abcdf>g>e
+5413,M,35,Missoula,MT,46.855423,-114.01229,academic/educator,eg>abcdf
+5418,F,25,Stoughton,WI,42.926473,-89.22432,other,bcd>aefg
+5433,F,35,Fairfield,OH,39.330356,-84.55277,technician/engineer,afg>bcde
+5445,M,25,Columbus,OH,39.935263,-83.04558,other,b>acfg>e>d
+5451,F,25,Seattle,WA,47.68382,-122.30122,academic/educator,g>abcf>d>e
+5453,M,18,Atlanta,GA,33.830054,-84.38472,college/grad_student,bcdfg>e>a
+5458,F,18,Seattle,WA,47.63287,-122.32253,artist,bc>adg>ef
+5488,M,25,Pasadena,CA,33.786594,-118.298662,scientist,ac>bd>e>fg
+5501,M,25,Fort Lauderdale,FL,26.182161,-80.13341,artist,a>cfg>bde
+5522,M,25,Newtonville,MA,42.352996,-71.20907,sales/marketing,bcfg>a>de
+5536,M,25,Wichita,KS,37.754443,-97.35763,self-employed,acg>bdf>e
+5543,M,25,Eugene,OR,44.06092,-123.08275,technician/engineer,bcdg>ae>f
+5550,M,35,Canton,MI,42.33087,-83.47575,scientist,adeg>bcf
+5578,F,18,Boston,MA,42.361477,-71.05417,academic/educator,a>bcdefg
+5585,M,25,New York,NY,40.74618,-73.97759,college/grad_student,a>f>bcd>eg
+5592,M,25,Madison,WI,43.074296,-89.40774,academic/educator,bcde>fg>a
+5595,M,25,Los Angeles,CA,34.111208,-118.28842,writer,abcg>def
+5596,M,35,Arlington,VA,38.885337,-77.09512,programmer,abg>cdef
+5605,F,18,Campbell,CA,37.278843,-121.95446,artist,ac>eg>bd>f
+5627,M,25,Maplewood,NJ,40.728901,-74.26821,other,b>cefg>ad
+5636,M,25,Seattle,WA,47.63287,-122.32253,executive/managerial,bc>dg>af>e
+5643,F,35,Salt Lake City,UT,40.744646,-111.81123,academic/educator,a>bcdeg>f
+5664,M,18,Oakland,MI,42.765582,-83.17281,college/grad_student,abcdf>eg
+5682,M,18,-999,-999,-999,-999,other,abcdfg>e
+5684,M,18,San Francisco,CA,37.74873,-122.41545,self-employed,abcg>df>e
+5689,M,25,Salt Lake City,UT,40.696596,-111.95239,other,abcdef>g
+5699,M,35,Albany,CA,37.889125,-122.29371,scientist,abc>dfg>e
+5701,M,25,Osseo,MN,45.102133,-93.48757,executive/managerial,bcdf>eg>a
+5716,M,1,Lebanon,NH,43.967542,-71.840883,K-12 student,ab>cdefg
+5726,M,25,College Station,TX,30.571905,-96.29882,academic/educator,f>abcdeg
+5733,M,25,Ann Arbor,MI,42.291637,-83.71831,college/grad_student,abc>dg>ef
+5738,M,25,Minneapolis,MN,44.938615,-93.22082,programmer,f>abcde>g
+5747,M,25,Hanover,NH,43.719756,-72.2507,other,abcdf>eg
+5759,F,25,Highland Park,NJ,40.500254,-74.4257,academic/educator,bcg>ad>ef
+5763,F,25,Highland Park,NJ,40.500254,-74.4257,academic/educator,abeg>cf>d
+5776,M,18,Portland,OR,45.52054,-122.68573,programmer,bcf>aeg>d
+5785,F,25,Chicago,IL,41.875882,-87.65114,executive/managerial,abcdef>g
+5787,M,25,Long Beach,CA,33.769018,-118.19225,writer,abc>deg>f
+5788,M,25,Huntington Beach,CA,33.666269,-117.9693,other,abcdfg>e
+5795,M,25,Rancho Santa Margarita,CA,33.639994,-117.60351,academic/educator,abcef>dg
+5798,M,35,Louisville,CO,39.963322,-105.15053,other,f>ag>bcde
+5812,F,25,San Diego,CA,32.794449,-117.07221,executive/managerial,abcg>ef>d
+5824,M,18,Whitehall,PA,40.651751,-75.49224,programmer,bc>dfg>ae
+5831,M,25,San Diego,CA,32.794449,-117.07221,academic/educator,a>bcdefg
+5837,M,25,Chicago,IL,41.875882,-87.65114,executive/managerial,abefg>d>c
+5852,F,25,Pacifica,CA,37.613806,-122.48229,academic/educator,ab>cf>de>g
+5869,F,25,Philadelphia,PA,39.952162,-75.17406,executive/managerial,afg>b>cde
+5874,M,25,Amherst,MA,42.377651,-72.50323,college/grad_student,abc>dfg>e
+5880,M,25,Highland Park,NJ,40.500254,-74.4257,academic/educator,bcg>ad>ef
+5886,M,25,Cambridge,MA,42.364347,-71.10431,writer,ag>bcf>de
+5903,M,25,Norwalk,CT,41.134896,-73.4053,lawyer,bcf>deg>a
+5908,M,25,Newark,DE,39.700561,-75.7431,college/grad_student,abcf>de>g
+5916,M,50,Grosse Pointe,MI,42.386087,-82.92426,writer,bf>cdeg>a
+5950,M,25,Newark,DE,39.669211,-75.71796,college/grad_student,bf>ce>ad>g
+6002,M,50,Columbus,OH,40.076042,-82.94064,other,a>befg>cd
+6036,F,25,Gainesville,FL,29.653145,-82.3469,scientist,abcfg>de
