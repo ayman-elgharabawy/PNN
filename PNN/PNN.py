@@ -97,32 +97,50 @@ class PNN:
             acc_sum = 0
             sens_sum = 0
             spec_sum = 0
-
+            accuracy1=0
+            Conf_total = [ [ 0 ] * ssteps ] * ssteps
             for i in range(len(y_test)):
                 cc = self.calculate_rank(predictedList[i].tolist())
                 ss = self.calculate_rank(y_test[i])
-                cm1 = confusion_matrix(ss, cc,normalize='all')
+                cm1 = confusion_matrix(ss, cc)#,normalize='all')
                 cm1=np.nan_to_num(cm1)
-                # print('Confusion Matrix : \n', cm1)
+                Conf_total=Conf_total+cm1
+                
 
-                total1 = sum(sum(cm1))
                 #####from confusion matrix calculate accuracy
-                accuracy1 = (cm1[0, 0] + cm1[1, 1]) / (cm1[0, 0] + cm1[0, 1]+cm1[1, 0] + cm1[1, 1])
+                ss=sum(cm1[:,0])*ssteps
+                dd=sum(cm1[i][ssteps-i-1] for i in range(ssteps))
+                accuracy1 =accuracy1+(dd/ss) #(cm1[0, 0] + cm1[1, 1]) / ss #(cm1[0, 0] + cm1[0, 1]+cm1[1, 0] + cm1[1, 1])
                 acc_sum += accuracy1
 
-                sensitivity1 =  cm1[0, 0] / (cm1[0, 0] + cm1[0, 1])
+                sensitivity1 =  cm1[0, 0] / ss
                 if(np.isnan(sensitivity1)):
                     sensitivity1=0
                 sens_sum += sensitivity1
 
-                specificity1 = cm1[1, 1] / (cm1[1, 0] + cm1[1, 1])
+                specificity1 = cm1[1, 1] / ss
                 if(np.isnan(specificity1)):
                     specificity1=0
                 spec_sum += specificity1
 
+
+            print('Summation of Confusion Matrix of Stock DS: \n', Conf_total)
+            fig, ax = plt.subplots(figsize=(7.5, 7.5))
+            ax.matshow(Conf_total, cmap=plt.cm.Blues, alpha=0.3)
+            for i in range(Conf_total.shape[0]):
+                for j in range(Conf_total.shape[1]):
+                    ax.text(x=j, y=i,s=Conf_total[i, j], va='center', ha='center', size='xx-large')
+            
             print('Accuracy : ', acc_sum / len(y_test))
             print('Sensitivity : ', sens_sum / len(y_test))
             print('Specificity : ', spec_sum / len(y_test))
+
+            plt.xlabel('Predicted labels', fontsize=15)
+            plt.ylabel('Actual labels', fontsize=15)
+            plt.title('Confusion Matrix of 6 labels for testing data of glass DS', fontsize=15)
+            plt.show()
+
+
 
 
     def calculate_rank_predicted(self,vector,noranks):
@@ -265,16 +283,15 @@ class PNN:
         w2 ,drop1= self.generate_wt_drop(hiddenlist, outs,dropno)
         return w1,w2 ,drop1
 
-    
 
-
-    def forward_propagation(self, w1,w2,drop1, input1, n_outputs, ssteps, scale, dropout):
+    def forward_propagation(self, w1,w2, input1,n_middlen, n_outputs, ssteps, scale, dropout,dropno):
 
         if dropout:
-            for ind ,i in enumerate(w2):
-                if(ind in drop1):
-                  w2[ind]=[0]*16
 
+            x = [randint(0, dropno) for p in range(0, 300)]
+            for ind ,i in enumerate(w1):
+                if(ind in x):
+                   w1[ind]=[0]*n_middlen
 
         z1 = input1.dot(w1)# input from layer 1
         a1 = self.PSS(z1, ssteps, scale)# out put of layer 2
@@ -283,16 +300,9 @@ class PNN:
         z2 = a1.dot(w2)# input of out layer
         a2 = self.PSS(z2, ssteps, scale)# output of out layer
 
-        return a2, drop1
+        return a2, w1,w2
 
-    def back_propagation(self, w1,w2,drop1,lrate, input1,InNetInputNo, expected, outputs, n_outputs, ssteps, scale, cache,
-                        dropout):
-            if dropout:
-                for ind ,i in enumerate(w2):
-                    if(ind in drop1):
-                       w2[ind]=[0]*16
-
-
+    def back_propagation(self, w1,w2,lrate, input1,InNetInputNo, expected, outputs, n_outputs, ssteps, scale,dropout):
             z1 = input1.dot(w1)# input from layer 1
             a1 = self.PSS(np.array([z1]), ssteps, scale)# out put of layer 2
             z2 = a1.dot(w2)# input of out layer
@@ -316,15 +326,14 @@ class PNN:
                     ssteps, lrate, hn, scale, dropout,dropno):
         z = len(train_fold_features)
         start1 = timer()
-        cache = []
         for epoch in range(epochs):
             iterationoutput = np.array([])
             for i, row in enumerate((train_fold_features)):
                 xxx = np.array(list(row))
                 trainfoldexpected = list(train_fold_labels[i])
-                outputs, drop1 = self.forward_propagation(w1,w2,drop1, xxx, n_outputs, ssteps, scale, dropout)
-                w1,w2 = self.back_propagation(w1,w2,drop1,lrate,xxx, InNetInputNo, trainfoldexpected, outputs, n_outputs,
-                                                    ssteps, scale, cache, dropout)
+                outputs, w1,w2 = self.forward_propagation(w1,w2, xxx,hn, n_outputs, ssteps, scale, dropout,dropno)
+                w1,w2 = self.back_propagation(w1,w2,lrate,xxx, InNetInputNo, trainfoldexpected, outputs, n_outputs,
+                                                    ssteps, scale, dropout)
                 cc = self.calculateoutputTau([outputs, np.array(trainfoldexpected)])
                 iterationoutput = np.append(iterationoutput, cc)
             rr = sum(iterationoutput) / z
@@ -335,7 +344,7 @@ class PNN:
         end1 = timer()
         print("Elapsed Training time")
         print(end1 - start1) # 
-        return w1,w2 , outputs, cache
+        return w1,w2 , outputs, drop1
 
 
     def calculateoutputTau( self,iterationoutput):
@@ -361,10 +370,10 @@ class PNN:
                 testFeatures = [X_train[i]  for i in idx_test]
                 testlabel = [y_train[i]  for i in idx_test]
                 print("Fold Index="+str(foldindex))
-                w1,w2 , output, cache = self.PNNChannels(w1,w2,drop1, epochs, trainFeatures, trainlabel,
+                w1,w2 , output, drop1 = self.PNNChannels(w1,w2,drop1, epochs, trainFeatures, trainlabel,
                                         InNetInputNo,labelno, ssteps, lrate, hnnolist, scale,dropout,dropno)
                 
-                iterationoutput = self.predict(w1=w1,w2=w2 , testFeatures=testFeatures, testlabel=testlabel, labelno=labelno,
+                iterationoutput = self.predict(w1=w1,w2=w2,drop1=drop1 , testFeatures=testFeatures, testlabel=testlabel, labelno=labelno,
                                             ssteps=ssteps, scale=scale, hnnolist=hnnolist, dropout=dropout,dropno=dropno)
 
                 tot_etau += iterationoutput[0]
@@ -373,12 +382,12 @@ class PNN:
                 print(' Validation ' + str(avr_res) + " Fold index=" + str(foldindex))
         else:
             trainFeatures = [i for i in X_train]
-            w1,w2, output, cache = self.PNNChannels(w1,w2,drop1, epochs, trainFeatures, y_train,
+            w1,w2, output, drop1 = self.PNNChannels(w1,w2,drop1, epochs, trainFeatures, y_train,
                                             InNetInputNo,labelno, ssteps, lrate, hnnolist, scale,dropout,dropno)
 
         print("###################################### Testing 20% of data ###########################") 
         start = timer()
-        iterationoutput = self.predict(w1=w1,w2=w2 , testFeatures=X_test, testlabel=y_test, labelno=labelno,
+        iterationoutput = self.predict(w1=w1,w2=w2 ,drop1=drop1, testFeatures=X_test, testlabel=y_test, labelno=labelno,
                                             ssteps=ssteps, scale=scale, hnnolist=hnnolist, dropout=dropout,dropno=dropno) 
                                             # ...
         end = timer()
@@ -388,7 +397,7 @@ class PNN:
         # self.drawROC(y_test, np.array(iterationoutput[1]), 3)                                                                                     
         tot_etau = iterationoutput[0]
         avr_res = tot_etau
-        return avr_res, w1,w2, cache
+        return avr_res, w1,w2
 
     def calculate_rank(self, vector):
         a = {}
@@ -417,7 +426,7 @@ class PNN:
         bestvresult = 0
         for lr1 in lrlist:
             for scl in scalelist:
-                avresult, w1,w2, cache = self.CrossValidationAvg(kfold=kfold, foldcounter=foldcounter,
+                avresult, w1,w2 = self.CrossValidationAvg(kfold=kfold, foldcounter=foldcounter,
                                                                                 foldindex=foldindex,
                                                                                 X_train=X, y_train=y,
                                                                                 X_test=X_test , y_test=y_test,
@@ -438,7 +447,7 @@ class PNN:
         # print('Best Vector = ',bestvector)
         return w1,w2, avresult
 
-    def predict(self, w1,w2 , testFeatures, testlabel, labelno, ssteps, scale, hnnolist, dropout,dropoutno):
+    def predict(self, w1,w2 ,drop1, testFeatures, testlabel, labelno, ssteps, scale, hnnolist, dropout,dropno):
         
         iterationoutput = np.array([])
         predictedList = []
@@ -446,7 +455,7 @@ class PNN:
         for i, row in enumerate((testFeatures)):
             xxx1 = np.array(list(row))
             testfoldlabels = list(testlabel[i])
-            predicted, drop1,drop2 = self.forward_propagation(w1,w2, xxx1, labelno, ssteps, scale, dropout,dropoutno)
+            predicted, w1,w2 = self.forward_propagation(w1,w2, xxx1,hnnolist, labelno, ssteps, scale, dropout,dropno)
             predictedList.append(predicted)
             iterationoutput = np.append(iterationoutput,
                                         [self.calculateoutputTau([predicted, np.array(testfoldlabels)])])
