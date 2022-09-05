@@ -30,6 +30,11 @@ Smooth Staircase (SS) function Mathematica code where # steps = 5 and boundaries
 
 ![ScreenShot](/Images/SS_wm.png)
 
+
+Smooth Staircase (SS) function for regression Mathematica code where # steps n = 60 and decimal value s = 0.1  is:
+
+**Manipulate[Plot[-0.5/s *(Sum[Tanh[(-20s*x)+(10*n)*((2*i/(n-1)) -1)],{i, 0, n - 1} ]-n), {x, -4, 4}],{s, 10,10} ,{n,60}]**
+
 ## Python example 
 
 Using pythin +3.7
