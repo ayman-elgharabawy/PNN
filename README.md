@@ -1,37 +1,49 @@
 # Preference Neural Network (PNN)
-![ScreenShot](/Images/PNN.png)
+
+<p align="center">
+<img src="/Images/PNN.png" width="400" height="200">
+</p>
+
 PNN is a native ranker neural network implemented for label ranking using Spearman ranking error function and Positive/Smooth Staircase activation function (SS) and (PSS) to enhance the prediction probability to produce almost discrete value without data freedom between layers, thus it use one middle layer for learning.
 
 # Subgroup Preference Neural Network (SGPNN)
 
 <p align="center">
-<img src="/Images/MAFN.png" width="500" height="200">
+<img src="/Images/MAFN.png" width="400" height="200">
 </p>
 
-![ScreenShot](/Images/SGPNN.png)
 
-SGPNN is extended PNN to ranke subgroup of labels using one learning model. the subgroups are combined from multiple domains to find a hidden relations between these groups.
+<p align="center">
+<img src="/Images/SGPNN.png" width="400" height="200">
+</p>
+
+SGPNN is extended PNN to rank subgroup of labels using one learning model. the subgroups are combined from multiple domains to find a hidden relations between these groups.
 
 These two networks use a new type of multi-values activation functions, Positive smooth staircase (PSS) and Smooth Staircase (SS) employed for ranking
-![ScreenShot](/Images/SS.png)
+
+<p align="center">
+<img src="/Images/SS.png" width="400" height="200">
+</p>
 
 
-## Positive Smoth Staircase (PSS) and Smooth Staircase (SS)
+## Positive Smooth Staircase (PSS) and Smooth Staircase (SS)
 
 
 The Positive Smooth Staircase (PSS) function Mathematica code where # steps = 4 and step width =1  is:
 
 **Manipulate[Plot[(Sum[-0.5*Tanh[-100*(x - (w*i))], {i, 0, n - 1}]) + (n/2), {x, -1, 6}], {n, 4}, {w, 1}]**
 
-![ScreenShot](/Images/PSS_wm.png)
+<p align="center">
+<img src="/Images/PSS_wm.png" width="400" height="200">
+</p>
 
 Smooth Staircase (SS) function Mathematica code where # steps = 5 and boundaries between -1 and 1  is:
 
 **Manipulate[Plot[(-0.5*Sum[( Tanh[(-x * 100)/b + c*(1 - (2*i/(n - 1)))] ), {i, 0,  n - 1}]) + ((n)/2), {x, -4, 4}], {n, 5}, {c, -100}, {b, 1}]**
 
-![ScreenShot](/Images/SS_wm.png)
-
-
+<p align="center">
+<img src="/Images/SS_wm.png" width="400" height="200">
+</p>
 ## Smooth Staircase (SS) function for regression
 
  where # steps n = 60 and decimal value s = 0.1  is:
