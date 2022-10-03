@@ -1,11 +1,11 @@
-# Preference Neural Network (PNN) 
+# Preference Neural Network (PNN)
 ![ScreenShot](/Images/PNN.png)
 PNN is a native ranker neural network implemented for label ranking using Spearman ranking error function and Positive/Smooth Staircase activation function (SS) and (PSS) to enhance the prediction probability to produce almost discrete value without data freedom between layers, thus it use one middle layer for learning.
 
 # Subgroup Preference Neural Network (SGPNN)
 
 <p align="center">
-<img src="/Images/MAFN.png" width="600" height="300">
+<img src="/Images/MAFN.png" width="500" height="200">
 </p>
 
 ![ScreenShot](/Images/SGPNN.png)
@@ -16,7 +16,8 @@ These two networks use a new type of multi-values activation functions, Positive
 ![ScreenShot](/Images/SS.png)
 
 
-## Wolframe Mathematica Positive Smotth Staircase (PSS) and Smooth Staircase (SS) 
+## Positive Smoth Staircase (PSS) and Smooth Staircase (SS)
+
 
 The Positive Smooth Staircase (PSS) function Mathematica code where # steps = 4 and step width =1  is:
 
@@ -31,21 +32,23 @@ Smooth Staircase (SS) function Mathematica code where # steps = 5 and boundaries
 ![ScreenShot](/Images/SS_wm.png)
 
 
-Smooth Staircase (SS) function for regression Mathematica code where # steps n = 60 and decimal value s = 0.1  is:
+## Smooth Staircase (SS) function for regression
 
-**Manipulate[Plot[-0.5/s *(Sum[Tanh[(-20s*x)+(10*n)*((2*i/(n-1)) -1)],{i, 0, n - 1} ]-n), {x, -4, 4}],{s, 10,10} ,{n,60}]**
+ where # steps n = 60 and decimal value s = 0.1  is:
 
-## Python example 
+**Manipulate[Plot[-0.5/s\*(Sum[Tanh[(-20s\*x)+(10\*n)*((2\*i/(n-1)) -1)],{i, 0, n - 1} ]-n), {x, -4, 4}],{s, 10,10} ,{n,60}]**
+
+## Python example
 
 Using pythin +3.7
 
 pnn = PNN()
 
-train_error = pnn.loadData(filename=path,featuresno= 4,labelno=3,ssteps=2,epochs=500,lrate=0.005,hn=100,Fold=10,useFold=False) 
+train_error = pnn.loadData(filename=path,featuresno= 4,labelno=3,ssteps=2,epochs=500,lrate=0.005,hn=100,Fold=10,useFold=False)
 
 
-## References 
-For feedback kindly connunicate using my email aaaeg@hotmail.com
+## References
+For feedback kindly communicate using my email aaaeg@hotmail.com
 
 Video Demo available at  https://drive.google.com/drive/folders/1yxuqYoQ3Kiuch-2sLeVe2ocMj12QVsRM?usp=sharing
 
