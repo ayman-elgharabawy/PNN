@@ -14,7 +14,7 @@ PNN is a native ranker neural network implemented for label ranking using Spearm
 
 
 <p align="center">
-<img src="/Images/SGPNN.png" width="400" height="200">
+<img src="/Images/SGPNN.png" width="350" height="200">
 </p>
 
 SGPNN is extended PNN to rank subgroup of labels using one learning model. the subgroups are combined from multiple domains to find a hidden relations between these groups.
@@ -22,7 +22,7 @@ SGPNN is extended PNN to rank subgroup of labels using one learning model. the s
 These two networks use a new type of multi-values activation functions, Positive smooth staircase (PSS) and Smooth Staircase (SS) employed for ranking
 
 <p align="center">
-<img src="/Images/SS.png" width="400" height="200">
+<img src="/Images/SS.png" width="350" height="200">
 </p>
 
 
@@ -34,7 +34,7 @@ The Positive Smooth Staircase (PSS) function Mathematica code where # steps = 4 
 **Manipulate[Plot[(Sum[-0.5*Tanh[-100*(x - (w*i))], {i, 0, n - 1}]) + (n/2), {x, -1, 6}], {n, 4}, {w, 1}]**
 
 <p align="center">
-<img src="/Images/PSS_wm.png" width="400" height="200">
+<img src="/Images/PSS_wm.png" width="350" height="200">
 </p>
 
 Smooth Staircase (SS) function Mathematica code where # steps = 5 and boundaries between -1 and 1  is:
@@ -42,9 +42,10 @@ Smooth Staircase (SS) function Mathematica code where # steps = 5 and boundaries
 **Manipulate[Plot[(-0.5*Sum[( Tanh[(-x * 100)/b + c*(1 - (2*i/(n - 1)))] ), {i, 0,  n - 1}]) + ((n)/2), {x, -4, 4}], {n, 5}, {c, -100}, {b, 1}]**
 
 <p align="center">
-<img src="/Images/SS_wm.png" width="400" height="200">
+<img src="/Images/SS_wm.png" width="350" height="200">
 </p>
-## Smooth Staircase (SS) function for regression
+
+## Smooth Staircase (SS) for regression
 
  where # steps n = 60 and decimal value s = 0.1  is:
 
@@ -52,7 +53,7 @@ Smooth Staircase (SS) function Mathematica code where # steps = 5 and boundaries
 
 ## Python example
 
-Using pythin +3.7
+Using python +3.7
 
 pnn = PNN()
 
