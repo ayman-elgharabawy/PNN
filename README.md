@@ -47,6 +47,10 @@ Smooth Staircase (SS) function where # steps = 5 and boundaries between -1 and 1
 
 ## Smooth Staircase (SS) for Regression
 
+<p align="center">
+<img src="/Images/Tabular Data_Rob.png" width="350" height="200">
+</p>
+
  where # steps n = 60 and n = R*S where R is the max range of y and S=decimal value s = 10 is the decimal point   is:
 
 **Manipulate[Plot[-0.5/s\*(Sum[Tanh[(-20\*S\*x)+(10\*n)*((2\*i/(n-1)) -1)],{i, 0, n - 1} ]-n), {x, -4, 4}],{S, 10,10} ,{n,60}]**
