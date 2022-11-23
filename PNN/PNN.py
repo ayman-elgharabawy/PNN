@@ -40,8 +40,7 @@ import pandas as pd
 from statistics import mean
 from sklearn.metrics import confusion_matrix
 from timeit import default_timer as timer
-
-
+import os.path
 
 class PNN:
 
@@ -49,6 +48,36 @@ class PNN:
         print("PNN Starting..")
 
 
+    ############################ Activation function for Regression by ranking ############# 
+
+    def SSS_R(xi):
+        s=1000
+        labelrange=144  #i.e. max range of labels is 143.4
+        n1=(s*labelrange)
+
+        sum2=0
+        for i1 in range(n1):
+            xx = (-20*s*xi) +10*n1*(((2*i1)/(n1-1))-1)
+            sum2 +=np.tanh(xx)
+        sum3=sum2-n1   
+        sum4=(-0.5/s)*sum3      
+        return sum4
+
+    def dSSS_R(xi):
+
+        s=1000
+        labelrange=144  #i.e. max range of labels is 143.4
+        n1=(s*labelrange)
+
+        sum2=0
+        for i1 in range(n1):
+            xx = (-20*s*xi) +10*n1*(((2*i1)/(n1-1))-1)
+            sum2 +=((1 - np.power(np.tanh(xx), 2))*xx)*(-20*s)
+        sum3=sum2-n1   
+        sum4=(-0.5/s)*sum3      
+        return sum4
+
+    ############################ Activation function for classification by ranking ############# 
     def SSS(self,xi,n,boundaryValue):
         sum = 0
         c=100
@@ -58,10 +87,10 @@ class PNN:
         sum= sum+(n*0.5)  
         return sum     
 
-    def dSSS(self,xi,nlabel,bx): 
+    def dSSS(self,xi,nlabel,boundaryValue): 
         derivative2 = 0
         s=100
-        b=100/bx
+        b=100/boundaryValue
         t=200
         for i in range(nlabel):
             xx=s-((i*t)/(nlabel-1))
@@ -86,7 +115,6 @@ class PNN:
         sum1 = sum1 + (n / 2)
         return sum1
 
-
     def DSpearman(self, output, expected):
         nn = len(expected)
         diflist=[]
@@ -106,7 +134,6 @@ class PNN:
                 cm1=np.nan_to_num(cm1)
                 Conf_total=Conf_total+cm1
                 
-
                 #####from confusion matrix calculate accuracy
                 ss=sum(cm1[:,0])*ssteps
                 dd=sum(cm1[i][ssteps-i-1] for i in range(ssteps))
@@ -259,7 +286,7 @@ class PNN:
     def generate_wt_drop(self,x, y,dropno):
         l =[]
         for i in range(x * y):
-            D1=np.random.uniform(low=-0.005, high=0.005)
+            D1=np.random.uniform(low=-0.5, high=0.5)
             l.append(D1)
 
         aa=(np.array(l).reshape(x, y))
@@ -288,14 +315,13 @@ class PNN:
 
         if dropout:
 
-            x = [randint(0, dropno) for p in range(0, 300)]
+            x = [randint(0, dropno) for p in range(0, 50)]
             for ind ,i in enumerate(w1):
                 if(ind in x):
                    w1[ind]=[0]*n_middlen
 
         z1 = input1.dot(w1)# input from layer 1
         a1 = self.PSS(z1, ssteps, scale)# out put of layer 2
-
 
         z2 = a1.dot(w2)# input of out layer
         a2 = self.PSS(z2, ssteps, scale)# output of out layer
@@ -325,21 +351,23 @@ class PNN:
     def PNNChannels( self, w1,w2,drop1, epochs, train_fold_features, train_fold_labels, InNetInputNo, n_outputs,
                     ssteps, lrate, hn, scale, dropout,dropno):
         z = len(train_fold_features)
-        start1 = timer()
+        start1 = timer()  
         for epoch in range(epochs):
-            iterationoutput = np.array([])
-            for i, row in enumerate((train_fold_features)):
+            error_sum = []
+            for i, row in enumerate((np.array(train_fold_features))):
                 xxx = np.array(list(row))
+                # rankedlist=np.array(self.calculate_rank(list(row))) 
                 trainfoldexpected = list(train_fold_labels[i])
                 outputs, w1,w2 = self.forward_propagation(w1,w2, xxx,hn, n_outputs, ssteps, scale, dropout,dropno)
                 w1,w2 = self.back_propagation(w1,w2,lrate,xxx, InNetInputNo, trainfoldexpected, outputs, n_outputs,
                                                     ssteps, scale, dropout)
                 cc = self.calculateoutputTau([outputs, np.array(trainfoldexpected)])
-                iterationoutput = np.append(iterationoutput, cc)
-            rr = sum(iterationoutput) / z
+                # iterationoutput = np.append(iterationoutput, cc)
+                error_sum.append(cc)
+            rrr=sum(error_sum)/(i+1)    
             w1,w2 = w1,w2
 
-            print(' Epoch ' + str(epoch) + " rho=" + str(rr))
+            print(' Epoch ' + str(epoch) + " rho=" + str(rrr))
         w1,w2  = w1,w2 
         end1 = timer()
         print("Elapsed Training time")
@@ -361,13 +389,13 @@ class PNN:
         avr_res = 0
         tot_etau = 0
         if (useFold):
-            for idx_train, idx_test in kfold.split(X_train):
+            for idx_train, idx_test in kfold.split(X_train.T):
                 foldindex += 1
 
-                trainFeatures = [X_train[i] for i in idx_train]
+                trainFeatures = [X_train.T[i] for i in idx_train]
                 trainlabel = [y_train[i] for i in idx_train]
                 
-                testFeatures = [X_train[i]  for i in idx_test]
+                testFeatures = [X_train.T[i]  for i in idx_test]
                 testlabel = [y_train[i]  for i in idx_test]
                 print("Fold Index="+str(foldindex))
                 w1,w2 , output, drop1 = self.PNNChannels(w1,w2,drop1, epochs, trainFeatures, trainlabel,
@@ -382,19 +410,19 @@ class PNN:
                 print(' Validation ' + str(avr_res) + " Fold index=" + str(foldindex))
         else:
             trainFeatures = [i for i in X_train]
-            w1,w2, output, drop1 = self.PNNChannels(w1,w2,drop1, epochs, trainFeatures, y_train,
+            w1,w2, output, drop1 = self.PNNChannels(w1,w2,drop1, epochs, trainFeatures.T, y_train,
                                             InNetInputNo,labelno, ssteps, lrate, hnnolist, scale,dropout,dropno)
 
         print("###################################### Testing 20% of data ###########################") 
         start = timer()
-        iterationoutput = self.predict(w1=w1,w2=w2 ,drop1=drop1, testFeatures=X_test, testlabel=y_test, labelno=labelno,
+        iterationoutput = self.predict(w1=w1,w2=w2 ,drop1=drop1, testFeatures=X_test.T, testlabel=y_test, labelno=labelno,
                                             ssteps=ssteps, scale=scale, hnnolist=hnnolist, dropout=dropout,dropno=dropno) 
                                             # ...
         end = timer()
         print("Elapsed Testing time")
         print(end - start) # 
         self.calcConfusion(iterationoutput[1],y_test,ssteps)     
-        # self.drawROC(y_test, np.array(iterationoutput[1]), 3)                                                                                     
+        self.drawROC(y_test, np.array(iterationoutput[1]), labelno)                                                                                     
         tot_etau = iterationoutput[0]
         avr_res = tot_etau
         return avr_res, w1,w2
@@ -454,13 +482,14 @@ class PNN:
         cache=[]
         for i, row in enumerate((testFeatures)):
             xxx1 = np.array(list(row))
+            # rankedlist=np.array(self.calculate_rank(list(row)) )
             testfoldlabels = list(testlabel[i])
             predicted, w1,w2 = self.forward_propagation(w1,w2, xxx1,hnnolist, labelno, ssteps, scale, dropout,dropno)
             predictedList.append(predicted)
             iterationoutput = np.append(iterationoutput,
                                         [self.calculateoutputTau([predicted, np.array(testfoldlabels)])])
 
-        avrre = sum(iterationoutput) / len(testFeatures)
+        avrre =sum(iterationoutput) / len(iterationoutput)
         return avrre, predictedList
 
 
@@ -484,6 +513,8 @@ class PNN:
                 a[num] = rank
                 rank = rank + 1
         return [a[i] for i in vector]
+    
+
 
     def loadData(self,filename, featuresno, labelno, ssteps,epochs,lrate,hn,Fold,useFold,scale,dropout,dropno):
         data = list()
@@ -514,8 +545,8 @@ class PNN:
         train_labels = train_labels.astype(float)
         test_labels = test_labels.astype(float)
 
-        train_features_norm=preprocessing.normalize(train_features)  #X
-        test_features_norm=preprocessing.normalize(test_features)
+        train_features_norm=preprocessing.normalize(train_features.T)  #X
+        test_features_norm=preprocessing.normalize(test_features.T)
 
         w1,w2,tot_error=self.training(chunk=1,epochs=epochs,ssteps=ssteps,Fold=Fold, X=train_features_norm,y=train_labels,
         X_test=test_features_norm , y_test=test_labels,InNetInputNo=featuresno,
@@ -530,4 +561,38 @@ class PNN:
 ##################################################################################################################################
 
 
+############################# Demo PNN ##############################
 
+my_path = os.path.abspath(os.path.dirname(__file__))
+pnn = PNN()
+############################## IRIS Dataset ##############################
+path = os.path.join(my_path, "../Data/LRData/iris.txt")
+train_error = pnn.loadData(filename=path,featuresno= 4,labelno=3,ssteps=3,epochs=50,lrate=0.007,hn=100,Fold=10,useFold=True,scale=3,dropout=False,dropno=50) 
+############################## Authorship Dataset ##############################
+# path = os.path.join(my_path, "../Data/LRData/authorship.txt")
+# train_error = pnn.loadData(filename=path,featuresno= 70,labelno=4,ssteps=4,epochs=500,lrate=0.007,hn=100,Fold=10,useFold=True,scale=2,dropout=False,dropno=100) 
+
+############################## Vehicle Dataset ##############################
+# path = os.path.join(my_path, "..//Data//LRData//vehicle.txt")
+# train_error = pnn.loadData(filename=path,featuresno= 18,labelno=4,ssteps=4,epochs=500,lrate=0.0008,hn=50,Fold=5,useFold=False,scale=3,dropout=False,dropno=100) 
+############################## Stock Dataset ##############################
+# path = os.path.join(my_path, "..//Data//LRData//stock.txt")
+# train_error = pnn.loadData(filename=path,featuresno= 5,labelno=5,ssteps=5,epochs=200,lrate=0.003,hn=300,Fold=5,useFold=True,scale=3,dropout=False,dropno=100) 
+############################## Segment Dataset ##############################
+# path = os.path.join(my_path, "..//Data//LRData//segment.txt")
+# train_error = pnn.loadData(filename=path,featuresno= 18,labelno=7,ssteps=7,epochs=100,lrate=0.007,hn=200,Fold=5,useFold=False,scale=3,dropout=False,dropno=100) 
+# path = os.path.join(my_path, "..//Data//LRData//elevators.txt")
+# train_error = pnn.loadData(filename=path,featuresno= 9,labelno=9,ssteps=9,epochs=100,lrate=0.003,hn=100,Fold=5,useFold=False,scale=3,dropout=False,dropno=100)
+# path = os.path.join(my_path, "..//Data//LRData//glass.txt")
+# train_error = pnn.loadData(filename=path,featuresno= 9,labelno=6,ssteps=6,epochs=500,lrate=0.005,hn=80,Fold=5,useFold=False,scale=3,dropout=False,dropno=100)
+
+# ############################## Fried Dataset ##############################
+# path = os.path.join(my_path, "LRData//fried.txt")
+# train_error = pnn.loadData(filename=path,featuresno= 9,labelno=5,ssteps=5,epochs=100,lrate=0.005,hn=100,Fold=5,useFold=False,scale=3)
+
+# ############################## pendigits Dataset ##############################
+# path = os.path.join(my_path, "..//Data//LRData//pendigits.txt")
+# train_error = pnn.loadData(filename=path,featuresno= 16,labelno=10,ssteps=10,epochs=100,lrate=0.007,hn=350,Fold=5,useFold=False,scale=3,dropout=False,dropno=100) 
+# ############################## Vowl Dataset ##############################
+# path = os.path.join(my_path, "..//Data//LRData//vowel.txt")
+# train_error = pnn.loadData(filename=path,featuresno= 10,labelno=11,ssteps=11,epochs=1000,lrate=0.003,hn=200,Fold=5,useFold=False,scale=3,dropout=False,dropno=100) 
