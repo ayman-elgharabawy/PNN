@@ -31,13 +31,13 @@ Smooth Staircase (SS) function where # steps = 5 and boundaries between -1 and 1
 **Manipulate[Plot[(-(s/2)*(Sum[( Tanh[(c*(b-x-(w*i)))] ), {i, 0, n - 1}]-(1)) ), {x, -4, 4}], {n, 5},{s,1,1000}, {c, 100}, {b, 2},{w,1}]**
 
 <p align="center">
-<img src="/Images/ss.png" width="450" height="300">
+<img src="/Images/ss.png" width="550" height="400">
 </p>
 
 Smooth Staircase (SS) function for regression value up to 2 decimal value where # steps = 5 and boundaries between -1 and 1  is:
 
 <p align="center">
-<img src="/Images/ss_0.001.png" width="450" height="300">
+<img src="/Images/ss_001.png" width="550" height="400">
 </p>
 
 ## Python example
@@ -56,6 +56,7 @@ Video Demo available at  https://drive.google.com/drive/folders/1yxuqYoQ3Kiuch-2
 
 Please Cite using the following links:
 
-Elgharabawy, A.; Prasad, M.; Lin, C.-T. Subgroup Preference Neural Network. Sensors 2021, 21, 6104. https://doi.org/10.3390/s21186104
+A. Elgharabawy, M. Prasad and C. -T. Lin, "Preference Neural Network," in IEEE Transactions on Emerging Topics in Computational Intelligence, doi: 10.1109/TETCI.2023.3268707.
+A. Elgharabawy, M. Prasad, and C.-T. Lin, “Subgroup Preference Neural Network,” Sensors, vol. 21, no. 18, p. 6104, Sep. 2021, doi: 10.3390/s21186104.
 
-Elgharabawy, A.; Prasad, M.; Lin, C.-T. Preference Neural Network. 2021 arXiv:1904.02345 [cs.LG]
+
