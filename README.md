@@ -14,7 +14,7 @@ PNN is a native ranker neural network implemented for label ranking using Spearm
 
 
 <p align="center">
-<img src="/Images/SGPNN.png" width="350" height="200">
+<img src="/Images/SGPNN.png" width="550" height="300">
 </p>
 
 SGPNN is extended PNN to rank subgroup of labels using one learning model. the subgroups are combined from multiple domains to find a hidden relations between these groups.
