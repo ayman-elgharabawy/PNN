@@ -27,7 +27,7 @@ These two networks use a new type of multi-values activation functions. Smooth S
 
 and 2b=n-1 where n is the number of steps and b is the boundary value on x axis.
 
-Smooth Staircase (SS) function where # steps = 5 and boundaries between -1 and 1  is:
+Symmetric Smooth Staircase (SSS) function where # steps = 5 and boundaries between -1 and 1  is:
 
 **Manipulate[Plot[(-(s/2)*(Sum[( Tanh[(c*(b-x-(w*i)))] ), {i, 0, n - 1}]-(1)) ), {x, -4, 4}], {n, 5},{s,1,1000}, {c, 100}, {b, 2},{w,1}]**
 
@@ -35,7 +35,7 @@ Smooth Staircase (SS) function where # steps = 5 and boundaries between -1 and 1
 <img src="/Images/ss.png" width="850" height="400">
 </p>
 
-Smooth Staircase (SS) function for regression value up to 2 decimal value where # steps = 5 and boundaries between -1 and 1  is:
+Symmetric Smooth Staircase (SSS) function for regression value up to 2 decimal value where # steps = 5 and boundaries between -1 and 1  is:
 
 <p align="center">
 <img src="/Images/ss_001.png" width="850" height="400">
