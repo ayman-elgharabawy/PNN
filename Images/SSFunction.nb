@@ -1,0 +1,32 @@
+Notebook[{Cell[
+CellGroupData[{Cell[
+BoxData[RowBox[{"Manipulate","[",RowBox[{RowBox[
+{"Plot","[",RowBox[{RowBox[{"(",RowBox[{RowBox[{"-","s"}],"*",RowBox[{"Sum","[",RowBox[
+{RowBox[{"("," ",RowBox[{"Tanh","[",RowBox[{"(",RowBox[{"c","*",RowBox[{"(",RowBox[
+{"b","-","x","-",RowBox[{"(",RowBox[{"w","*","i"}],")"}]}],")"}]}],")"}],"]"}]," ",")"}],","," ",RowBox[
+{"{",RowBox[{"i",","," ","0",","," ",RowBox[{"n"," ","-"," ","1"}]}],"}"}]}],"]"}]}],")"}]," ",","," ",RowBox[
+{"{",RowBox[{"x",","," ",RowBox[{"-","4"}],","," ","4"}],"}"}]}],"]"}],","," ",RowBox[
+{"{",RowBox[{"n",","," ","5"}],"}"}],",",RowBox[{"{",RowBox[{"s",",","0.001",",","1000"}],"}"}],","," ",RowBox[
+{"{",RowBox[{"c",","," ","100"}],"}"}],","," ",RowBox[{"{",RowBox[{"b",","," ","2"}],"}"}],",",RowBox[
+{"{",RowBox[{"w",",","1"}],"}"}]}],"]"}]],"Input",CellLabel -> "In[7]:= ",ExpressionUUID -> "bcfaf7c9-6f34-4b26-b49c-c417fa46e62b"],Cell[
+BoxData[
+TagBox[StyleBox[DynamicModuleBox[{Set[b$$,2],Set[c$$,100],Set[n$$,5],Set[s$$,0.001`],Set[
+w$$,1],Set[Typeset`show$$,True],Set[Typeset`bookmarkList$$,{}],Set[Typeset`bookmarkMode$$,
+"Menu"],Typeset`animator$$,Set[Typeset`animvar$$,1],Set[Typeset`name$$,"\"untitled\""],Set[
+Typeset`specs$$,{{Hold[n$$],5},{Hold[s$$],0.001`,1000},{Hold[c$$],100},{Hold[b$$],2},{Hold[
+w$$],1}}],Set[Typeset`size$$,Automatic],Set[Typeset`update$$,0],Set[Typeset`initDone$$,
+False],Set[Typeset`skipInitDone$$,True]},DynamicBox[Manipulate`ManipulateBoxes[1,
+StandardForm,RuleDelayed["Variables",{Set[b$$,2],Set[c$$,100],Set[n$$,5],Set[s$$,
+0.001`],Set[w$$,1]}],RuleDelayed["ControllerVariables",{}],RuleDelayed["OtherVariables",
+{Typeset`show$$,Typeset`bookmarkList$$,Typeset`bookmarkMode$$,Typeset`animator$$,Typeset`animvar$$,Typeset`name$$,Typeset`specs$$,Typeset`size$$,Typeset`update$$,Typeset`initDone$$,Typeset`skipInitDone$$}],
+RuleDelayed["Body",Plot[Times[Times[-1,s$$],Sum[Tanh[Times[c$$,Plus[b$$,Times[-1,
+x],Times[-1,Times[w$$,i]]]]],{i,0,Plus[n$$,-1]}]],{x,-4,4}]],RuleDelayed["Specifications",
+{{n$$,5},{s$$,0.001`,1000},{c$$,100},{b$$,2},{w$$,1}}],RuleDelayed["Options",{}],
+RuleDelayed["DefaultOptions",{}]],SingleEvaluation -> True],RuleDelayed[DynamicModuleValues,
+{}],RuleDelayed[Deinitialization,None],RuleDelayed[UntrackedVariables,{Typeset`size$$}],
+SynchronousInitialization -> True,RuleDelayed[UnsavedVariables,{Typeset`initDone$$}],
+RuleDelayed[UndoTrackedVariables,{Typeset`show$$,Typeset`bookmarkMode$$}],ExpressionUUID -> "4f80961a-f1b4-4ea0-a04b-691b996070ad"],
+"Manipulate",Deployed -> True,StripOnInput -> False],Manipulate`InterpretManipulate[
+1]],StandardForm],"Output",CellLabel -> "Out[7]= ",ExpressionUUID -> "5bdfb952-d701-48cd-bbac-269a6668aad2"]},
+Open],ExpressionUUID -> "15663652-ce48-4046-b262-7a4bc042fd62"]},StyleDefinitions -> "Default.nb",
+FrontEndVersion -> "13.2 for Wolfram Cloud 1.65 (April 11, 2023)"]
