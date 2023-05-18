@@ -1,7 +1,7 @@
 # Preference Neural Network (PNN)
 
 <p align="center">
-<img src="/Images/PNN.png" width="400" height="200">
+<img src="/Images/PNN.png" width="500" height="300">
 </p>
 
 PNN is a native ranker neural network implemented for label ranking using Spearman ranking error function and Positive/Smooth Staircase activation function (SS) and (PSS) to enhance the prediction probability to produce almost discrete value without data freedom between layers, thus it use one middle layer for learning.
@@ -9,7 +9,7 @@ PNN is a native ranker neural network implemented for label ranking using Spearm
 # Subgroup Preference Neural Network (SGPNN)
 
 <p align="center">
-<img src="/Images/MAFN.png" width="400" height="200">
+<img src="/Images/MAFN.png" width="500" height="300">
 </p>
 
 
