@@ -26,29 +26,18 @@ These two networks use a new type of multi-values activation functions, Positive
 </p>
 
 
-## Positive Smooth Staircase (PSS) and Smooth Staircase (SS)
-
-
-The Positive Smooth Staircase (PSS) function where # steps = 4 and step width =1  is:
-
-**Manipulate[Plot[(Sum[-0.5*Tanh[-100*(x - (w*i))], {i, 0, n - 1}]) + (n/2), {x, -1, 6}], {n, 4}, {w, 1}]**
-
-<p align="center">
-<img src="/Images/PSS_wm.png" width="350" height="200">
-</p>
-
 Smooth Staircase (SS) function where # steps = 5 and boundaries between -1 and 1  is:
 
 **Manipulate[Plot[(-(s/2)*(Sum[( Tanh[(c*(b-x-(w*i)))] ), {i, 0, n - 1}]-(1)) ), {x, -4, 4}], {n, 5},{s,1,1000}, {c, 100}, {b, 2},{w,1}]**
 
 <p align="center">
-<img src="/Images/ss.png" width="350" height="200">
+<img src="/Images/ss.png" width="450" height="300">
 </p>
 
 Smooth Staircase (SS) function for regression value up to 2 decimal value where # steps = 5 and boundaries between -1 and 1  is:
 
 <p align="center">
-<img src="/Images/ss_0.001.png" width="350" height="200">
+<img src="/Images/ss_0.001.png" width="450" height="300">
 </p>
 
 ## Python example
