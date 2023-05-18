@@ -19,7 +19,7 @@ PNN is a native ranker neural network implemented for label ranking using Spearm
 
 SGPNN is extended PNN to rank subgroup of labels using one learning model. the subgroups are combined from multiple domains to find a hidden relations between these groups.
 
-These two networks use a new type of multi-values activation functions, Positive smooth staircase (PSS) and Smooth Staircase (SS) employed for ranking
+These two networks use a new type of multi-values activation functions. Smooth Staircase (SS) employed for ranking, The following equations shows the positive output values of SS function.
 
 <p align="center">
 <img src="/Images/eq_ss.png" width="450" height="200">
