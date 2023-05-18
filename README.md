@@ -25,6 +25,7 @@ These two networks use a new type of multi-values activation functions. Smooth S
 <img src="/Images/eq_ss.png" width="450" height="200">
 </p>
 
+and 2b=n-1 where n is the number of steps and b is the boundary value on x axis.
 
 Smooth Staircase (SS) function where # steps = 5 and boundaries between -1 and 1  is:
 
